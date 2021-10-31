@@ -10,7 +10,7 @@ import (
 const (
 	category            = "api"
 	configTemplateFile  = "config.tpl"
-	contextTemplateFile = "context.tpl"
+	contextTemplateFile = "pathvar.tpl"
 	etcTemplateFile     = "etc.tpl"
 	handlerTemplateFile = "handler.tpl"
 	logicTemplateFile   = "logic.tpl"

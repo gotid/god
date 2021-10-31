@@ -5,7 +5,8 @@ import (
 	"net/http"
 	"strings"
 
-	"git.zc0901.com/go/god/api/internal/context"
+	"git.zc0901.com/go/god/api/pathvar"
+
 	"git.zc0901.com/go/god/lib/container/gmap"
 	"git.zc0901.com/go/god/lib/gconv"
 	"git.zc0901.com/go/god/lib/gvalid"
@@ -31,32 +32,38 @@ var (
 )
 
 // Parse 依次将请求路径、表单和JSON中的参数，解析值目标 v
-func Parse(r *http.Request, pointer interface{}) error {
-	pathParams, err := ParsePath(r, pointer)
+func Parse(r *http.Request, v interface{}) error {
+	pathParams, err := ParsePath(r)
 	if err != nil {
 		return err
 	}
 
-	formParams, err := ParseForm(r, pointer)
+	formParams, err := ParseForm(r)
 	if err != nil {
 		return err
 	}
 
-	bodyParams, err := ParseJsonBody(r, pointer)
+	headerParams, err := ParseHeaders(r)
+	if err != nil {
+		return err
+	}
+
+	bodyParams, err := ParseJsonBody(r)
 	if err != nil {
 		return err
 	}
 
 	params := pathParams.Clone()
 	params.Merge(formParams)
+	params.Merge(headerParams)
 	params.Merge(bodyParams)
 
 	// 转换
-	if err := gconv.Struct(params, pointer); err != nil {
+	if err := gconv.Struct(params, v); err != nil {
 		return err
 	}
 	// 验证
-	if err := gvalid.CheckStruct(pointer, nil); err != nil {
+	if err := gvalid.CheckStruct(v, nil); err != nil {
 		return err.Current()
 	}
 
@@ -64,7 +71,7 @@ func Parse(r *http.Request, pointer interface{}) error {
 }
 
 // ParseJsonBody 解析请求体为JSON的参数
-func ParseJsonBody(r *http.Request, pointer interface{}) (*gmap.StrAnyMap, error) {
+func ParseJsonBody(r *http.Request) (*gmap.StrAnyMap, error) {
 	var reader io.Reader
 	if withJsonBody(r) {
 		reader = io.LimitReader(r.Body, maxBodyLen)
@@ -72,11 +79,11 @@ func ParseJsonBody(r *http.Request, pointer interface{}) (*gmap.StrAnyMap, error
 		reader = strings.NewReader(emptyJson)
 	}
 
-	return mapping.UnmarshalJsonReader(reader, pointer)
+	return mapping.UnmarshalJsonReader(reader)
 }
 
-// ParseForm 解析表单请求参数（即Query参数）
-func ParseForm(r *http.Request, pointer interface{}) (*gmap.StrAnyMap, error) {
+// ParseForm 解析表单请求参数。
+func ParseForm(r *http.Request) (*gmap.StrAnyMap, error) {
 	if err := r.ParseForm(); err != nil {
 		return nil, err
 	}
@@ -95,44 +102,37 @@ func ParseForm(r *http.Request, pointer interface{}) (*gmap.StrAnyMap, error) {
 		}
 	}
 
-	//// 转换
-	//if err := gconv.Struct(params, pointer); err != nil {
-	//	return err
-	//}
-	//// 验证
-	//if err := gvalid.CheckStruct(pointer, nil); err != nil {
-	//	return err.Current()
-	//}
-
 	return gmap.NewStrAnyMapFrom(params), nil
-	// return formUnmarshaler.Unmarshal(params, pointer)
+}
+
+func ParseHeaders(r *http.Request) (*gmap.StrAnyMap, error) {
+	m := gmap.NewStrAnyMap()
+	for k, v := range r.Header {
+		if len(v) == 1 {
+			m.Set(k, v[0])
+		} else {
+			m.Set(k, v)
+		}
+	}
+	return m, nil
 }
 
 // ParsePath 解析URL中的路径参数。
 // 如：http://localhost/users/:name
-func ParsePath(r *http.Request, pointer interface{}) (*gmap.StrAnyMap, error) {
-	vars := context.Vars(r)
+func ParsePath(r *http.Request) (*gmap.StrAnyMap, error) {
+	vars := pathvar.Vars(r)
 	params := make(map[string]interface{}, len(vars))
 	for k, v := range vars {
 		params[k] = v
 	}
 
-	//// 转换
-	//if err := gconv.Struct(params, pointer); err != nil {
-	//	return err
-	//}
-	//// 验证
-	//if err := gvalid.CheckStruct(pointer, nil); err != nil {
-	//	return err.Current()
-	//}
-
 	return gmap.NewStrAnyMapFrom(params), nil
-	// return pathUnmarshaler.Unmarshal(params, pointer)
 }
 
 func ParseHeader(headerValue string) map[string]string {
 	params := make(map[string]string)
 	fields := strings.Split(headerValue, separator)
+
 	for _, field := range fields {
 		field = strings.TrimSpace(field)
 		if len(field) == 0 {

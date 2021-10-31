@@ -6,7 +6,8 @@ import (
 	"path"
 	"strings"
 
-	"git.zc0901.com/go/god/api/internal/context"
+	"git.zc0901.com/go/god/api/pathvar"
+
 	"git.zc0901.com/go/god/lib/search"
 )
 
@@ -44,7 +45,7 @@ func (rt *router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if tree, ok := rt.trees[r.Method]; ok {
 		if result, ok := tree.Search(reqPath); ok {
 			if len(result.Params) > 0 {
-				r = context.WithPathVars(r, result.Params)
+				r = pathvar.WithPathVars(r, result.Params)
 			}
 			result.Item.(http.Handler).ServeHTTP(w, r)
 			return

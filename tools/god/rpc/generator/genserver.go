@@ -2,9 +2,10 @@ package generator
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
 	"path/filepath"
 	"strings"
+
+	"git.zc0901.com/go/god/lib/fs"
 
 	"git.zc0901.com/go/god/lib/collection"
 	"git.zc0901.com/go/god/lib/stringx"
@@ -20,7 +21,7 @@ const (
 package server
 
 import (
-	"context"
+	"pathvar"
 
 	{{.imports}}
 )
@@ -39,7 +40,7 @@ func New{{.server}}Server(svcCtx *svc.ServiceContext) *{{.server}}Server {
 `
 	functionTemplate = `
 {{if .hasComment}}{{.comment}}{{end}}
-func (s *{{.server}}Server) {{.method}} (ctx context.Context, req {{.request}}) ({{.response}}, error) {
+func (s *{{.server}}Server) {{.method}} (ctx pathvar.Context, req {{.request}}) ({{.response}}, error) {
 	l := logic.New{{.logicName}}(ctx,s.svcCtx)
 	return l.{{.method}}(req)
 }

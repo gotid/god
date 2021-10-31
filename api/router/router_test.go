@@ -3,14 +3,15 @@ package router
 import (
 	"bytes"
 	"fmt"
-	"git.zc0901.com/go/god/api/httpx"
-	"git.zc0901.com/go/god/api/internal/context"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"git.zc0901.com/go/god/api/httpx"
+	"git.zc0901.com/go/god/api/pathvar"
+	"github.com/stretchr/testify/assert"
 )
 
 const (
@@ -106,12 +107,12 @@ func TestRouter(t *testing.T) {
 			router := NewRouter()
 			err := router.Handle(test.method, "/a/:b", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				routed = true
-				assert.Equal(t, 1, len(context.Vars(r)))
+				assert.Equal(t, 1, len(pathvar.Vars(r)))
 			}))
 			assert.Nil(t, err)
 			err = router.Handle(test.method, "/a/b/c", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				routed = true
-				assert.Nil(t, context.Vars(r))
+				assert.Nil(t, pathvar.Vars(r))
 			}))
 			assert.Nil(t, err)
 			err = router.Handle(test.method, "/b/c", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

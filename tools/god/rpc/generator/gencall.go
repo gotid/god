@@ -2,9 +2,10 @@ package generator
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
 	"path/filepath"
 	"strings"
+
+	"git.zc0901.com/go/god/lib/fs"
 
 	"git.zc0901.com/go/god/lib/collection"
 	"git.zc0901.com/go/god/lib/stringx"
@@ -22,7 +23,7 @@ const (
 package {{.filePackage}}
 
 import (
-	"context"
+	"pathvar"
 
 	{{.package}}
 
@@ -51,11 +52,11 @@ func New{{.serviceName}}(cli rpc.Client) {{.serviceName}} {
 `
 
 	callInterfaceFunctionTemplate = `{{if .hasComment}}{{.comment}}
-{{end}}{{.method}}(ctx context.Context,req *{{.pbRequest}}) (*{{.pbResponse}},error)`
+{{end}}{{.method}}(ctx pathvar.Context,req *{{.pbRequest}}) (*{{.pbResponse}},error)`
 
 	callFunctionTemplate = `
 {{if .hasComment}}{{.comment}}{{end}}
-func (m *default{{.serviceName}}) {{.method}}(ctx context.Context,req *{{.pbRequest}}) (*{{.pbResponse}}, error) {
+func (m *default{{.serviceName}}) {{.method}}(ctx pathvar.Context,req *{{.pbRequest}}) (*{{.pbResponse}}, error) {
 	client := {{.package}}.New{{.rpcServiceName}}Client(m.cli.Conn())
 	return client.{{.method}}(ctx, req)
 }
@@ -88,7 +89,7 @@ func (g *defaultGenerator) GenCall(ctx DirContext, proto parser.Proto, cfg *conf
 		return err
 	}
 
-	var alias = collection.NewSet()
+	alias := collection.NewSet()
 	for _, item := range proto.Message {
 		alias.AddStr(fmt.Sprintf("%s = %s", parser.CamelCase(item.Name), fmt.Sprintf("%s.%s", proto.PbPackage, parser.CamelCase(item.Name))))
 	}

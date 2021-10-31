@@ -15,8 +15,8 @@ func UnmarshalJsonBytes(content []byte, v interface{}) error {
 	return unmarshalJsonBytes(content, v, jsonUnmarshaler)
 }
 
-func UnmarshalJsonReader(reader io.Reader, v interface{}) (*gmap.StrAnyMap, error) {
-	return unmarshalJsonReader(reader, v, jsonUnmarshaler)
+func UnmarshalJsonReader(reader io.Reader) (*gmap.StrAnyMap, error) {
+	return unmarshalJsonReader(reader)
 }
 
 func unmarshalJsonBytes(content []byte, v interface{}, unmarshaler *Unmarshaler) error {
@@ -28,13 +28,13 @@ func unmarshalJsonBytes(content []byte, v interface{}, unmarshaler *Unmarshaler)
 	return unmarshaler.Unmarshal(m, v)
 }
 
-func unmarshalJsonReader(reader io.Reader, v interface{}, unmarshaler *Unmarshaler) (*gmap.StrAnyMap, error) {
+func unmarshalJsonReader(reader io.Reader) (*gmap.StrAnyMap, error) {
 	var m map[string]interface{}
 	if err := jsonx.UnmarshalFromReader(reader, &m); err != nil {
 		return nil, err
 	}
 
-	// 弃用，该用gf方式以支持validator
+	// 弃用，改用gf方式以支持validator
 	// return unmarshaler.Unmarshal(m, v)
 
 	return gmap.NewStrAnyMapFrom(m), nil

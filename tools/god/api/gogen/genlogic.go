@@ -23,11 +23,11 @@ import (
 
 type {{.logic}} struct {
 	logx.Logger
-	ctx    context.Context
+	ctx    pathvar.Context
 	svcCtx *svc.ServiceContext
 }
 
-func New{{.logic}}(ctx context.Context, svcCtx *svc.ServiceContext) {{.logic}} {
+func New{{.logic}}(ctx pathvar.Context, svcCtx *svc.ServiceContext) {{.logic}} {
 	return {{.logic}}{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
@@ -132,7 +132,7 @@ func getLogicFolderPath(group spec.Group, route spec.Route) string {
 
 func genLogicImports(route spec.Route, parentPkg string) string {
 	var imports []string
-	imports = append(imports, `"context"`+"\n")
+	imports = append(imports, `"pathvar"`+"\n")
 	imports = append(imports, fmt.Sprintf("\"%s\"", ctlutil.JoinPackages(parentPkg, contextDir)))
 	if len(route.ResponseType.Name) > 0 || len(route.RequestType.Name) > 0 {
 		imports = append(imports, fmt.Sprintf("\"%s\"\n", ctlutil.JoinPackages(parentPkg, typesDir)))

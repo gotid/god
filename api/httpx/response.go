@@ -44,7 +44,13 @@ func Error(w http.ResponseWriter, err error) {
 	}
 
 	code, body := errorHandler(err)
+	if body == nil {
+		w.WriteHeader(code)
+		return
+	}
+
 	e, ok := body.(error)
+	// TODO 不论是什么错，都返回 Message 结构。
 	if ok {
 		http.Error(w, e.Error(), code)
 	} else {
@@ -74,7 +80,6 @@ func OkJson(w http.ResponseWriter, body interface{}) {
 	}
 
 	WriteJson(w, http.StatusOK, body)
-	return
 }
 
 // SetErrorHandler 设置自定义错误处理器
@@ -96,15 +101,15 @@ func WriteJson(w http.ResponseWriter, code int, body interface{}) {
 	w.Header().Set(ContentType, ApplicationJson)
 	w.WriteHeader(code)
 
-	if bytes, err := json.Marshal(body); err != nil {
+	if bs, err := json.Marshal(body); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	} else if n, err := w.Write(bytes); err != nil {
+	} else if n, err := w.Write(bs); err != nil {
 		// http.ErrHandlerTimeout 已经被 http.TimeoutHandler 处理了
 		// 所以此处忽略。
 		if err != http.ErrHandlerTimeout {
 			logx.Errorf("写响应失败，错误：%s", err)
 		}
-	} else if n < len(bytes) {
-		logx.Errorf("实际字节数：%d，写字节数：%d", len(bytes), n)
+	} else if n < len(bs) {
+		logx.Errorf("实际字节数：%d，写字节数：%d", len(bs), n)
 	}
 }

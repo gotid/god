@@ -94,5 +94,5 @@ func formatWithReq(r *http.Request, v string) string {
 type contextKey string
 
 func (c contextKey) String() string {
-	return "api/internal context key " + string(c)
+	return "api/internal pathvar key " + string(c)
 }

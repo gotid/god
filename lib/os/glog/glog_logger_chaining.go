@@ -2,13 +2,14 @@ package glog
 
 import (
 	"context"
+	"io"
+
 	"git.zc0901.com/go/god/internal/intlog"
 	"git.zc0901.com/go/god/lib/os/gfile"
-	"io"
 )
 
 // Ctx is a chaining function,
-// which sets the context for current logging.
+// which sets the pathvar for current logging.
 func (l *Logger) Ctx(ctx context.Context, keys ...interface{}) *Logger {
 	if ctx == nil {
 		return l

@@ -2,10 +2,11 @@ package generator
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
-	"git.zc0901.com/go/god/lib/stringx"
 	"path/filepath"
 	"strings"
+
+	"git.zc0901.com/go/god/lib/fs"
+	"git.zc0901.com/go/god/lib/stringx"
 
 	"git.zc0901.com/go/god/lib/collection"
 	conf "git.zc0901.com/go/god/tools/god/config"
@@ -18,7 +19,7 @@ const (
 	logicTemplate = `package logic
 
 import (
-	"context"
+	"pathvar"
 
 	{{.imports}}
 
@@ -26,12 +27,12 @@ import (
 )
 
 type {{.logicName}} struct {
-	ctx    context.Context
+	ctx    pathvar.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func New{{.logicName}}(ctx context.Context,svcCtx *svc.ServiceContext) *{{.logicName}} {
+func New{{.logicName}}(ctx pathvar.Context,svcCtx *svc.ServiceContext) *{{.logicName}} {
 	return &{{.logicName}}{
 		ctx:    ctx,
 		svcCtx: svcCtx,
@@ -84,7 +85,7 @@ func (g *defaultGenerator) GenLogic(ctx DirContext, proto parser.Proto, cfg *con
 }
 
 func (g *defaultGenerator) genLogicFunction(goPackage string, rpc *parser.RPC) (string, error) {
-	var functions = make([]string, 0)
+	functions := make([]string, 0)
 	text, err := util.LoadTemplate(category, logicFuncTemplateFileFile, logicFunctionTemplate)
 	if err != nil {
 		return "", err
