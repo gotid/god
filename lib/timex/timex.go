@@ -9,7 +9,3 @@ import (
 func MillisecondDuration(d time.Duration) string {
 	return fmt.Sprintf("%.1fms", float32(d)/float32(time.Millisecond))
 }
-
-func ReprOfDuration(duration time.Duration) string {
-	return fmt.Sprintf("%.1fms", float32(duration)/float32(time.Millisecond))
-}

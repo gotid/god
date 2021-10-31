@@ -12,20 +12,22 @@ import (
 )
 
 var (
-	LogInterval  = time.Minute
+	logInterval  = time.Minute
 	writerLock   sync.Mutex
 	reportWriter Writer = nil
 	logEnabled          = syncx.ForAtomicBool(true)
 )
 
 type (
+	// Writer 是一个定义 Write 方法的接口。
 	Writer interface {
-		Write(report *StatReport) error
+		Write(report *ReportItem) error
 	}
 
-	StatReport struct {
+	// ReportItem 是一个统计汇报项结构体。
+	ReportItem struct {
 		Name          string  `json:"name"`
-		Timestamp     int64   `json:"timestamp"`
+		Timestamp     int64   `json:"tm"`
 		Pid           int     `json:"pid"`
 		ReqsPerSecond float32 `json:"qps"`
 		Drops         int     `json:"drops"`
@@ -36,23 +38,10 @@ type (
 		Top99p9th     float32 `json:"t99p9"`
 	}
 
+	// Metrics 用于记录和汇报统计项。
 	Metrics struct {
 		dispatcher *executors.PeriodicalExecutor
-		manager    *metricsManager
-	}
-
-	metricsManager struct {
-		name     string
-		pid      int
-		tasks    []Task
-		duration time.Duration
-		drops    int
-	}
-
-	tasksDurationPair struct {
-		tasks    []Task
-		duration time.Duration
-		drops    int
+		container  *metricsContainer
 	}
 )
 
@@ -69,20 +58,20 @@ func SetReportWriter(writer Writer) {
 }
 
 func NewMetrics(name string) *Metrics {
-	manager := &metricsManager{
+	manager := &metricsContainer{
 		name: name,
 		pid:  os.Getpid(),
 	}
 
 	return &Metrics{
-		dispatcher: executors.NewPeriodicalExecutor(LogInterval, manager),
-		manager:    manager,
+		dispatcher: executors.NewPeriodicalExecutor(logInterval, manager),
+		container:  manager,
 	}
 }
 
 func (m *Metrics) SetName(name string) {
 	m.dispatcher.Sync(func() {
-		m.manager.name = name
+		m.container.name = name
 	})
 }
 
@@ -94,7 +83,23 @@ func (m *Metrics) AddDrop() {
 	m.dispatcher.Add(Task{Drop: true})
 }
 
-func (c *metricsManager) Add(v interface{}) bool {
+type (
+	metricsContainer struct {
+		name     string
+		pid      int
+		tasks    []Task
+		duration time.Duration
+		drops    int
+	}
+
+	tasksDurationPair struct {
+		tasks    []Task
+		duration time.Duration
+		drops    int
+	}
+)
+
+func (c *metricsContainer) Add(v interface{}) bool {
 	if task, ok := v.(Task); ok {
 		if task.Drop {
 			c.drops++
@@ -108,17 +113,17 @@ func (c *metricsManager) Add(v interface{}) bool {
 }
 
 // Execute 执行并写入远程普罗米修斯
-func (c *metricsManager) Execute(v interface{}) {
+func (c *metricsContainer) Execute(v interface{}) {
 	pair := v.(tasksDurationPair)
 	tasks := pair.tasks
 	duration := pair.duration
 	drops := pair.drops
 	size := len(tasks)
-	report := &StatReport{
+	report := &ReportItem{
 		Name:          c.name,
 		Timestamp:     time.Now().Unix(),
 		Pid:           c.pid,
-		ReqsPerSecond: float32(size) / float32(LogInterval/time.Second),
+		ReqsPerSecond: float32(size) / float32(logInterval/time.Second),
 		Drops:         drops,
 	}
 
@@ -171,7 +176,7 @@ func (c *metricsManager) Execute(v interface{}) {
 	log(report)
 }
 
-func (c *metricsManager) RemoveAll() interface{} {
+func (c *metricsContainer) RemoveAll() interface{} {
 	tasks := c.tasks
 	duration := c.duration
 	drops := c.drops
@@ -196,17 +201,17 @@ func getTopDuration(tasks []Task) float32 {
 }
 
 // log 写入远程metric地址
-func log(report *StatReport) {
+func log(report *ReportItem) {
 	writeReport(report)
 	if logEnabled.True() {
-		logx.Statf("(%s) - QPS: %.1f/s, 已丢弃: %d, 平均时长: %.1fms, 中位数: %.1fms, "+
+		logx.Statf("(%s) - QPS: %.1f/s, 丢弃数: %d, 平均时长: %.1fms, 中位数: %.1fms, "+
 			"90th: %.1fms, 99th: %.1fms, 99.9th: %.1fms",
 			report.Name, report.ReqsPerSecond, report.Drops, report.Average, report.Median,
 			report.Top90th, report.Top99th, report.Top99p9th)
 	}
 }
 
-func writeReport(report *StatReport) {
+func writeReport(report *ReportItem) {
 	writerLock.Lock()
 	defer writerLock.Unlock()
 

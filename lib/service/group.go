@@ -1,42 +1,52 @@
 package service
 
 import (
+	"log"
+
 	"git.zc0901.com/go/god/lib/proc"
 	"git.zc0901.com/go/god/lib/syncx"
 	"git.zc0901.com/go/god/lib/threading"
-	"log"
 )
 
 type (
+	// Starter 是一个定义 Start 开始方法的接口。
 	Starter interface {
 		Start()
 	}
 
+	// Stopper 是一个定义 Stop 停止方法的接口。
 	Stopper interface {
 		Stop()
 	}
 
+	// Service 是一个组合定义开始和停止方法的接口。
 	Service interface {
 		Starter
 		Stopper
 	}
 
+	// Group 是一个服务组。
+	// 注意：不保证添加服务端启动顺序。
 	Group struct {
 		services []Service
 		stopOnce func()
 	}
 )
 
+// NewServiceGroup 返回一个服务组。
 func NewServiceGroup() *Group {
 	g := new(Group)
 	g.stopOnce = syncx.Once(g.doStop)
 	return g
 }
 
+// Add 添加一个服务到服务组。
 func (g *Group) Add(service Service) {
-	g.services = append(g.services, service)
+	// 将新增服务添加到最前，按反向顺序停止。
+	g.services = append([]Service{service}, g.services...)
 }
 
+// Start 启用该服务组。
 // 调用该方法后不应有任何逻辑代码，因为该方法是阻塞的，
 // 同时，退出该方法后将关闭 logx 输出。
 func (g *Group) Start() {
@@ -48,6 +58,7 @@ func (g *Group) Start() {
 	g.doStart()
 }
 
+// Stop 关闭该服务组。
 func (g *Group) Stop() {
 	g.stopOnce()
 }
@@ -71,12 +82,14 @@ func (g *Group) doStop() {
 	}
 }
 
+// WithStart 将指定函数包装为一个服务。
 func WithStart(start func()) Service {
 	return startOnlyService{
 		start: start,
 	}
 }
 
+// WithStarter 将指定 Starter 包装为一个服务。
 func WithStarter(start Starter) Service {
 	return starterOnlyService{
 		Starter: start,

@@ -2,15 +2,16 @@ package dq
 
 import (
 	"bytes"
-	"git.zc0901.com/go/god/lib/errorx"
-	"git.zc0901.com/go/god/lib/fx"
-	"git.zc0901.com/go/god/lib/lang"
-	"git.zc0901.com/go/god/lib/logx"
 	"log"
 	"math/rand"
 	"strconv"
 	"strings"
 	"time"
+
+	"git.zc0901.com/go/god/lib/errorx"
+	"git.zc0901.com/go/god/lib/fx"
+	"git.zc0901.com/go/god/lib/lang"
+	"git.zc0901.com/go/god/lib/logx"
 )
 
 const (
@@ -19,7 +20,7 @@ const (
 )
 
 type (
-	// 任务生产者
+	// Producer 任务生产者
 	Producer interface {
 		At(body []byte, at time.Time) (string, error)           // 定时执行
 		Delay(body []byte, delay time.Duration) (string, error) // 延迟执行
@@ -37,7 +38,7 @@ func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
-// 新建队列生产者集群
+// NewProducer 新建队列生产者集群
 func NewProducer(beanstalks []Beanstalk) Producer {
 	if len(beanstalks) < minWrittenNodes {
 		log.Fatalf("节点数必须大于等于 %d", minWrittenNodes)
@@ -56,7 +57,7 @@ func NewProducer(beanstalks []Beanstalk) Producer {
 	return &producerCluster{nodes: nodes}
 }
 
-// 定时执行
+// At 定时执行
 func (p *producerCluster) At(body []byte, at time.Time) (string, error) {
 	wrapped := p.wrap(body, at)
 	return p.insert(func(node Producer) (string, error) {
@@ -64,7 +65,7 @@ func (p *producerCluster) At(body []byte, at time.Time) (string, error) {
 	})
 }
 
-// 延迟执行
+// Delay 延迟执行
 func (p *producerCluster) Delay(body []byte, delay time.Duration) (string, error) {
 	wrapped := p.wrap(body, time.Now().Add(delay))
 	return p.insert(func(node Producer) (string, error) {
@@ -72,7 +73,7 @@ func (p *producerCluster) Delay(body []byte, delay time.Duration) (string, error
 	})
 }
 
-// 撤回一批任务
+// Revoke 撤回一批任务
 func (p *producerCluster) Revoke(ids string) error {
 	var errs errorx.Errors
 
@@ -92,7 +93,7 @@ func (p *producerCluster) Revoke(ids string) error {
 	return errs.Error()
 }
 
-// 关闭集群所有节点
+// Close 关闭集群所有节点
 func (p *producerCluster) Close() error {
 	var errs errorx.Errors
 

@@ -94,7 +94,7 @@ func (e *engine) bindRoutes(router router.Router) error {
 func (e *engine) bindRoute(fr featuredRoutes, router router.Router, metrics *stat.Metrics,
 	route Route, verifier func(chain alice.Chain) alice.Chain) error {
 	chain := alice.New(
-		handler.TraceHandler,                                                   // 链路追踪
+		handler.TraceHandler(e.conf.Name, route.Path), // 链路追踪
 		e.getLogHandler(),                                                      // 日志记录
 		handler.PrometheusHandler(route.Path),                                  // 请求时长和响应码监控
 		handler.MaxConns(e.conf.MaxConns),                                      // 最大请求连接数
@@ -210,7 +210,7 @@ func (e *engine) getLogHandler() alice.Constructor {
 	}
 }
 
-// 获取负载均衡泄流器
+// 获取负载均衡泄流阀
 func (e *engine) getShedder(priority bool) load.Shedder {
 	if priority && e.priorityShedder != nil {
 		return e.priorityShedder

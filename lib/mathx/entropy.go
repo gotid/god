@@ -4,7 +4,7 @@ import "math"
 
 const epsilon = 1e-6
 
-// 求熵
+// CalcEntropy 对映射 m 求熵
 func CalcEntropy(m map[interface{}]int) float64 {
 	if len(m) == 0 || len(m) == 1 {
 		return 1

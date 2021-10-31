@@ -2,15 +2,16 @@ package stringx
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/tools/god/mysql/builder"
-	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
 	"time"
+
+	"git.zc0901.com/go/god/tools/god/mysql/builder"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestString_Split(t *testing.T) {
-	dsn := "root:asdfasdf@tcp(192.168.0.166:3306)?parseTime=true"
+	dsn := "root:asdfasdf@tcp(192.168.0.166:3306)/dhome_project?parseTime=true"
 	path := strings.Split(dsn, "?")[0]
 	parts := strings.Split(path, "/")
 	database := strings.TrimSpace(parts[len(parts)-1])

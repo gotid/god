@@ -130,21 +130,21 @@ func WithMiddleware(middleware Middleware, rs ...Route) []Route {
 	return routes
 }
 
-// 附加资源未找到处理器选项
+// WithNotFoundHandler 附加资源未找到处理器选项
 func WithNotFoundHandler(handler http.Handler) RunOption {
 	rt := router.NewRouter()
 	rt.SetNotFoundHandler(handler)
 	return WithRouter(rt)
 }
 
-// 附加资源不允许访问处理器选项
+// WithNotAllowedHandler 附加资源不允许访问处理器选项
 func WithNotAllowedHandler(handler http.Handler) RunOption {
 	rt := router.NewRouter()
 	rt.SetNotAllowedHandler(handler)
 	return WithRouter(rt)
 }
 
-// 附加高优先级路由选项
+// WithPriority 附加高优先级路由选项
 func WithPriority() RouteOption {
 	return func(r *featuredRoutes) {
 		r.priority = true

@@ -2,11 +2,12 @@ package router
 
 import (
 	"errors"
-	"git.zc0901.com/go/god/api/internal/context"
-	"git.zc0901.com/go/god/lib/search"
 	"net/http"
 	"path"
 	"strings"
+
+	"git.zc0901.com/go/god/api/internal/context"
+	"git.zc0901.com/go/god/lib/search"
 )
 
 const (
@@ -19,7 +20,7 @@ var (
 	ErrInvalidPath   = errors.New("路径必须以 / 开头")
 )
 
-// 继承于 http.Handler 的路由器
+// Router 继承于 http.Handler 的路由器
 type Router interface {
 	http.Handler
 	Handle(method, path string, handler http.Handler) error

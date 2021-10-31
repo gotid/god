@@ -31,11 +31,17 @@ require (
 	github.com/urfave/cli v1.22.5
 	github.com/xwb1989/sqlparser v0.0.0-20180606152119-120387863bf2
 	github.com/yuin/gopher-lua v0.0.0-20200816102855-ee81675732da // indirect
-	go.etcd.io/etcd/api/v3 v3.5.0 // indirect
+	go.etcd.io/etcd/api/v3 v3.5.0
 	go.etcd.io/etcd/client/v3 v3.5.0
+	go.opentelemetry.io/otel v1.0.1
+	go.opentelemetry.io/otel/exporters/jaeger v1.0.1
+	go.opentelemetry.io/otel/exporters/zipkin v1.0.1
+	go.opentelemetry.io/otel/sdk v1.0.1
+	go.opentelemetry.io/otel/trace v1.0.1
 	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4
 	golang.org/x/text v0.3.5
 	google.golang.org/grpc v1.38.0
+	google.golang.org/protobuf v1.26.0
 	//google.golang.org/protobuf v1.26.0
 	gopkg.in/yaml.v2 v2.3.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b

@@ -17,7 +17,7 @@ func main() {
 	stat.SetReporter(nil)
 
 	server := api.MustNewServer(api.Conf{
-		ServiceConf: service.Conf{
+		Conf: service.Conf{
 			Name: "api breaker",
 			Log:  logx.LogConf{Mode: "console"},
 		},

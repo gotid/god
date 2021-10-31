@@ -14,8 +14,6 @@ import (
 	"testing"
 	"time"
 
-	"git.zc0901.com/go/god/lib/gconv"
-
 	"github.com/stretchr/testify/assert"
 )
 
@@ -59,7 +57,7 @@ func (mw *mockWriter) String() string {
 
 func TestFileLineFileMode(t *testing.T) {
 	writer := new(mockWriter)
-	errorLogger = writer
+	errorLog = writer
 	atomic.StoreUint32(&initialized, 1)
 	file, line := getFileLine()
 	Error("anything")
@@ -74,7 +72,7 @@ func TestFileLineFileMode(t *testing.T) {
 func TestFileLineConsoleMode(t *testing.T) {
 	writer := new(mockWriter)
 	writeConsole = true
-	errorLogger = newLogWriter(log.New(writer, "[ERROR] ", flags))
+	errorLog = newLogWriter(log.New(writer, "[ERROR] ", flags))
 	atomic.StoreUint32(&initialized, 1)
 	file, line := getFileLine()
 	Error("anything")
@@ -87,80 +85,128 @@ func TestFileLineConsoleMode(t *testing.T) {
 }
 
 func TestStructedLogAlert(t *testing.T) {
-	doTestStructedLog(t, alertLevel, func(writer io.WriteCloser) {
-		errorLogger = writer
+	doTestStructedLog(t, levelAlert, func(writer io.WriteCloser) {
+		errorLog = writer
 	}, func(v ...interface{}) {
 		Alert(fmt.Sprint(v...))
 	})
 }
 
+func TestStructedLogError(t *testing.T) {
+	doTestStructedLog(t, levelError, func(writer io.WriteCloser) {
+		errorLog = writer
+	}, func(v ...interface{}) {
+		Error(v...)
+	})
+}
+
+func TestStructedLogErrorf(t *testing.T) {
+	doTestStructedLog(t, levelError, func(writer io.WriteCloser) {
+		errorLog = writer
+	}, func(v ...interface{}) {
+		Errorf("%s", fmt.Sprint(v...))
+	})
+}
+
+func TestStructedLogErrorv(t *testing.T) {
+	doTestStructedLog(t, levelError, func(writer io.WriteCloser) {
+		errorLog = writer
+	}, func(v ...interface{}) {
+		Errorv(fmt.Sprint(v...))
+	})
+}
+
 func TestStructedLogInfo(t *testing.T) {
-	doTestStructedLog(t, infoLevel, func(writer io.WriteCloser) {
-		infoLogger = writer
+	doTestStructedLog(t, levelInfo, func(writer io.WriteCloser) {
+		infoLog = writer
 	}, func(v ...interface{}) {
 		Info(v...)
 	})
 }
 
+func TestStructedLogInfof(t *testing.T) {
+	doTestStructedLog(t, levelInfo, func(writer io.WriteCloser) {
+		infoLog = writer
+	}, func(v ...interface{}) {
+		Infof("%s", fmt.Sprint(v...))
+	})
+}
+
+func TestStructedLogInfov(t *testing.T) {
+	doTestStructedLog(t, levelInfo, func(writer io.WriteCloser) {
+		infoLog = writer
+	}, func(v ...interface{}) {
+		Infov(fmt.Sprint(v...))
+	})
+}
+
 func TestStructedLogSlow(t *testing.T) {
-	doTestStructedLog(t, slowLevel, func(writer io.WriteCloser) {
-		slowLogger = writer
+	doTestStructedLog(t, levelSlow, func(writer io.WriteCloser) {
+		slowLog = writer
 	}, func(v ...interface{}) {
 		Slow(v...)
 	})
 }
 
 func TestStructedLogSlowf(t *testing.T) {
-	doTestStructedLog(t, slowLevel, func(writer io.WriteCloser) {
-		slowLogger = writer
+	doTestStructedLog(t, levelSlow, func(writer io.WriteCloser) {
+		slowLog = writer
 	}, func(v ...interface{}) {
 		Slowf(fmt.Sprint(v...))
 	})
 }
 
+func TestStructedLogSlowv(t *testing.T) {
+	doTestStructedLog(t, levelSlow, func(writer io.WriteCloser) {
+		slowLog = writer
+	}, func(v ...interface{}) {
+		Slowv(fmt.Sprint(v...))
+	})
+}
+
 func TestStructedLogStat(t *testing.T) {
-	doTestStructedLog(t, statLevel, func(writer io.WriteCloser) {
-		statLogger = writer
+	doTestStructedLog(t, levelStat, func(writer io.WriteCloser) {
+		statLog = writer
 	}, func(v ...interface{}) {
 		Stat(v...)
 	})
 }
 
 func TestStructedLogStatf(t *testing.T) {
-	doTestStructedLog(t, statLevel, func(writer io.WriteCloser) {
-		statLogger = writer
+	doTestStructedLog(t, levelStat, func(writer io.WriteCloser) {
+		statLog = writer
 	}, func(v ...interface{}) {
 		Statf(fmt.Sprint(v...))
 	})
 }
 
 func TestStructedLogSevere(t *testing.T) {
-	doTestStructedLog(t, fatalLevel, func(writer io.WriteCloser) {
-		fatalLogger = writer
+	doTestStructedLog(t, levelSevere, func(writer io.WriteCloser) {
+		severeLog = writer
 	}, func(v ...interface{}) {
-		Fatal(v...)
+		Severe(v...)
 	})
 }
 
 func TestStructedLogSeveref(t *testing.T) {
-	doTestStructedLog(t, fatalLevel, func(writer io.WriteCloser) {
-		fatalLogger = writer
+	doTestStructedLog(t, levelSevere, func(writer io.WriteCloser) {
+		severeLog = writer
 	}, func(v ...interface{}) {
-		Fatalf(fmt.Sprint(v...))
+		Severef(fmt.Sprint(v...))
 	})
 }
 
 func TestStructedLogWithDuration(t *testing.T) {
 	const message = "hello there"
 	writer := new(mockWriter)
-	infoLogger = writer
+	infoLog = writer
 	atomic.StoreUint32(&initialized, 1)
 	WithDuration(time.Second).Info(message)
 	var entry logEntry
 	if err := json.Unmarshal([]byte(writer.builder.String()), &entry); err != nil {
 		t.Error(err)
 	}
-	assert.Equal(t, infoLevel, entry.Level)
+	assert.Equal(t, levelInfo, entry.Level)
 	assert.Equal(t, message, entry.Content)
 	assert.Equal(t, "1000.0ms", entry.Duration)
 }
@@ -169,7 +215,7 @@ func TestSetLevel(t *testing.T) {
 	SetLevel(ErrorLevel)
 	const message = "hello there"
 	writer := new(mockWriter)
-	infoLogger = writer
+	infoLog = writer
 	atomic.StoreUint32(&initialized, 1)
 	Info(message)
 	assert.Equal(t, 0, writer.builder.Len())
@@ -190,7 +236,7 @@ func TestSetLevelWithDuration(t *testing.T) {
 	SetLevel(ErrorLevel)
 	const message = "hello there"
 	writer := new(mockWriter)
-	infoLogger = writer
+	infoLog = writer
 	atomic.StoreUint32(&initialized, 1)
 	WithDuration(time.Second).Info(message)
 	assert.Equal(t, 0, writer.builder.Len())
@@ -224,13 +270,13 @@ func TestSetup(t *testing.T) {
 		KeepDays:    1,
 	}))
 	setupLogLevel(LogConf{
-		Level: infoLevel,
+		Level: levelInfo,
 	})
 	setupLogLevel(LogConf{
-		Level: errorLevel,
+		Level: levelError,
 	})
 	setupLogLevel(LogConf{
-		Level: fatalLevel,
+		Level: levelSevere,
 	})
 	_, err := createOutput("")
 	assert.NotNil(t, err)
@@ -246,6 +292,17 @@ func TestDisable(t *testing.T) {
 	assert.Nil(t, Close())
 	writeConsole = false
 	assert.Nil(t, Close())
+}
+
+func TestDisableStat(t *testing.T) {
+	DisableStat()
+
+	const message = "hello there"
+	writer := new(mockWriter)
+	statLog = writer
+	atomic.StoreUint32(&initialized, 1)
+	Stat(message)
+	assert.Equal(t, 0, writer.builder.Len())
 }
 
 func TestWithGzip(t *testing.T) {
@@ -359,7 +416,9 @@ func doTestStructedLog(t *testing.T, level string, setup func(writer io.WriteClo
 		t.Error(err)
 	}
 	assert.Equal(t, level, entry.Level)
-	assert.True(t, strings.Contains(gconv.String(entry.Content), message))
+	val, ok := entry.Content.(string)
+	assert.True(t, ok)
+	assert.True(t, strings.Contains(val, message))
 }
 
 func testSetLevelTwiceWithMode(t *testing.T, mode string) {
@@ -375,7 +434,7 @@ func testSetLevelTwiceWithMode(t *testing.T, mode string) {
 	})
 	const message = "hello there"
 	writer := new(mockWriter)
-	infoLogger = writer
+	infoLog = writer
 	atomic.StoreUint32(&initialized, 1)
 	Info(message)
 	assert.Equal(t, 0, writer.builder.Len())

@@ -2,7 +2,14 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"net/http"
+	"runtime"
+	"time"
+
+	"git.zc0901.com/go/god/lib/g"
+
+	"git.zc0901.com/go/god/lib/syncx"
 
 	"git.zc0901.com/go/god/api"
 	"git.zc0901.com/go/god/api/httpx"
@@ -24,16 +31,34 @@ func main() {
 	// 增加路由
 	server.AddRoute(api.Route{
 		Method: http.MethodGet,
-		Path:   "/",
+		Path:   "/api",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
-			httpx.OkJson(w, "hello, world!")
+			httpx.OkJson(w, map[string]string{
+				"data": fmt.Sprintf("hello, world!-%d", time.Now().UnixMilli()),
+			})
 		},
 	})
+
+	// 模拟并发限制
+	limiter := syncx.NewLimit(2)
 	server.AddRoute(api.Route{
 		Method: http.MethodGet,
-		Path:   "/ping",
+		Path:   "/api/ping",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
-			httpx.OkJson(w, "pong")
+			if limiter.TryBorrow() {
+				defer limiter.Return()
+				runtime.LockOSThread()
+				defer runtime.UnlockOSThread()
+				begin := time.Now()
+				for {
+					if time.Now().Sub(begin) > 9*time.Millisecond {
+						break
+					}
+				}
+				httpx.OkJson(w, g.Map{"data": "pong"})
+			} else {
+				w.WriteHeader(http.StatusInternalServerError)
+			}
 		},
 	})
 

@@ -42,10 +42,12 @@ func (s *lockedSource) Seed(seed int64) {
 	s.source.Seed(seed)
 }
 
+// Rand 返回一个8位随机字符串。
 func Rand() string {
 	return Randn(defaultRandLen)
 }
 
+// RandId 返回一个8位随机 Id 字符串。
 func RandId() string {
 	b := make([]byte, idLen)
 	_, err := crand.Read(b)
@@ -56,6 +58,7 @@ func RandId() string {
 	return fmt.Sprintf("%x%x%x%x", b[0:2], b[2:4], b[4:6], b[6:8])
 }
 
+// Randn 返回指定长度的随机字符串。
 func Randn(n int) string {
 	b := make([]byte, n)
 	for i, cache, remain := n-1, src.Int63(), letterIdxMax; i >= 0; {
@@ -73,6 +76,7 @@ func Randn(n int) string {
 	return string(b)
 }
 
+// Seed 设置随机种子数。
 func Seed(seed int64) {
 	src.Seed(seed)
 }
