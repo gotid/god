@@ -2,21 +2,21 @@ package serverinterceptors
 
 import (
 	"context"
+	"runtime/debug"
+
 	"git.zc0901.com/go/god/lib/logx"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"runtime/debug"
 )
 
-func UnaryCrashInterceptor() grpc.UnaryServerInterceptor {
-	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
-		defer handleCrash(func(r interface{}) {
-			err = toPanicError(r)
-		})
+func UnaryCrashInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo,
+	handler grpc.UnaryHandler) (resp interface{}, err error) {
+	defer handleCrash(func(r interface{}) {
+		err = toPanicError(r)
+	})
 
-		return handler(ctx, req)
-	}
+	return handler(ctx, req)
 }
 
 func StreamCrashInterceptor(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) (err error) {

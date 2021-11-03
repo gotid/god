@@ -56,9 +56,9 @@ func (s *server) Start(register RegisterFn) error {
 	// 一元拦截器
 	unaryInterceptors := []grpc.UnaryServerInterceptor{
 		serverinterceptors.UnaryTraceInterceptor,           // 链路跟踪
-		serverinterceptors.UnaryCrashInterceptor(),         // 异常捕获
+		serverinterceptors.UnaryCrashInterceptor,           // 异常捕获
 		serverinterceptors.UnaryStatInterceptor(s.metrics), // 数据统计
-		serverinterceptors.UnaryPrometheusInterceptor(),    // 监控报警
+		serverinterceptors.UnaryPrometheusInterceptor,      // 监控报警
 		serverinterceptors.UnaryBreakerInterceptor,
 	}
 	unaryInterceptors = append(unaryInterceptors, s.unaryInterceptors...)
