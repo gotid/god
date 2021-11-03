@@ -53,15 +53,15 @@ func (l *Logger) Errorf(format string, args ...interface{}) {
 }
 
 func (l *Logger) Fatal(args ...interface{}) {
-	logx.Fatal(args...)
+	logx.Error(args...)
 }
 
 func (l *Logger) Fatalln(args ...interface{}) {
-	logx.Fatal(args...)
+	logx.Error(args...)
 }
 
 func (l *Logger) Fatalf(format string, args ...interface{}) {
-	logx.Fatalf(format, args...)
+	logx.Errorf(format, args...)
 }
 
 func (l *Logger) V(level int) bool {
