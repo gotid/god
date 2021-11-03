@@ -33,7 +33,7 @@ type (
 
 func NewCacheCluster(clusterConf ClusterConf, barrier syncx.SingleFlight, stat *Stat, errNotFound error, opts ...Option) Cache {
 	if len(clusterConf) == 0 || TotalWeights(clusterConf) <= 0 {
-		logx.Fatal("未配置缓存节点")
+		logx.Error("未配置缓存节点")
 	}
 
 	if len(clusterConf) == 1 {

@@ -11,7 +11,8 @@ const (
 	methods      = "GET, HEAD, POST, PATCH, PUT, DELETE"
 )
 
-// API 跨资源共享中间件，默认全部域名均允许
+// CorsHandler 返回一个跨域请求处理器。
+// origins 源站仅可指定一个或全部。
 func CorsHandler(origins ...string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if len(origins) > 0 {

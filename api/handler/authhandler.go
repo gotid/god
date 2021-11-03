@@ -49,10 +49,10 @@ func Authorize(secret string, opts ...AuthorizeOption) func(http.Handler) http.H
 		opt(&authOpts)
 	}
 
-	parser := token.NewTokenParser()
+	tokenParser := token.NewTokenParser()
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			jwtToken, err := parser.ParseToken(r, secret, authOpts.PrevSecret)
+			jwtToken, err := tokenParser.Parse(r, secret, authOpts.PrevSecret)
 			if err != nil {
 				unauthorized(w, r, err, authOpts.Callback)
 				return
@@ -117,6 +117,7 @@ func unauthorized(w http.ResponseWriter, r *http.Request, err error, callback Un
 	}
 
 	writer.WriteHeader(http.StatusUnauthorized)
+	// 支持自定义错误函数响应体
 }
 
 type guardedResponseWriter struct {

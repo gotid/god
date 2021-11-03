@@ -15,14 +15,14 @@ import (
 	"github.com/justinas/alice"
 )
 
-// 使用 1000m 来表示 cpu 负载为 100%
+// 最高 CPU 用量。用 1000m 表示 cpu 负载为 100%。
 const topCpuUsage = 1000
 
 var ErrSignatureConfig = errors.New("错误的签名配置")
 
-// API 内部引擎
+// engine 是一个 API 内部引擎。
 type engine struct {
-	conf                 Conf
+	conf                 ServerConf
 	routes               []featuredRoutes
 	middlewares          []Middleware
 	unauthorizedCallback handler.UnauthorizedCallback
@@ -31,11 +31,11 @@ type engine struct {
 	priorityShedder      load.Shedder
 }
 
-// 新建 API 引擎
-func newEngine(c Conf) *engine {
+// 返回一个新的 API 内部引擎。
+func newEngine(c ServerConf) *engine {
 	e := &engine{conf: c}
 
-	// 启用cpu负载均衡
+	// 启用 CPU 负载泄流阀
 	if c.CpuThreshold > 0 {
 		e.shedder = load.NewAdaptiveShedder(load.WithCpuThreshold(c.CpuThreshold))
 		e.priorityShedder = load.NewAdaptiveShedder(load.WithCpuThreshold(
@@ -97,19 +97,19 @@ func (e *engine) bindRoute(fr featuredRoutes, router router.Router, metrics *sta
 		handler.TraceHandler(e.conf.Name, route.Path), // 链路追踪
 		e.getLogHandler(),                                                      // 日志记录
 		handler.PrometheusHandler(route.Path),                                  // 请求时长和响应码监控
-		handler.MaxConns(e.conf.MaxConns),                                      // 最大请求连接数
+		handler.MaxConns(e.conf.MaxConns),                                      // 并发限制
 		handler.BreakerHandler(route.Method, route.Path, metrics),              // 自动熔断
 		handler.ShedderHandler(e.getShedder(fr.priority), metrics),             // 负载均衡
 		handler.TimeoutHandler(time.Duration(e.conf.Timeout)*time.Millisecond), // 超时控制
 		handler.RecoverHandler,                                                 // 异常捕获
-		handler.MetricHandler(metrics),                                         // 耗时监控
-		handler.MaxBytesHandler(e.conf.MaxBytes),                               // 最大字节码
+		handler.MetricHandler(metrics),                                         // 耗时统计
+		handler.MaxBytesHandler(e.conf.MaxBytes),                               // 内容长度限制
 		handler.GzipHandler,                                                    // Gzip压缩
 	)
-	chain = e.appendAuthHandler(fr, chain, verifier) // JWT鉴权
+	chain = e.appendAuthHandler(fr, chain, verifier) // JWT 鉴权
 
 	for _, middleware := range e.middlewares {
-		chain = chain.Append(convertMiddleware(middleware)) // 自定义中间件
+		chain = chain.Append(convertMiddleware(middleware))
 	}
 	handle := chain.ThenFunc(route.Handler)
 
@@ -210,7 +210,7 @@ func (e *engine) getLogHandler() alice.Constructor {
 	}
 }
 
-// 获取负载均衡泄流阀
+// 获取负载泄流阀
 func (e *engine) getShedder(priority bool) load.Shedder {
 	if priority && e.priorityShedder != nil {
 		return e.priorityShedder

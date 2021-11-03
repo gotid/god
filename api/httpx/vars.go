@@ -8,7 +8,7 @@ const (
 	KeyField        = "key"
 	SecretField     = "secret"
 	TypeField       = "type"
-	EncryptedType   = 1
+	CryptionType    = 1
 )
 
 const (

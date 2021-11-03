@@ -27,7 +27,7 @@ const (
 	slowThreshold  = 500 * time.Millisecond // 慢日志阈值
 )
 
-// LogHandler 返回一个记录请求和响应的日志中间件。
+// LogHandler 返回一个简要记录请求和响应的日志中间件。
 func LogHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		timer := utils.NewElapsedTimer()

@@ -21,7 +21,7 @@ var configFile = flag.String("f", "config.yaml", "API 配置文件")
 func main() {
 	// 读取配置文件
 	flag.Parse()
-	var c api.Conf
+	var c api.ServerConf
 	conf.MustLoad(*configFile, &c)
 
 	// 新建 API 服务器

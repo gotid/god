@@ -42,7 +42,7 @@ type ContentSecurityHeader struct {
 
 // Encrypted 判断是否为加密请求。
 func (h *ContentSecurityHeader) Encrypted() bool {
-	return h.ContentType == httpx.EncryptedType
+	return h.ContentType == httpx.CryptionType
 }
 
 // ParseContentSecurity 解析指定请求的内容安全设置。

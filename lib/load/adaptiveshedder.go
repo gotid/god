@@ -48,7 +48,7 @@ type (
 		Fail() // 告知调用者调用失败。
 	}
 
-	// Shedder 是实现 Allow 方法的接口。
+	// Shedder 表示一个负载泄流阀。
 	Shedder interface {
 		Allow() (Promise, error) // 允许返回 Promise，不允许返 ErrServiceOverloaded。
 	}

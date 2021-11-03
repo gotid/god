@@ -1,11 +1,12 @@
 package internal
 
 import (
+	"net"
+
 	"git.zc0901.com/go/god/lib/proc"
 	"git.zc0901.com/go/god/lib/stat"
 	"git.zc0901.com/go/god/rpc/internal/serverinterceptors"
 	"google.golang.org/grpc"
-	"net"
 )
 
 type (
@@ -58,6 +59,7 @@ func (s *server) Start(register RegisterFn) error {
 		serverinterceptors.UnaryCrashInterceptor(),         // 异常捕获
 		serverinterceptors.UnaryStatInterceptor(s.metrics), // 数据统计
 		serverinterceptors.UnaryPrometheusInterceptor(),    // 监控报警
+		serverinterceptors.UnaryBreakerInterceptor,
 	}
 	unaryInterceptors = append(unaryInterceptors, s.unaryInterceptors...)
 

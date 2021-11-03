@@ -39,7 +39,7 @@ func TestTokenParser(t *testing.T) {
 		req.Header.Set("Authorization", "Bearer "+token)
 
 		parser := NewTokenParser(WithResetDuration(time.Minute))
-		tok, err := parser.ParseToken(req, pair.key, pair.prevKey)
+		tok, err := parser.Parse(req, pair.key, pair.prevKey)
 		assert.Nil(t, err)
 		assert.Equal(t, "value", tok.Claims.(jwt.MapClaims)["key"])
 	}
@@ -56,16 +56,18 @@ func TestTokenParser_Expired(t *testing.T) {
 	}, 3600)
 	assert.Nil(t, err)
 	req.Header.Set("Authorization", "Bearer "+token)
-
 	parser := NewTokenParser(WithResetDuration(time.Second))
-	tok, err := parser.ParseToken(req, key, prevKey)
+
+	tok, err := parser.Parse(req, key, prevKey)
 	assert.Nil(t, err)
 	assert.Equal(t, "value", tok.Claims.(jwt.MapClaims)["key"])
-	tok, err = parser.ParseToken(req, key, prevKey)
+
+	tok, err = parser.Parse(req, key, prevKey)
 	assert.Nil(t, err)
 	assert.Equal(t, "value", tok.Claims.(jwt.MapClaims)["key"])
+
 	parser.resetTime = timex.Now() - time.Hour
-	tok, err = parser.ParseToken(req, key, prevKey)
+	tok, err = parser.Parse(req, key, prevKey)
 	assert.Nil(t, err)
 	assert.Equal(t, "value", tok.Claims.(jwt.MapClaims)["key"])
 }

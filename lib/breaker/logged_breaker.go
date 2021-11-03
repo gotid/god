@@ -2,6 +2,7 @@ package breaker
 
 import (
 	"fmt"
+
 	"git.zc0901.com/go/god/lib/proc"
 	"git.zc0901.com/go/god/lib/stat"
 )
@@ -59,7 +60,7 @@ func (t loggedThrottle) doReq(req Request, fallback Fallback, acceptable Accepta
 func (t loggedThrottle) logError(err error) error {
 	if err == ErrServiceUnavailable {
 		stat.Report(fmt.Sprintf(
-			"进程(%s/%d), 调用者名称: %s, 断路器已打开，请求被丢弃\n最新错误：\n%s",
+			"进程(%s/%d), 调用者名称: %s, 断路器已打开，请求被丢弃\n最后错误：\n%s",
 			proc.ProcessName(), proc.Pid(), t.name, t.errWin))
 	}
 	return err

@@ -39,7 +39,8 @@ type (
 	}
 
 	unmarshalOptions struct {
-		fromString bool
+		fromString   bool
+		canonicalKey func(key string) string
 	}
 
 	keyCache        map[string][]string
@@ -611,6 +612,13 @@ func (u *Unmarshaler) parseOptionsWithContext(field reflect.StructField, m Value
 func WithStringValues() UnmarshalOption {
 	return func(opt *unmarshalOptions) {
 		opt.fromString = true
+	}
+}
+
+// WithCanonicalKeyFunc customizes a Unmarshaler with Canonical Key func
+func WithCanonicalKeyFunc(f func(string) string) UnmarshalOption {
+	return func(opt *unmarshalOptions) {
+		opt.canonicalKey = f
 	}
 }
 
