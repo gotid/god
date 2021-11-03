@@ -55,7 +55,7 @@ func (s *server) Start(register RegisterFn) error {
 
 	// 一元拦截器
 	unaryInterceptors := []grpc.UnaryServerInterceptor{
-		serverinterceptors.UnaryTraceInterceptor(s.name),   // 链路跟踪
+		serverinterceptors.UnaryTraceInterceptor,           // 链路跟踪
 		serverinterceptors.UnaryCrashInterceptor(),         // 异常捕获
 		serverinterceptors.UnaryStatInterceptor(s.metrics), // 数据统计
 		serverinterceptors.UnaryPrometheusInterceptor(),    // 监控报警
@@ -65,7 +65,9 @@ func (s *server) Start(register RegisterFn) error {
 
 	// 流式拦截器
 	streamInterceptors := []grpc.StreamServerInterceptor{
+		serverinterceptors.StreamTracingInterceptor,
 		serverinterceptors.StreamCrashInterceptor,
+		serverinterceptors.StreamBreakerInterceptor,
 	}
 	streamInterceptors = append(streamInterceptors, s.streamInterceptors...)
 
@@ -75,17 +77,17 @@ func (s *server) Start(register RegisterFn) error {
 		WithUnaryServerInterceptors(unaryInterceptors...),
 		WithStreamServerInterceptors(streamInterceptors...),
 	)
-	server := grpc.NewServer(options...)
-	register(server)
+	srv := grpc.NewServer(options...)
+	register(srv)
 
 	// 平滑重启
 	waitForCalled := proc.AddWrapUpListener(func() {
-		server.GracefulStop()
+		srv.GracefulStop()
 	})
 	defer waitForCalled()
 
 	// 启动RPC服务监听
-	return server.Serve(listener)
+	return srv.Serve(listener)
 }
 
 // WithMetrics 携带监控选项
