@@ -21,6 +21,7 @@ func CorsHandler(origins ...string) http.Handler {
 		} else {
 			w.Header().Set(allowOrigin, allOrigins)
 		}
+
 		w.Header().Set(allowMethods, methods)
 		w.Header().Set(allowHeaders, headers)
 		w.Header().Set(allowCredentials, "true")
