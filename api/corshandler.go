@@ -8,7 +8,7 @@ const (
 	allowMethods     = "Access-Control-Allow-Methods"
 	allowHeaders     = "Access-Control-Allow-Headers"
 	allowCredentials = "Access-Control-Allow-Credentials"
-	headers          = "Content-Type,Content-Length,Origin"
+	headers          = "Content-Type,Content-Length,Origin,X-Requested-With"
 	methods          = "GET,HEAD,POST,PATCH,PUT,DELETE"
 )
 
