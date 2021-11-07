@@ -45,7 +45,7 @@ func (m *{{.upperTable}}Model) FindMany(ids []{{.dataType}}, workers ...int) (li
 			source <- id
 		}
 	}, func(item interface{}, writer mr.Writer) {
-		id := item.(int64)
+		id := item.({{.dataType}})
 		one, err := m.FindOne(id)
 		if err == nil {
 			writer.Write(one)
@@ -108,23 +108,23 @@ func (m *{{.upperTable}}Model) FindOneBy{{.upperField}}({{.in}}) (*{{.upperTable
 
 // FindManyByFields 通过唯一键切片查询
 var FindManyByFields = `
-func (m *{{.upperTable}}Model) FindManyBy{{.upperField}}(ids []{{.dataType}}, workers ...int) (list []*{{.upperTable}}) {
-	ids = gconv.Int64s(garray.NewArrayFrom(gconv.Interfaces(ids), true).Unique())
+func (m *{{.upperTable}}Model) FindManyBy{{.upperField}}s(keys []{{.dataType}}, workers ...int) (list []*{{.upperTable}}) {
+	keys = gconv.Strings(garray.NewArrayFrom(gconv.Interfaces(keys), true).Unique())
 
 	var nWorkers int
 	if len(workers) > 0 {
 		nWorkers = workers[0]
 	} else {
-		nWorkers = mathx.MinInt(10, len(ids))
+		nWorkers = mathx.MinInt(10, len(keys))
 	}
 
 	channel := mr.Map(func(source chan<- interface{}) {
-		for _, id := range ids {
-			source <- id
+		for _, key := range keys {
+			source <- key
 		}
 	}, func(item interface{}, writer mr.Writer) {
-		id := item.(int64)
-		one, err := m.FindOne(id)
+		key := item.({{.dataType}})
+		one, err := m.FindOneBy{{.upperField}}(key)
 		if err == nil {
 			writer.Write(one)
 		} else {
@@ -137,7 +137,7 @@ func (m *{{.upperTable}}Model) FindManyBy{{.upperField}}(ids []{{.dataType}}, wo
 	}
 
 	sort.Slice(list, func(i, j int) bool {
-		return gutil.IndexOf(list[i].Id, ids) < gutil.IndexOf(list[j].Id, ids)
+		return gutil.IndexOf(list[i].{{.upperField}}, keys) < gutil.IndexOf(list[j].{{.upperField}}, keys)
 	})
 
 	return

@@ -184,15 +184,20 @@ func (g *ModelGenerator) genModelCode(table parser.Table, withCache bool) (strin
 		return "", nil
 	}
 
-	// 生成字段查找代码段
+	// 生成唯一键字段查找代码段
 	findOneByFieldCode, err := genFindOneByField(tableDTO, withCache)
 	if err != nil {
 		return "", nil
 	}
 
+	findManyByFieldsCode, err := genFindManyByFields(tableDTO)
+	if err != nil {
+		return "", err
+	}
+
 	// 合成查找代码段
 	findCode := make([]string, 0)
-	findCode = append(findCode, findOneCode, findManyCode, findOneByFieldCode)
+	findCode = append(findCode, findOneCode, findManyCode, findOneByFieldCode, findManyByFieldsCode)
 
 	// 生成更新代码段
 	updateCode, err := genUpdate(tableDTO, withCache)
