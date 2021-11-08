@@ -19,7 +19,7 @@ const (
 	logicTemplate = `package logic
 
 import (
-	"pathvar"
+	"context"
 
 	{{.imports}}
 
@@ -27,12 +27,12 @@ import (
 )
 
 type {{.logicName}} struct {
-	ctx    pathvar.Context
+	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func New{{.logicName}}(ctx pathvar.Context,svcCtx *svc.ServiceContext) *{{.logicName}} {
+func New{{.logicName}}(ctx context.Context,svcCtx *svc.ServiceContext) *{{.logicName}} {
 	return &{{.logicName}}{
 		ctx:    ctx,
 		svcCtx: svcCtx,
@@ -43,7 +43,7 @@ func New{{.logicName}}(ctx pathvar.Context,svcCtx *svc.ServiceContext) *{{.logic
 `
 	logicFunctionTemplate = `{{if .hasComment}}{{.comment}}{{end}}
 func (l *{{.logicName}}) {{.method}} (req {{.request}}) ({{.response}}, error) {
-	// todo: add your logic here and delete this line
+	// todo: 此处添加你的业务逻辑并删除改行
 	
 	return &{{.responseType}}{}, nil
 }

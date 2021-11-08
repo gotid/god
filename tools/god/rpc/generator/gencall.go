@@ -23,7 +23,7 @@ const (
 package {{.filePackage}}
 
 import (
-	"pathvar"
+	"context"
 
 	{{.package}}
 
@@ -52,11 +52,11 @@ func New{{.serviceName}}(cli rpc.Client) {{.serviceName}} {
 `
 
 	callInterfaceFunctionTemplate = `{{if .hasComment}}{{.comment}}
-{{end}}{{.method}}(ctx pathvar.Context,req *{{.pbRequest}}) (*{{.pbResponse}},error)`
+{{end}}{{.method}}(ctx context.Context,req *{{.pbRequest}}) (*{{.pbResponse}},error)`
 
 	callFunctionTemplate = `
 {{if .hasComment}}{{.comment}}{{end}}
-func (m *default{{.serviceName}}) {{.method}}(ctx pathvar.Context,req *{{.pbRequest}}) (*{{.pbResponse}}, error) {
+func (m *default{{.serviceName}}) {{.method}}(ctx context.Context,req *{{.pbRequest}}) (*{{.pbResponse}}, error) {
 	client := {{.package}}.New{{.rpcServiceName}}Client(m.cli.Conn())
 	return client.{{.method}}(ctx, req)
 }
