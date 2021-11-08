@@ -1,11 +1,13 @@
 package api
 
 import (
+	"crypto/tls"
 	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"git.zc0901.com/go/god/api/httpx"
 	"git.zc0901.com/go/god/api/router"
@@ -20,11 +22,6 @@ Port: 54321
 `
 	var cnf ServerConf
 	assert.Nil(t, conf.LoadConfigFromYamlBytes([]byte(configYaml), &cnf))
-	failStart := func(server *Server) {
-		server.opts.start = func(e *engine) error {
-			return http.ErrServerClosed
-		}
-	}
 
 	tests := []struct {
 		c    ServerConf
@@ -33,38 +30,40 @@ Port: 54321
 	}{
 		{
 			c:    ServerConf{},
-			opts: []RunOption{failStart},
+			opts: []RunOption{WithRouter(mockedRouter{}), WithCors()},
 			fail: true,
 		},
 		{
 			c:    cnf,
-			opts: []RunOption{failStart},
+			opts: []RunOption{WithRouter(mockedRouter{})},
 		},
 		{
 			c:    cnf,
-			opts: []RunOption{WithNotAllowedHandler(nil), failStart},
+			opts: []RunOption{WithRouter(mockedRouter{}), WithNotAllowedHandler(nil)},
 		},
 		{
 			c:    cnf,
-			opts: []RunOption{WithNotFoundHandler(nil), failStart},
+			opts: []RunOption{WithNotFoundHandler(nil), WithRouter(mockedRouter{})},
 		},
 		{
 			c:    cnf,
-			opts: []RunOption{WithUnauthorizedCallback(nil), failStart},
+			opts: []RunOption{WithUnauthorizedCallback(nil), WithRouter(mockedRouter{})},
 		},
 		{
 			c:    cnf,
-			opts: []RunOption{WithUnsignedCallback(nil), failStart},
+			opts: []RunOption{WithUnsignedCallback(nil), WithRouter(mockedRouter{})},
 		},
 	}
 
 	for _, test := range tests {
-		srv, err := NewServer(test.c, test.opts...)
+		var srv *Server
+		var err error
 		if test.fail {
+			_, err = NewServer(test.c, test.opts...)
 			assert.NotNil(t, err)
-		}
-		if err != nil {
 			continue
+		} else {
+			srv = MustNewServer(test.c, test.opts...)
 		}
 
 		srv.Use(ToMiddleware(func(next http.Handler) http.Handler {
@@ -78,8 +77,21 @@ Port: 54321
 			Handler: nil,
 		}, WithJwt("thesecret"), WithSignature(SignatureConf{}),
 			WithJwtTransition("preivous", "thenewone"))
-		srv.Start()
-		srv.Stop()
+
+		func() {
+			defer func() {
+				p := recover()
+				switch v := p.(type) {
+				case error:
+					assert.Equal(t, "foo", v.Error())
+				default:
+					t.Fail()
+				}
+			}()
+
+			srv.Start()
+			srv.Stop()
+		}()
 	}
 }
 
@@ -215,8 +227,86 @@ func TestMultiMiddlewares(t *testing.T) {
 	}, m)
 }
 
+func TestWithPrefix(t *testing.T) {
+	fr := featuredRoutes{
+		routes: []Route{
+			{
+				Path: "/hello",
+			},
+			{
+				Path: "/world",
+			},
+		},
+	}
+	WithPrefix("/api")(&fr)
+	var vals []string
+	for _, r := range fr.routes {
+		vals = append(vals, r.Path)
+	}
+	assert.EqualValues(t, []string{"/api/hello", "/api/world"}, vals)
+}
+
 func TestWithPriority(t *testing.T) {
 	var fr featuredRoutes
 	WithPriority()(&fr)
 	assert.True(t, fr.priority)
+}
+
+func TestWithTimeout(t *testing.T) {
+	var fr featuredRoutes
+	WithTimeout(time.Hour)(&fr)
+	assert.Equal(t, time.Hour, fr.timeout)
+}
+
+func TestWithTLSConfig(t *testing.T) {
+	const configYaml = `
+Name: foo
+Port: 54321
+`
+	var cnf ServerConf
+	assert.Nil(t, conf.LoadConfigFromYamlBytes([]byte(configYaml), &cnf))
+
+	testConfig := &tls.Config{
+		CipherSuites: []uint16{
+			tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+		},
+	}
+
+	testCases := []struct {
+		c    ServerConf
+		opts []RunOption
+		res  *tls.Config
+	}{
+		{
+			c:    cnf,
+			opts: []RunOption{WithTLSConfig(testConfig)},
+			res:  testConfig,
+		},
+		{
+			c:    cnf,
+			opts: []RunOption{WithUnsignedCallback(nil)},
+			res:  nil,
+		},
+	}
+
+	for _, testCase := range testCases {
+		srv, err := NewServer(testCase.c, testCase.opts...)
+		assert.Nil(t, err)
+		assert.Equal(t, srv.engine.tlsConfig, testCase.res)
+	}
+}
+
+func TestWithCors(t *testing.T) {
+	const configYaml = `
+Name: foo
+Port: 54321
+`
+	var cnf ServerConf
+	assert.Nil(t, conf.LoadConfigFromYamlBytes([]byte(configYaml), &cnf))
+	rt := router.NewRouter()
+	srv, err := NewServer(cnf, WithRouter(rt))
+	assert.Nil(t, err)
+
+	opt := WithCors("local")
+	opt(srv)
 }

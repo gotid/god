@@ -12,9 +12,10 @@ func NewAtomicDuration() *AtomicDuration {
 	return new(AtomicDuration)
 }
 
-func (ad *AtomicDuration) WithDuration(duration time.Duration) *AtomicDuration {
-	ad.Set(duration)
-	return ad
+func ForAtomicDuration(duration time.Duration) *AtomicDuration {
+	d := NewAtomicDuration()
+	d.Set(duration)
+	return d
 }
 
 func (ad *AtomicDuration) Set(val time.Duration) {

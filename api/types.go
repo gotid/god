@@ -1,6 +1,9 @@
 package api
 
-import "net/http"
+import (
+	"net/http"
+	"time"
+)
 
 type (
 	// Route 是一个 HTTP 路由。
@@ -31,6 +34,7 @@ type (
 
 	// 特色路由，支持高优先级、jwt令牌校验、签名校验
 	featuredRoutes struct {
+		timeout   time.Duration
 		priority  bool             // 带有高优先级的路由
 		jwt       jwtSetting       // JWT 鉴权
 		signature signatureSetting // 签名校验

@@ -2,10 +2,16 @@ package internal
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"strings"
 	"time"
+
+	"google.golang.org/grpc/credentials"
 
 	"git.zc0901.com/go/god/rpc/internal/balancer/p2c"
 	"git.zc0901.com/go/god/rpc/internal/clientinterceptors"
@@ -26,6 +32,9 @@ type (
 
 	// ClientOptions 是RPC客户端选择项
 	ClientOptions struct {
+		NonBlock    bool
+		Secure      bool
+		Retry       bool
 		Timeout     time.Duration
 		DialOptions []grpc.DialOption
 	}
@@ -64,19 +73,26 @@ func (c *client) buildDialOptions(opts ...ClientOption) []grpc.DialOption {
 		opt(&cliOpts)
 	}
 
-	options := []grpc.DialOption{
-		grpc.WithInsecure(),
-		grpc.WithBlock(),
+	var options []grpc.DialOption
+	if !cliOpts.Secure {
+		options = append([]grpc.DialOption(nil), grpc.WithInsecure())
+	}
+	if !cliOpts.NonBlock {
+		options = append(options, grpc.WithBlock())
+	}
+
+	options = append(options,
 		WithUnaryClientInterceptors(
 			clientinterceptors.UnaryTraceInterceptor,               // 线路跟踪
 			clientinterceptors.DurationInterceptor,                 // 慢查询日志
 			clientinterceptors.PrometheusInterceptor,               // 监控报警
 			clientinterceptors.BreakerInterceptor,                  // 自动熔断
 			clientinterceptors.TimeoutInterceptor(cliOpts.Timeout), // 超时控制
+			// clientinterceptors.RetryInterceptor(cliOpts.Retry), // 重试
 		),
 		// WithStreamClientInterceptors(
 		//	clientinterceptors.st),
-	}
+	)
 
 	return append(options, cliOpts.DialOptions...)
 }
@@ -109,14 +125,70 @@ func WithDialOption(opt grpc.DialOption) ClientOption {
 	}
 }
 
+// WithNonBlock sets the dialing to be nonblock.
+func WithNonBlock() ClientOption {
+	return func(options *ClientOptions) {
+		options.NonBlock = true
+	}
+}
+
 func WithTimeout(timeout time.Duration) ClientOption {
 	return func(options *ClientOptions) {
 		options.Timeout = timeout
 	}
 }
 
+// WithRetry returns a func to customize a ClientOptions with auto retry.
+func WithRetry() ClientOption {
+	return func(options *ClientOptions) {
+		options.Retry = true
+	}
+}
+
 func WithUnaryClientInterceptor(interceptor grpc.UnaryClientInterceptor) ClientOption {
 	return func(options *ClientOptions) {
 		options.DialOptions = append(options.DialOptions, WithUnaryClientInterceptors(interceptor))
+	}
+}
+
+// WithTlsClientFromUnilateral return a func to customize a ClientOptions Verify with Unilateralism authentication.
+func WithTlsClientFromUnilateral(crt, domainName string) ClientOption {
+	return func(options *ClientOptions) {
+		c, err := credentials.NewClientTLSFromFile(crt, domainName)
+		if err != nil {
+			log.Fatalf("credentials.NewClientTLSFromFile err: %v", err)
+		}
+
+		options.Secure = true
+		options.DialOptions = append(options.DialOptions, grpc.WithTransportCredentials(c))
+	}
+}
+
+// WithTlsClientFromMutual return a func to customize a ClientOptions Verify with mutual authentication.
+func WithTlsClientFromMutual(crtFile, keyFile, caFile string) ClientOption {
+	return func(options *ClientOptions) {
+		cert, err := tls.LoadX509KeyPair(crtFile, keyFile)
+		if err != nil {
+			log.Fatalf("tls.LoadX509KeyPair err: %v", err)
+		}
+
+		certPool := x509.NewCertPool()
+		ca, err := ioutil.ReadFile(caFile)
+		if err != nil {
+			log.Fatalf("credentials: failed to ReadFile CA certificates err: %v", err)
+		}
+
+		if !certPool.AppendCertsFromPEM(ca) {
+			log.Fatalf("credentials: failed to append certificates err: %v", err)
+		}
+
+		config := &tls.Config{
+			Certificates: []tls.Certificate{cert},
+			RootCAs:      certPool,
+		}
+
+		options.Secure = true
+		options.DialOptions = append(options.DialOptions,
+			grpc.WithTransportCredentials(credentials.NewTLS(config)))
 	}
 }

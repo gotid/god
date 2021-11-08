@@ -34,7 +34,7 @@ func RegisterHandlers(engine *api.Server, serverCtx *svc.ServiceContext) {
 }
 `
 	routesAdditionTemplate = `
-	engine.AddRoutes(
+	engine.addRoutes(
 		{{.routes}} {{.jwt}}{{.signature}}
 	)
 `

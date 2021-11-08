@@ -1,10 +1,13 @@
 package api
 
 import (
+	"crypto/tls"
 	"errors"
 	"fmt"
 	"net/http"
 	"time"
+
+	"git.zc0901.com/go/god/api/httpx"
 
 	"git.zc0901.com/go/god/api/handler"
 	"git.zc0901.com/go/god/api/internal"
@@ -29,6 +32,7 @@ type engine struct {
 	unsignedCallback     handler.UnsignedCallback
 	shedder              load.Shedder
 	priorityShedder      load.Shedder
+	tlsConfig            *tls.Config
 }
 
 // 返回一个新的 API 内部引擎。
@@ -46,18 +50,18 @@ func newEngine(c ServerConf) *engine {
 	return e
 }
 
-// AddRoutes 增加一批特定路由
-func (e *engine) AddRoutes(r featuredRoutes) {
+// addRoutes 增加一批特定路由
+func (e *engine) addRoutes(r featuredRoutes) {
 	e.routes = append(e.routes, r)
 }
 
-// SetUnauthorizedCallback 设置未授权回调函数
-func (e *engine) SetUnauthorizedCallback(callback handler.UnauthorizedCallback) {
+// setUnauthorizedCallback 设置未授权回调函数
+func (e *engine) setUnauthorizedCallback(callback handler.UnauthorizedCallback) {
 	e.unauthorizedCallback = callback
 }
 
-// SetUnsignedCallback 设置未签名回调函数
-func (e *engine) SetUnsignedCallback(callback handler.UnsignedCallback) {
+// setUnsignedCallback 设置未签名回调函数
+func (e *engine) setUnsignedCallback(callback handler.UnsignedCallback) {
 	e.unsignedCallback = callback
 }
 
@@ -95,16 +99,16 @@ func (e *engine) bindRoute(fr featuredRoutes, router router.Router, metrics *sta
 	route Route, verifier func(chain alice.Chain) alice.Chain) error {
 	chain := alice.New(
 		handler.TraceHandler(e.conf.Name, route.Path), // 链路追踪
-		e.getLogHandler(),                                                      // 日志记录
-		handler.PrometheusHandler(route.Path),                                  // 请求时长和响应码监控
-		handler.MaxConns(e.conf.MaxConns),                                      // 并发限制
-		handler.BreakerHandler(route.Method, route.Path, metrics),              // 自动熔断
-		handler.ShedderHandler(e.getShedder(fr.priority), metrics),             // 负载均衡
-		handler.TimeoutHandler(time.Duration(e.conf.Timeout)*time.Millisecond), // 超时控制
-		handler.RecoverHandler,                                                 // 异常捕获
-		handler.MetricHandler(metrics),                                         // 耗时统计
-		handler.MaxBytesHandler(e.conf.MaxBytes),                               // 内容长度限制
-		handler.GzipHandler,                                                    // Gzip压缩
+		e.getLogHandler(),                                          // 日志记录
+		handler.PrometheusHandler(route.Path),                      // 请求时长和响应码监控
+		handler.MaxConns(e.conf.MaxConns),                          // 并发限制
+		handler.BreakerHandler(route.Method, route.Path, metrics),  // 自动熔断
+		handler.ShedderHandler(e.getShedder(fr.priority), metrics), // 负载均衡
+		handler.TimeoutHandler(e.checkedTimeout(fr.timeout)),       // 超时控制
+		handler.RecoverHandler,                                     // 异常捕获
+		handler.MetricHandler(metrics),                             // 耗时统计
+		handler.MaxBytesHandler(e.conf.MaxBytes),                   // 内容长度限制
+		handler.GzipHandler,                                        // Gzip压缩
 	)
 	chain = e.appendAuthHandler(fr, chain, verifier) // JWT 鉴权
 
@@ -186,7 +190,8 @@ func (e *engine) signatureVerifier(signature signatureSetting) (func(chain alice
 }
 
 // 添加JWT鉴权中间件
-func (e *engine) appendAuthHandler(fr featuredRoutes, chain alice.Chain, verifier func(chain alice.Chain) alice.Chain) alice.Chain {
+func (e *engine) appendAuthHandler(fr featuredRoutes, chain alice.Chain,
+	verifier func(chain alice.Chain) alice.Chain) alice.Chain {
 	if fr.jwt.enabled {
 		if len(fr.jwt.prevSecret) == 0 {
 			chain = chain.Append(handler.Authorize(fr.jwt.secret,
@@ -219,8 +224,37 @@ func (e *engine) getShedder(priority bool) load.Shedder {
 	return e.shedder
 }
 
+func (e *engine) setTlsConfig(cfg *tls.Config) {
+	e.tlsConfig = cfg
+}
+
+func (e *engine) start(router httpx.Router) error {
+	if err := e.bindRoutes(router); err != nil {
+		return err
+	}
+
+	if len(e.conf.CertFile) == 0 && len(e.conf.KeyFile) == 0 {
+		return internal.StartHttp(e.conf.Host, e.conf.Port, router)
+	}
+
+	return internal.StartHttps(e.conf.Host, e.conf.Port, e.conf.CertFile,
+		e.conf.KeyFile, router, func(s *http.Server) {
+			if e.tlsConfig != nil {
+				s.TLSConfig = e.tlsConfig
+			}
+		})
+}
+
 func (e *engine) use(middleware Middleware) {
 	e.middlewares = append(e.middlewares, middleware)
+}
+
+func (e *engine) checkedTimeout(timeout time.Duration) time.Duration {
+	if timeout > 0 {
+		return timeout
+	}
+
+	return time.Duration(e.conf.Timeout) * time.Millisecond
 }
 
 func convertMiddleware(middleware Middleware) alice.Constructor {

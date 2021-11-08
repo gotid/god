@@ -25,7 +25,7 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 
 	// 新建 API 服务器
-	server := api.MustNewServer(c, api.WithNotAllowedHandler(api.CorsHandler()))
+	server := api.MustNewServer(c, api.WithCors())
 	defer server.Stop()
 
 	// 增加路由

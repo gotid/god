@@ -13,7 +13,7 @@ const (
 	tagName = "db"
 
 	// 数据库慢日志阈值，用于记录慢查询和慢执行
-	slowThreshold = 500 * time.Millisecond
+	defaultSlowThreshold = 500 * time.Millisecond
 )
 
 var (

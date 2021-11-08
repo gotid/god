@@ -143,7 +143,7 @@ Verbose: true
 			var cnf ServerConf
 			assert.Nil(t, conf.LoadConfigFromYamlBytes([]byte(yaml), &cnf))
 			e := newEngine(cnf)
-			e.AddRoutes(route)
+			e.addRoutes(route)
 			e.use(func(next http.HandlerFunc) http.HandlerFunc {
 				return func(w http.ResponseWriter, r *http.Request) {
 					next.ServeHTTP(w, r)
