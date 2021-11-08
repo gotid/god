@@ -2,9 +2,10 @@ package generator
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
 	"path/filepath"
 	"strings"
+
+	"git.zc0901.com/go/god/lib/fs"
 
 	"git.zc0901.com/go/god/lib/stringx"
 	conf "git.zc0901.com/go/god/tools/god/config"
@@ -28,7 +29,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-var configFile = flag.String("f", "etc/{{.serviceName}}.yaml", "the config file")
+var configFile = flag.String("f", "etc/{{.serviceName}}.yaml", "配置文件")
 
 func main() {
 	flag.Parse()

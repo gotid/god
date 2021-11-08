@@ -199,7 +199,7 @@ func getRoutes(api *spec.ApiSpec) ([]group, error) {
 			}
 			routePath := r.Path
 			if prefix != "" {
-				routePath = prefix + routePath
+				routePath = strings.ReplaceAll(prefix+routePath, "//", "/")
 			}
 			groupedRoutes.routes = append(groupedRoutes.routes, route{
 				method:  mapping[r.Method],
