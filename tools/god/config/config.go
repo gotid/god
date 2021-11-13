@@ -10,7 +10,7 @@ import (
 	"git.zc0901.com/go/god/lib/fs"
 
 	"git.zc0901.com/go/god/tools/god/util"
-	"gopkg.in/yaml.v3"
+	"gopkg.in/yaml.v2"
 )
 
 const (
