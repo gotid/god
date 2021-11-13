@@ -113,9 +113,19 @@ func NewNotFound() *NotFound {
 }
 
 func (n *NotFound) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// httpx.Ok(w)
-	// httpx.WriteJson(w, http.StatusNotFound, g.Map{"data": "页面不存在"})
-	httpx.OkJson(w, map[string]string{
-		"data": "页面不存在",
-	})
+	msg := ApiMessage{
+		Code: http.StatusNotFound,
+		Msg:  "接口不存在",
+	}
+	httpx.WriteJson(w, http.StatusOK, msg)
+}
+
+func UnauthorizedCallback() func(w http.ResponseWriter, r *http.Request, err error) {
+	return func(w http.ResponseWriter, r *http.Request, err error) {
+		msg := ApiMessage{
+			Code: http.StatusUnauthorized,
+			Msg:  "请登录",
+		}
+		httpx.WriteJson(w, http.StatusOK, msg)
+	}
 }
