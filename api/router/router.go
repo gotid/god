@@ -85,12 +85,12 @@ func (rt *router) Handle(method, reqPath string, handler http.Handler) error {
 	}
 }
 
-// 设置资源未找到处理器
+// SetNotFoundHandler 设置资源未找到处理器
 func (rt *router) SetNotFoundHandler(handler http.Handler) {
 	rt.notFound = handler
 }
 
-// 设置资源不允许访问处理器
+// SetNotAllowedHandler 设置资源不允许访问处理器
 func (rt *router) SetNotAllowedHandler(handler http.Handler) {
 	rt.notAllowed = handler
 }

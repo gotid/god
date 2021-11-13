@@ -159,14 +159,14 @@ func WithMiddleware(middleware Middleware, rs ...Route) []Route {
 // WithNotFoundHandler 返回一个资源未找到运行选项。
 func WithNotFoundHandler(handler http.Handler) RunOption {
 	return func(s *Server) {
-		s.router.SetNotAllowedHandler(handler)
+		s.router.SetNotFoundHandler(handler)
 	}
 }
 
 // WithNotAllowedHandler 返回一个资源不允许访问的运行选项。
 func WithNotAllowedHandler(handler http.Handler) RunOption {
 	return func(s *Server) {
-		s.router.SetNotFoundHandler(handler)
+		s.router.SetNotAllowedHandler(handler)
 	}
 }
 

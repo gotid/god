@@ -18,6 +18,26 @@ import (
 
 var configFile = flag.String("f", "config.yaml", "API 配置文件")
 
+type ApiMessage struct {
+	Code int         `json:"code"`
+	Data interface{} `json:"data,omitempty"`
+	Msg  string      `json:"message,omitempty"`
+}
+
+func ApiErrorHandler(err error) (int, interface{}) {
+	return http.StatusOK, ApiMessage{
+		Code: 0,
+		Msg:  err.Error(),
+	}
+}
+
+func ApiOKHandler(data interface{}) interface{} {
+	return ApiMessage{
+		Code: 0,
+		Data: data,
+	}
+}
+
 func main() {
 	// 读取配置文件
 	flag.Parse()
@@ -25,18 +45,30 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 
 	// 新建 API 服务器
-	server := api.MustNewServer(c, api.WithCors())
+	server := api.MustNewServer(c,
+		api.WithCors(),
+		api.WithNotFoundHandler(NewNotFound()),
+	)
 	defer server.Stop()
+
+	httpx.SetErrorHandler(ApiErrorHandler)
+	httpx.SetOkJsonHandler(ApiOKHandler)
+
+	server.Use(func(next http.HandlerFunc) http.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request) {
+			if p := recover(); p != nil {
+				httpx.WriteJson(w, http.StatusOK, fmt.Errorf("❎出错啦🌶, %v", p))
+			} else {
+				next.ServeHTTP(w, r)
+			}
+		}
+	})
 
 	// 增加路由
 	server.AddRoute(api.Route{
-		Method: http.MethodGet,
-		Path:   "/api",
-		Handler: func(w http.ResponseWriter, r *http.Request) {
-			httpx.OkJson(w, map[string]string{
-				"data": fmt.Sprintf("hello, world!-%d", time.Now().UnixMilli()),
-			})
-		},
+		Method:  http.MethodGet,
+		Path:    "/api",
+		Handler: apiHandler,
 	})
 
 	// 模拟并发限制
@@ -64,4 +96,26 @@ func main() {
 
 	// 启动 API 服务器
 	server.Start()
+}
+
+func apiHandler(w http.ResponseWriter, r *http.Request) {
+	a, b := 1, 0
+	fmt.Println(a / b)
+	httpx.OkJson(w, map[string]string{
+		"data": fmt.Sprintf("hello, world!-%d", time.Now().UnixMilli()),
+	})
+}
+
+type NotFound struct{}
+
+func NewNotFound() *NotFound {
+	return &NotFound{}
+}
+
+func (n *NotFound) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	// httpx.Ok(w)
+	// httpx.WriteJson(w, http.StatusNotFound, g.Map{"data": "页面不存在"})
+	httpx.OkJson(w, map[string]string{
+		"data": "页面不存在",
+	})
 }
