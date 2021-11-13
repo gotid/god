@@ -9,19 +9,23 @@ const (
 	allowHeaders     = "Access-Control-Allow-Headers"
 	allowCredentials = "Access-Control-Allow-Credentials"
 	exposeHeaders    = "Access-Control-Expose-Headers"
+	requestMethod    = "Access-Control-Request-Method"
+	requestHeaders   = "Access-Control-Request-Headers"
 	allowHeadersVal  = "Content-Type, Origin, X-CSRF-Token, Authorization, AccessToken, Token, Range"
 	exposeHeadersVal = "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers"
 	methods          = "GET, HEAD, POST, PATCH, PUT, DELETE"
 	allowTrue        = "true"
 	maxAgeHeader     = "Access-Control-Max-Age"
 	maxAgeHeaderVal  = "86400"
+	varyHeader       = "Vary"
+	originHeader     = "Origin"
 )
 
 // Handler 处理不允许的跨域请求。
 // 仅允许一个 origin 源站或允许所有来源。
 func Handler(origin ...string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		setHeader(w, getOrigin(origin))
+		checkAndSetHeader(w, r, origin)
 
 		if r.Method != http.MethodOptions {
 			w.WriteHeader(http.StatusNotFound)
@@ -35,7 +39,7 @@ func Handler(origin ...string) http.Handler {
 func Middleware(origin ...string) func(handlerFunc http.HandlerFunc) http.HandlerFunc {
 	return func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
-			setHeader(w, getOrigin(origin))
+			checkAndSetHeader(w, r, origin)
 
 			if r.Method == http.MethodOptions {
 				w.WriteHeader(http.StatusNoContent)
@@ -46,19 +50,51 @@ func Middleware(origin ...string) func(handlerFunc http.HandlerFunc) http.Handle
 	}
 }
 
-func getOrigin(origins []string) string {
-	if len(origins) > 0 {
-		return origins[0]
-	} else {
-		return allOrigins
+func checkAndSetHeader(w http.ResponseWriter, r *http.Request, origins []string) {
+	setVaryHeaders(w, r)
+
+	if len(origins) == 0 {
+		setHeader(w, allOrigins)
+		return
+	}
+
+	origin := r.Header.Get(originHeader)
+	if isOriginAllowed(origins, origin) {
+		setHeader(w, origin)
 	}
 }
 
+func isOriginAllowed(allows []string, origin string) bool {
+	for _, o := range allows {
+		if o == allOrigins {
+			return true
+		}
+
+		if o == origin {
+			return true
+		}
+
+	}
+	return false
+}
+
 func setHeader(w http.ResponseWriter, origin string) {
-	w.Header().Set(allowOrigin, origin)
-	w.Header().Set(allowMethods, methods)
-	w.Header().Set(allowHeaders, allowHeadersVal)
-	w.Header().Set(exposeHeaders, exposeHeadersVal)
-	w.Header().Set(allowCredentials, allowTrue)
-	w.Header().Set(maxAgeHeader, maxAgeHeaderVal)
+	header := w.Header()
+	header.Set(allowOrigin, origin)
+	header.Set(allowMethods, methods)
+	header.Set(allowHeaders, allowHeadersVal)
+	header.Set(exposeHeaders, exposeHeadersVal)
+	if origin != allOrigins {
+		header.Set(allowCredentials, allowTrue)
+	}
+	header.Set(maxAgeHeader, maxAgeHeaderVal)
+}
+
+func setVaryHeaders(w http.ResponseWriter, r *http.Request) {
+	header := w.Header()
+	header.Add(varyHeader, originHeader)
+	if r.Method == http.MethodOptions {
+		header.Add(varyHeader, requestMethod)
+		header.Add(varyHeader, requestHeaders)
+	}
 }

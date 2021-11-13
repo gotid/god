@@ -6,7 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 // 为了使.json和.yaml保持一致，我们只使用json作为标记键。

@@ -43,23 +43,19 @@ func Error(w http.ResponseWriter, err error) {
 		return
 	}
 
-	code, body := errorHandler(err)
+	code, body := handler(err)
 	if body == nil {
 		w.WriteHeader(code)
 		return
 	}
 
 	e, ok := body.(error)
-	// TODO 不论是什么错，都返回 Message 结构。
 	if ok {
-		http.Error(w, e.Error(), code)
+		WriteJson(w, http.StatusOK, &Message{
+			Code: code,
+			Msg:  e.Error(),
+		})
 	} else {
-		if m, ok := body.(Message); ok {
-			if m.Code > 0 {
-				http.Error(w, m.Msg, http.StatusOK)
-				return
-			}
-		}
 		WriteJson(w, code, body)
 	}
 }
