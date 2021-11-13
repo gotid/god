@@ -15,17 +15,21 @@ type (
 		Auth          bool               `json:",optional"`                   // 是否开启rpc通信鉴权，若是则Redis配置必填
 		Redis         redis.KeyConf      `json:",optional"`                   // rpc通信及安全的redis配置
 		StrictControl bool               `json:",optional"`                   // 是否为严格模式，若是且遇到鉴权错误则抛出异常
-		Timeout       int64              `json:",default=2000"`               // 默认超时时长为2000毫秒，<=0则意味支持无限期等待
+		Timeout       int64              `json:",default=2000"`               // 默认超时时长为2000毫秒，<=0则表示无超时限制
 		CpuThreshold  int64              `json:",default=900,range=[0:1000]"` // cpu降载阈值，默认900，支持区间为0-1000
+		MaxRetries    int                `json:",default=0,range=[0:]"`
 	}
 
 	// ClientConf Rpc客户端配置
 	ClientConf struct {
 		Etcd      discovery.EtcdConf `json:",optional"`
-		Endpoints []string           `json:",optional=!Etcd"`
+		Endpoints []string           `json:",optional"`
+		Target    string             `json:",optional"`
 		App       string             `json:",optional"`
 		Token     string             `json:",optional"`
-		Timeout   int64              `json:",default=2000"`
+		NonBlock  bool               `json:",optional"`
+		Retry     bool               `json:",optional"`     // 自动重连
+		Timeout   int64              `json:",default=2000"` // 连接超时，单位毫秒
 	}
 )
 
@@ -50,7 +54,7 @@ func NewEtcdClientConf(hosts []string, key, app, token string) ClientConf {
 	}
 }
 
-// HasEtcd 判断服务端配置是否传递Etcd主机和键
+// HasEtcd 判断服务端配置是否有Etcd主机和键。
 func (sc ServerConf) HasEtcd() bool {
 	return len(sc.Etcd.Hosts) > 0 && len(sc.Etcd.Key) > 0
 }

@@ -2,12 +2,8 @@ package internal
 
 import (
 	"context"
-	"crypto/tls"
-	"crypto/x509"
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"strings"
 	"time"
 
@@ -53,7 +49,7 @@ func init() {
 }
 
 // NewClient 返回RPC客户端
-func NewClient(target string, opts ...ClientOption) (*client, error) {
+func NewClient(target string, opts ...ClientOption) (Client, error) {
 	var cli client
 	opts = append([]ClientOption{WithDialOption(grpc.WithBalancerName(p2c.Name))}, opts...)
 	if err := cli.dial(target, opts...); err != nil {
@@ -77,6 +73,7 @@ func (c *client) buildDialOptions(opts ...ClientOption) []grpc.DialOption {
 	if !cliOpts.Secure {
 		options = append([]grpc.DialOption(nil), grpc.WithInsecure())
 	}
+
 	if !cliOpts.NonBlock {
 		options = append(options, grpc.WithBlock())
 	}
@@ -88,10 +85,11 @@ func (c *client) buildDialOptions(opts ...ClientOption) []grpc.DialOption {
 			clientinterceptors.PrometheusInterceptor,               // 监控报警
 			clientinterceptors.BreakerInterceptor,                  // 自动熔断
 			clientinterceptors.TimeoutInterceptor(cliOpts.Timeout), // 超时控制
-			// clientinterceptors.RetryInterceptor(cliOpts.Retry), // 重试
+			clientinterceptors.RetryInterceptor(cliOpts.Retry),     // 连接重试
 		),
-		// WithStreamClientInterceptors(
-		//	clientinterceptors.st),
+		WithStreamClientInterceptors(
+			clientinterceptors.StreamTraceInterceptor,
+		),
 	)
 
 	return append(options, cliOpts.DialOptions...)
@@ -119,76 +117,45 @@ func (c *client) dial(server string, opts ...ClientOption) error {
 	return nil
 }
 
+// WithDialOption 自定义 grpc.DialOption。
 func WithDialOption(opt grpc.DialOption) ClientOption {
 	return func(options *ClientOptions) {
 		options.DialOptions = append(options.DialOptions, opt)
 	}
 }
 
-// WithNonBlock sets the dialing to be nonblock.
+// WithNonBlock 设为非阻塞模式。
 func WithNonBlock() ClientOption {
 	return func(options *ClientOptions) {
 		options.NonBlock = true
 	}
 }
 
+// WithTimeout 设置超时时间。
 func WithTimeout(timeout time.Duration) ClientOption {
 	return func(options *ClientOptions) {
 		options.Timeout = timeout
 	}
 }
 
-// WithRetry returns a func to customize a ClientOptions with auto retry.
+// WithRetry 设为自动重连。
 func WithRetry() ClientOption {
 	return func(options *ClientOptions) {
 		options.Retry = true
 	}
 }
 
+// WithUnaryClientInterceptor 自定义一元客户端拦截器。
 func WithUnaryClientInterceptor(interceptor grpc.UnaryClientInterceptor) ClientOption {
 	return func(options *ClientOptions) {
 		options.DialOptions = append(options.DialOptions, WithUnaryClientInterceptors(interceptor))
 	}
 }
 
-// WithTlsClientFromUnilateral return a func to customize a ClientOptions Verify with Unilateralism authentication.
-func WithTlsClientFromUnilateral(crt, domainName string) ClientOption {
+// WithTransportCredentials 自定义安全拨号证书。
+func WithTransportCredentials(creds credentials.TransportCredentials) ClientOption {
 	return func(options *ClientOptions) {
-		c, err := credentials.NewClientTLSFromFile(crt, domainName)
-		if err != nil {
-			log.Fatalf("credentials.NewClientTLSFromFile err: %v", err)
-		}
-
 		options.Secure = true
-		options.DialOptions = append(options.DialOptions, grpc.WithTransportCredentials(c))
-	}
-}
-
-// WithTlsClientFromMutual return a func to customize a ClientOptions Verify with mutual authentication.
-func WithTlsClientFromMutual(crtFile, keyFile, caFile string) ClientOption {
-	return func(options *ClientOptions) {
-		cert, err := tls.LoadX509KeyPair(crtFile, keyFile)
-		if err != nil {
-			log.Fatalf("tls.LoadX509KeyPair err: %v", err)
-		}
-
-		certPool := x509.NewCertPool()
-		ca, err := ioutil.ReadFile(caFile)
-		if err != nil {
-			log.Fatalf("credentials: failed to ReadFile CA certificates err: %v", err)
-		}
-
-		if !certPool.AppendCertsFromPEM(ca) {
-			log.Fatalf("credentials: failed to append certificates err: %v", err)
-		}
-
-		config := &tls.Config{
-			Certificates: []tls.Certificate{cert},
-			RootCAs:      certPool,
-		}
-
-		options.Secure = true
-		options.DialOptions = append(options.DialOptions,
-			grpc.WithTransportCredentials(credentials.NewTLS(config)))
+		options.DialOptions = append(options.DialOptions, grpc.WithTransportCredentials(creds))
 	}
 }
