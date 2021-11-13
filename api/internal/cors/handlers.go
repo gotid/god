@@ -21,9 +21,9 @@ const (
 	originHeader     = "Origin"
 )
 
-// Handler 处理不允许的跨域请求。
+// NotAllowedHandler 处理不允许的跨域请求。
 // 仅允许一个 origin 源站或允许所有来源。
-func Handler(origin ...string) http.Handler {
+func NotAllowedHandler(origin ...string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		checkAndSetHeader(w, r, origin)
 

@@ -108,7 +108,7 @@ func ToMiddleware(handler func(next http.Handler) http.Handler) Middleware {
 // WithCors 返回一个允许指定来源的CORS中间件，默认允许所有来源(*)。
 func WithCors(origin ...string) RunOption {
 	return func(server *Server) {
-		server.router.SetNotAllowedHandler(cors.Handler(origin...))
+		server.router.SetNotAllowedHandler(cors.NotAllowedHandler(origin...))
 		server.Use(cors.Middleware(origin...))
 	}
 }
