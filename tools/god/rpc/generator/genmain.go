@@ -44,6 +44,7 @@ func main() {
 	s := rpc.MustNewServer(c.ServerConf, func(grpcServer *grpc.Server) {
 		{{.pkg}}.Register{{.service}}Server(grpcServer, srv)
 
+		// 在开发和测试模式下进行服务器反射，可为grpcurl/grpc_cli等提供grpc服务或方法查询。
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
 		}
