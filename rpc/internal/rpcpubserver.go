@@ -1,10 +1,11 @@
 package internal
 
 import (
-	"git.zc0901.com/go/god/lib/discovery"
-	"git.zc0901.com/go/god/lib/netx"
 	"os"
 	"strings"
+
+	"git.zc0901.com/go/god/lib/discovery"
+	"git.zc0901.com/go/god/lib/netx"
 )
 
 const (
@@ -12,10 +13,15 @@ const (
 	envPodIp = "POD_IP"
 )
 
-func NewPubServer(etcdEndpoints []string, etcdKey, listenOn string, opts ...ServerOption) (Server, error) {
+// NewPubServer 返回一个新的服务器。
+func NewPubServer(etcd discovery.EtcdConf, listenOn string, opts ...ServerOption) (Server, error) {
 	registerEtcd := func() error {
-		listenOn := figureOutListenOn(listenOn)
-		pubClient := discovery.NewPublisher(etcdEndpoints, etcdKey, listenOn)
+		pubListenOn := figureOutListenOn(listenOn)
+		var pubOpts []discovery.PublisherOption
+		if etcd.HasAccount() {
+			pubOpts = append(pubOpts, discovery.WithEtcdAccount(etcd.User, etcd.Pass))
+		}
+		pubClient := discovery.NewPublisher(etcd.Hosts, etcd.Key, pubListenOn, pubOpts...)
 		return pubClient.KeepAlive()
 	}
 	server := keepAliveServer{

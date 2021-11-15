@@ -19,14 +19,19 @@ type (
 	baseServer struct {
 		address            string
 		metrics            *stat.Metrics
+		maxRetries         int
 		options            []grpc.ServerOption
 		unaryInterceptors  []grpc.UnaryServerInterceptor
 		streamInterceptors []grpc.StreamServerInterceptor
 	}
 )
 
-func newBaseServer(address string, metrics *stat.Metrics) *baseServer {
-	return &baseServer{address: address, metrics: metrics}
+func newBaseServer(address string, opts *serverOptions) *baseServer {
+	return &baseServer{
+		address:    address,
+		metrics:    opts.metrics,
+		maxRetries: opts.maxRetries,
+	}
 }
 
 func (bs *baseServer) AddOptions(options ...grpc.ServerOption) {

@@ -11,8 +11,10 @@ import (
 )
 
 type (
+	// PublisherOption Publisher 的自定义方法。
 	PublisherOption func(client *Publisher)
 
+	// Publisher 用于在指定 key 的 etcd 集群上发布值的发布器。
 	Publisher struct {
 		endpoints  []string
 		key        string
@@ -26,6 +28,10 @@ type (
 	}
 )
 
+// NewPublisher 发挥一个新的 Publisher。
+// endpoints 是 etcd 集群的主机。
+// key:value 是待发布的键值对。
+// opts 是用于自定义 Publisher 的方法。
 func NewPublisher(endpoints []string, key, value string, opts ...PublisherOption) *Publisher {
 	publisher := &Publisher{
 		endpoints:  endpoints,
@@ -139,5 +145,12 @@ func (p *Publisher) revoke(cli internal.EtcdClient) {
 func WithId(id int64) PublisherOption {
 	return func(publisher *Publisher) {
 		publisher.id = id
+	}
+}
+
+// WithEtcdAccount 自定义 Etcd 账号。
+func WithEtcdAccount(user, pass string) PublisherOption {
+	return func(client *Publisher) {
+		internal.AddAccount(client.endpoints, user, pass)
 	}
 }

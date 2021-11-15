@@ -17,7 +17,8 @@ const (
 	ProMode  = "pro"  // 生产模式
 )
 
-type Conf struct {
+// ServiceConf 是一个服务配置项。
+type ServiceConf struct {
 	Name       string            // 服务名称
 	Log        logx.LogConf      // 日志配置
 	Mode       string            `json:",default=pro,options=dev|test|pre|pro"` // 服务环境，dev-开发环境，test-测试环境，pre-预发环境，pro-正式环境
@@ -27,14 +28,14 @@ type Conf struct {
 }
 
 // MustSetup 设置服务项，出错则退出。
-func (c Conf) MustSetup() {
+func (c ServiceConf) MustSetup() {
 	if err := c.Setup(); err != nil {
 		log.Fatal(err)
 	}
 }
 
 // Setup 设置并初始化服务配置（初始化启动模式、普罗米修斯代理、统计输出器等）
-func (c Conf) Setup() error {
+func (c ServiceConf) Setup() error {
 	if len(c.Log.ServiceName) == 0 {
 		c.Log.ServiceName = c.Name
 	}
@@ -64,7 +65,7 @@ func (c Conf) Setup() error {
 	return nil
 }
 
-func (c Conf) initMode() {
+func (c ServiceConf) initMode() {
 	switch c.Mode {
 	case DevMode, TestMode, RtMode, PreMode:
 		// 非生产模式，禁用负载均衡和统计上报。

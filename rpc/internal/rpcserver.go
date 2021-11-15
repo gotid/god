@@ -11,7 +11,8 @@ import (
 
 type (
 	serverOptions struct {
-		metrics *stat.Metrics
+		metrics    *stat.Metrics
+		maxRetries int
 	}
 
 	ServerOption func(options *serverOptions)
@@ -26,6 +27,7 @@ func init() {
 	InitLogger()
 }
 
+// NewRpcServer 返回一个新的 RPC 服务器。
 func NewRpcServer(address string, opts ...ServerOption) Server {
 	var options serverOptions
 	for _, opt := range opts {
@@ -36,7 +38,7 @@ func NewRpcServer(address string, opts ...ServerOption) Server {
 	}
 
 	return &server{
-		baseServer: newBaseServer(address, options.metrics),
+		baseServer: newBaseServer(address, &options),
 	}
 }
 
@@ -56,6 +58,7 @@ func (s *server) Start(register RegisterFn) error {
 	// 一元拦截器
 	unaryInterceptors := []grpc.UnaryServerInterceptor{
 		serverinterceptors.UnaryTraceInterceptor,           // 链路跟踪
+		serverinterceptors.RetryInterceptor(s.maxRetries),  // 连接重试
 		serverinterceptors.UnaryCrashInterceptor,           // 异常捕获
 		serverinterceptors.UnaryStatInterceptor(s.metrics), // 数据统计
 		serverinterceptors.UnaryPrometheusInterceptor,      // 监控报警
@@ -94,5 +97,12 @@ func (s *server) Start(register RegisterFn) error {
 func WithMetrics(metrics *stat.Metrics) ServerOption {
 	return func(options *serverOptions) {
 		options.metrics = metrics
+	}
+}
+
+// WithMaxRetries 自定义连接重试次数。
+func WithMaxRetries(maxRetries int) ServerOption {
+	return func(options *serverOptions) {
+		options.maxRetries = maxRetries
 	}
 }

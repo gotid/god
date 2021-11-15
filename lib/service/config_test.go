@@ -7,7 +7,7 @@ import (
 )
 
 func TestConfi(t *testing.T) {
-	c := Conf{
+	c := ServiceConf{
 		Name: "foo",
 		Log: logx.LogConf{
 			Mode: "console",

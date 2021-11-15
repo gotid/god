@@ -9,15 +9,15 @@ import (
 type (
 	// ServerConf Rpc服务端配置
 	ServerConf struct {
-		service.Conf                     // 服务配置
-		ListenOn      string             // rpc监听地址和端口，如：127.0.0.1:8888
-		Etcd          discovery.EtcdConf `json:",optional"`                   // etcd相关配置
-		Auth          bool               `json:",optional"`                   // 是否开启rpc通信鉴权，若是则Redis配置必填
-		Redis         redis.KeyConf      `json:",optional"`                   // rpc通信及安全的redis配置
-		StrictControl bool               `json:",optional"`                   // 是否为严格模式，若是且遇到鉴权错误则抛出异常
-		Timeout       int64              `json:",default=2000"`               // 默认超时时长为2000毫秒，<=0则表示无超时限制
-		CpuThreshold  int64              `json:",default=900,range=[0:1000]"` // cpu降载阈值，默认900，支持区间为0-1000
-		MaxRetries    int                `json:",default=0,range=[0:]"`
+		service.ServiceConf                    // 服务配置
+		ListenOn            string             // rpc监听地址和端口，如：127.0.0.1:8888
+		Etcd                discovery.EtcdConf `json:",optional"`                   // etcd相关配置
+		Auth                bool               `json:",optional"`                   // 是否开启rpc通信鉴权，若是则Redis配置必填
+		Redis               redis.KeyConf      `json:",optional"`                   // rpc通信及安全的redis配置
+		StrictControl       bool               `json:",optional"`                   // 是否为严格模式，若是且遇到鉴权错误则抛出异常
+		Timeout             int64              `json:",default=2000"`               // 默认超时时长为2000毫秒，<=0则表示无超时限制
+		CpuThreshold        int64              `json:",default=900,range=[0:1000]"` // cpu降载阈值，默认900，支持区间为0-1000
+		MaxRetries          int                `json:",default=0,range=[0:]"`
 	}
 
 	// ClientConf Rpc客户端配置
