@@ -10,21 +10,21 @@ import (
 )
 
 var (
-	// 数据库慢日志阈值，用于记录慢查询和慢执行
+	// 数据库慢日志阈值，用于记录慢调用和慢执行
 	defaultSlowThreshold = 500 * time.Millisecond
 	slowThreshold        = syncx.ForAtomicDuration(defaultSlowThreshold)
 )
 
-// SetSlowThreshold 设置慢查询时间阈值。
+// SetSlowThreshold 设置慢调用时间阈值。
 func SetSlowThreshold(threshold time.Duration) {
 	slowThreshold.Set(threshold)
 }
 
-func doRead(driver neo4j.Driver, scanner Scanner, cypher string, params ...g.Map) error {
-	// 慢查询检测
+func doRun(driver neo4j.Driver, scanner Scanner, cypher string, params ...g.Map) error {
+	// 慢调用检测
 	start := time.Now()
 
-	// 执行查询
+	// 执行调用
 	session := driver.NewSession(neo4j.SessionConfig{})
 	defer session.Close()
 
@@ -33,12 +33,36 @@ func doRead(driver neo4j.Driver, scanner Scanner, cypher string, params ...g.Map
 		param = params[0]
 	}
 	result, err := session.Run(cypher, param)
-	// fmt.Println("doRead Next:", result.Next())
 	duration := time.Since(start)
 	if duration > slowThreshold.Load() {
-		logx.WithDuration(duration).Slowf("[Neo] doRead：慢查询 —— %s", cypher)
+		logx.WithDuration(duration).Slowf("[Neo] doRun：慢调用 —— %s", cypher)
 	} else {
-		logx.WithDuration(duration).Infof("[Neo] doRead: %s", cypher)
+		logx.WithDuration(duration).Infof("[Neo] doRun: %s", cypher)
+	}
+
+	if err != nil {
+		logCypherError(cypher, err)
+		return err
+	}
+
+	return scanner(result)
+}
+
+func doTxRun(tx neo4j.Transaction, scanner Scanner, cypher string, params ...g.Map) error {
+	// 慢调用检测
+	start := time.Now()
+
+	// 执行调用
+	var param g.Map
+	if len(params) > 0 {
+		param = params[0]
+	}
+	result, err := tx.Run(cypher, param)
+	duration := time.Since(start)
+	if duration > slowThreshold.Load() {
+		logx.WithDuration(duration).Slowf("[Neo] doRun：慢调用 —— %s", cypher)
+	} else {
+		logx.WithDuration(duration).Infof("[Neo] doRun: %s", cypher)
 	}
 
 	if err != nil {

@@ -17,7 +17,6 @@ const (
 )
 
 var (
-	ErrNotFound             = errors.New("neo: 查无此项")
 	ErrNotReadableValue     = errors.New("neo: 无法读取的值，检查结构字段是否大写开头")
 	ErrUnsupportedValueType = errors.New("neo: 不支持的扫描目标类型")
 )
@@ -25,8 +24,14 @@ var (
 type (
 	// Session 表示一个可进行 neo4j 读写的会话。
 	Session interface {
-		Read(scanner Scanner, cypher string, params ...g.Map) error
-		Read2(dest interface{}, cypher string, params ...g.Map) error
+		// Read 读数 —— 运行Cypher并读入目标。
+		Read(dest interface{}, cypher string, params ...g.Map) error
+		// TxRead 事务型读数 —— 运行Cypher并读入目标。
+		TxRead(tx neo4j.Transaction, dest interface{}, cypher string, params ...g.Map) error
+		// Scan 扫数 —— 利用扫描器扫描指定Cypher的查询结果。
+		Scan(scanner Scanner, cypher string, params ...g.Map) error
+		// TxScan 事务型扫数 —— 利用扫描器扫描指定Cypher的查询结果。
+		TxScan(tx neo4j.Transaction, scanner Scanner, cypher string, params ...g.Map) error
 	}
 
 	// Driver 表示一个带有断路器保护的 neo4j 驱动。
@@ -58,7 +63,8 @@ func NewDriver(target, username, password, realm string) Driver {
 	return d
 }
 
-func (d *driver) Read(scanner Scanner, cypher string, params ...g.Map) error {
+// Read 读数 —— 运行指定 Cypher 并读数至目标。
+func (d *driver) Read(dest interface{}, cypher string, params ...g.Map) error {
 	var readError error
 	err := d.brk.DoWithAcceptable(func() error {
 		driver4j, err := getDriver(d.target, d.username, d.password, d.realm)
@@ -67,7 +73,9 @@ func (d *driver) Read(scanner Scanner, cypher string, params ...g.Map) error {
 			return err
 		}
 
-		err = doRead(driver4j, scanner, cypher, params...)
+		err = doRun(driver4j, func(result neo4j.Result) error {
+			return scan(dest, result)
+		}, cypher, params...)
 		return err
 	}, func(reqError error) bool {
 		return reqError == readError || d.acceptable(reqError)
@@ -79,7 +87,26 @@ func (d *driver) Read(scanner Scanner, cypher string, params ...g.Map) error {
 	return nil
 }
 
-func (d *driver) Read2(dest interface{}, cypher string, params ...g.Map) error {
+// TxRead 事务型读数 —— 运行指定 Cypher 并读数至目标。
+func (d *driver) TxRead(tx neo4j.Transaction, dest interface{}, cypher string, params ...g.Map) error {
+	var readError error
+	err := d.brk.DoWithAcceptable(func() error {
+		err := doTxRun(tx, func(result neo4j.Result) error {
+			return scan(dest, result)
+		}, cypher, params...)
+		return err
+	}, func(reqError error) bool {
+		return reqError == readError || d.acceptable(reqError)
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Scan 扫数 —— 运行指定 Cypher 查询并利用指定扫描器进行结果扫描。
+func (d *driver) Scan(scanner Scanner, cypher string, params ...g.Map) error {
 	var readError error
 	err := d.brk.DoWithAcceptable(func() error {
 		driver4j, err := getDriver(d.target, d.username, d.password, d.realm)
@@ -88,9 +115,23 @@ func (d *driver) Read2(dest interface{}, cypher string, params ...g.Map) error {
 			return err
 		}
 
-		err = doRead(driver4j, func(result neo4j.Result) error {
-			return scan(dest, result)
-		}, cypher, params...)
+		err = doRun(driver4j, scanner, cypher, params...)
+		return err
+	}, func(reqError error) bool {
+		return reqError == readError || d.acceptable(reqError)
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// TxScan 事务型扫数 —— 运行指定 Cypher 查询并利用指定扫描器进行结果扫描。
+func (d *driver) TxScan(tx neo4j.Transaction, scanner Scanner, cypher string, params ...g.Map) error {
+	var readError error
+	err := d.brk.DoWithAcceptable(func() error {
+		err := doTxRun(tx, scanner, cypher, params...)
 		return err
 	}, func(reqError error) bool {
 		return reqError == readError || d.acceptable(reqError)
@@ -162,7 +203,8 @@ func scan(dest interface{}, result neo4j.Result) error {
 		}
 
 		base := mapping.Deref(dte.Elem())
-		switch base.Kind() {
+		baseKind := base.Kind()
+		switch baseKind {
 		case reflect.String, reflect.Bool, reflect.Float32, reflect.Float64,
 			reflect.Int, reflect.Int8, reflect.Int32, reflect.Int64,
 			reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:

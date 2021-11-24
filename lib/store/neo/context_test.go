@@ -1,7 +1,6 @@
 package neo
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
@@ -44,39 +43,27 @@ func TestConfig_RunCypher(t *testing.T) {
 	})
 }
 
-func BenchmarkAutoTx(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		query()
-	}
-}
+func BenchmarkOriginalRunCypher(b *testing.B) {
+	cypher := `MATCH (tom:Person {name: "Tom Hanks"})-[:ACTED_IN]->() RETURN tom`
 
-func BenchmarkManualTx(b *testing.B) {
-	tx, err := ctx.BeginTx()
-	defer tx.Close()
-	assert.Nil(b, err)
-	for i := 0; i < b.N; i++ {
-		queryWithTx(tx)
-	}
+	b.Run("原生自动事务测试", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			err := ctx.RunCypher(cypher, callback)
+			assert.Nil(b, err)
+		}
+	})
+
+	b.Run("原生手动事务测试", func(b *testing.B) {
+		tx, err := ctx.BeginTx()
+		defer tx.Close()
+		assert.Nil(b, err)
+		for i := 0; i < b.N; i++ {
+			err := ctx.RunCypherWithTx(tx, cypher, callback)
+			assert.Nil(b, err)
+		}
+	})
 }
 
 func callback(result neo4j.Result) error {
-	var ids []int64
-	for result.Next() {
-		record := result.Record()
-		if v, ok := record.Get("reco"); ok {
-			ids = append(ids, v.(int64))
-		}
-	}
-	fmt.Println(ids)
 	return nil
-}
-
-func query() {
-	cypher := "match (p:Person) return id(p) as reco limit 10"
-	ctx.RunCypher(cypher, callback)
-}
-
-func queryWithTx(tx neo4j.Transaction) {
-	cypher := "match (p:Person) return id(p) as reco limit 10"
-	ctx.RunCypherWithTx(tx, cypher, callback)
 }
