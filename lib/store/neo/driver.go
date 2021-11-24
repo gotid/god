@@ -1,7 +1,6 @@
 package neo
 
 import (
-	"errors"
 	"reflect"
 	"strings"
 
@@ -16,43 +15,21 @@ const (
 	tagName = "neo"
 )
 
-var (
-	ErrNotReadableValue     = errors.New("neo: 无法读取的值，检查结构字段是否大写开头")
-	ErrUnsupportedValueType = errors.New("neo: 不支持的扫描目标类型")
-)
-
-type (
-	// Session 表示一个可进行 neo4j 读写的会话。
-	Session interface {
-		// Read 读数 —— 运行Cypher并读入目标。
-		Read(dest interface{}, cypher string, params ...g.Map) error
-		// TxRead 事务型读数 —— 运行Cypher并读入目标。
-		TxRead(tx neo4j.Transaction, dest interface{}, cypher string, params ...g.Map) error
-		// Scan 扫数 —— 利用扫描器扫描指定Cypher的查询结果。
-		Scan(scanner Scanner, cypher string, params ...g.Map) error
-		// TxScan 事务型扫数 —— 利用扫描器扫描指定Cypher的查询结果。
-		TxScan(tx neo4j.Transaction, scanner Scanner, cypher string, params ...g.Map) error
-	}
-
-	// Driver 表示一个带有断路器保护的 neo4j 驱动。
-	Driver interface {
-		Session
-	}
-
-	driver struct {
-		target,
-		username,
-		password,
-		realm string // neo4j.Driver 连接字符串
-		brk    breaker.Breaker         // 断路器
-		accept func(reqErr error) bool // 自定义错误可接收器
-	}
-)
+// 带有断路器保护的 neo4j 驱动
+type driver struct {
+	target,
+	username,
+	password,
+	realm string // neo4j.Driver 连接字符串
+	driver neo4j.Driver            // neo4j.Driver 驱动
+	brk    breaker.Breaker         // 断路器
+	accept func(reqErr error) bool // 自定义错误可接收器
+}
 
 var _ Driver = (*driver)(nil)
 
-// NewDriver 返回一个新的 neo4j 驱动。
-func NewDriver(target, username, password, realm string) Driver {
+// MustDriver 返回一个新的 neo4j 驱动。
+func MustDriver(target, username, password, realm string) Driver {
 	d := &driver{
 		target:   target,
 		username: username,
@@ -60,14 +37,40 @@ func NewDriver(target, username, password, realm string) Driver {
 		realm:    realm,
 		brk:      breaker.NewBreaker(),
 	}
+	driver4j, err := getDriver(d.target, d.username, d.password, d.realm)
+	d.driver = driver4j
+	if err != nil {
+		logx.Errorf("neo.MustDriver 初始化失败！")
+		panic(err)
+	}
+
 	return d
+}
+
+// Driver 返回可复用的 neo4j.Driver。
+func (d *driver) Driver() (neo4j.Driver, error) {
+	return getDriver(d.target, d.username, d.password, d.realm)
+}
+
+// BeginTx 返回一个新的事务。
+func (d *driver) BeginTx() (neo4j.Transaction, error) {
+	driver4j, err := d.Driver()
+	if err != nil {
+		return nil, err
+	}
+	session := driver4j.NewSession(neo4j.SessionConfig{})
+	tx, err := session.BeginTransaction()
+	if err != nil {
+		return nil, err
+	}
+	return tx, nil
 }
 
 // Read 读数 —— 运行指定 Cypher 并读数至目标。
 func (d *driver) Read(dest interface{}, cypher string, params ...g.Map) error {
 	var readError error
 	err := d.brk.DoWithAcceptable(func() error {
-		driver4j, err := getDriver(d.target, d.username, d.password, d.realm)
+		driver4j, err := d.Driver()
 		if err != nil {
 			logConnError(d.target, err)
 			return err
@@ -109,7 +112,7 @@ func (d *driver) TxRead(tx neo4j.Transaction, dest interface{}, cypher string, p
 func (d *driver) Scan(scanner Scanner, cypher string, params ...g.Map) error {
 	var readError error
 	err := d.brk.DoWithAcceptable(func() error {
-		driver4j, err := getDriver(d.target, d.username, d.password, d.realm)
+		driver4j, err := d.Driver()
 		if err != nil {
 			logConnError(d.target, err)
 			return err
@@ -259,8 +262,6 @@ func setSimpleValue(dve reflect.Value, result neo4j.Result, dv reflect.Value) er
 	return nil
 }
 
-// setFieldValueMap: 获取结构体字段中标记的字段名——值映射关系
-// 在编写字段tag的情况下，可以确保结构体字段和Cypher选择列不一致的情况下不出错
 func setFieldValueMap(structValue reflect.Value, record *neo4j.Record) error {
 	dt := mapping.Deref(structValue.Type())
 	size := dt.NumField()
@@ -296,7 +297,6 @@ func setFieldValueMap(structValue reflect.Value, record *neo4j.Record) error {
 	return nil
 }
 
-// getFieldTag 获取结构标记值
 func getFieldTag(field reflect.StructField) string {
 	tag := field.Tag.Get(tagName)
 	if len(tag) == 0 {

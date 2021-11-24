@@ -3,6 +3,7 @@ package neo
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"git.zc0901.com/go/god/lib/logx"
 
@@ -11,8 +12,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const (
+	target   = "bolt://localhost:7687"
+	username = "neo4j"
+	password = "asdfasdf"
+)
+
 func TestNewNeo(t *testing.T) {
 	neo := NewNeo(target, username, password, "")
+	SetSlowThreshold(10 * time.Millisecond)
 
 	t.Run("单值——简单类型测试", func(t *testing.T) {
 		var tomId int64
@@ -126,7 +134,7 @@ func BenchmarkRunCypherWithBreaker(b *testing.B) {
 		}
 	})
 
-	tx, err := ctx.BeginTx()
+	tx, err := neo.BeginTx()
 	assert.Nil(b, err)
 	defer tx.Close()
 	b.Run("断路器版手动事务测试", func(b *testing.B) {
