@@ -32,6 +32,9 @@ type Session interface {
 
 	// CreateNode 创建节点。
 	CreateNode(nodes ...*neo4j.Node) error
+	// MergeNode 合并节点。
+	MergeNode(nodes ...*neo4j.Node) error
+
 	// SingleOtherNode 返回单一关系中的另一节点。
 	SingleOtherNode(input *neo4j.Node, rel *Relationship) (*neo4j.Node, error)
 }

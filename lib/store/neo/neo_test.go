@@ -2,8 +2,11 @@ package neo
 
 import (
 	"fmt"
+	"math/rand"
 	"testing"
 	"time"
+
+	"git.zc0901.com/go/god/lib/stringx"
 
 	"git.zc0901.com/go/god/lib/logx"
 
@@ -25,9 +28,9 @@ func TestNewNeo(t *testing.T) {
 
 	t.Run("单值——简单类型测试", func(t *testing.T) {
 		var tomId int64
-		err := neo.Read(&tomId, `MATCH (tom:Person {name: "Tom Hanks"}) RETURN id(tom)`)
+		err := neo.Read(&tomId, `MATCH (tom:User {Nick: "苗雨露"}) RETURN id(tom)`)
 		assert.Nil(t, err)
-		assert.Equal(t, int64(71), tomId)
+		assert.Equal(t, int64(5), tomId)
 	})
 
 	t.Run("单值——结构体测试", func(t *testing.T) {
@@ -43,12 +46,13 @@ func TestNewNeo(t *testing.T) {
 
 	t.Run("单值——结构体测试2", func(t *testing.T) {
 		var result struct {
-			Tom neo4j.Node `neo:"tom"`
+			Node neo4j.Node `neo:"n"`
 		}
-		err := neo.Read(&result, `MATCH (tom:Person {name: "Tom Hanks"})-[:ACTED_IN]->() RETURN tom`)
+		err := neo.Read(&result, `MATCH (n:User) WHERE n.Id=318 RETURN n LIMIT 25`)
 		assert.Nil(t, err)
-		assert.Equal(t, int64(71), result.Tom.Id)
-		assert.Equal(t, "Tom Hanks", result.Tom.Props["name"])
+		fmt.Println(result)
+		// assert.Equal(t, int64(71), result.Tom.Id)
+		// assert.Equal(t, "Tom Hanks", result.Tom.Props["name"])
 	})
 
 	t.Run("多值——简单类型测试", func(t *testing.T) {
@@ -141,8 +145,41 @@ func TestDriver_SingleOtherNode(t *testing.T) {
 }
 
 func TestDriver_CreateNode(t *testing.T) {
-	err := neo.CreateNode(&neo4j.Node{Id: 318, Labels: []string{"User", "Project"}})
+	id := int64(6)
+	err := neo.CreateNode(&neo4j.Node{
+		Id:     id,
+		Labels: []string{"User", "Project"},
+		Props: map[string]interface{}{
+			"id":       id,
+			"nickname": "苗雨露",
+		},
+	})
 	assert.Nil(t, err)
+}
+
+func BenchmarkMergeNode(b *testing.B) {
+	logx.Disable()
+
+	nodes := make([]*neo4j.Node, 0)
+	labels := []string{"User", "Project"}
+
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(2)
+		id := rand.Int63()
+		label := labels[n]
+		nodes = append(nodes, &neo4j.Node{
+			Id:     id,
+			Labels: []string{label},
+			Props: map[string]interface{}{
+				"id":   id,
+				"name": stringx.RandId(),
+			},
+		})
+	}
+
+	fmt.Println("本批次数量 ", len(nodes))
+	err := neo.MergeNode(nodes...)
+	assert.Nil(b, err)
 }
 
 func BenchmarkRunCypherWithBreaker(b *testing.B) {
