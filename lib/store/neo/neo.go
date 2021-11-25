@@ -20,10 +20,10 @@ type Session interface {
 	Read(dest interface{}, cypher string, params ...g.Map) error
 	// TxRead 事务型读数 —— 运行Cypher并读入目标。
 	TxRead(tx neo4j.Transaction, dest interface{}, cypher string, params ...g.Map) error
-	// Scan 扫数 —— 利用扫描器扫描指定Cypher的查询结果。
-	Scan(scanner Scanner, cypher string, params ...g.Map) error
-	// TxScan 事务型扫数 —— 利用扫描器扫描指定Cypher的查询结果。
-	TxScan(tx neo4j.Transaction, scanner Scanner, cypher string, params ...g.Map) error
+	// Run 运行 —— 并利用扫描器扫描指定Cypher的执行结果。
+	Run(scanner Scanner, cypher string, params ...g.Map) error
+	// TxRun 事务型运行 —— 利用扫描器扫描指定Cypher的执行结果。
+	TxRun(tx neo4j.Transaction, scanner Scanner, cypher string, params ...g.Map) error
 }
 
 // NewNeo 返回新的 Neo 驱动。出错则退出。

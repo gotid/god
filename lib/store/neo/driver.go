@@ -68,82 +68,58 @@ func (d *driver) BeginTx() (neo4j.Transaction, error) {
 
 // Read 读数 —— 运行指定 Cypher 并读数至目标。
 func (d *driver) Read(dest interface{}, cypher string, params ...g.Map) error {
-	var readError error
-	err := d.brk.DoWithAcceptable(func() error {
+	var scanError error
+	return d.brk.DoWithAcceptable(func() error {
 		driver4j, err := d.Driver()
 		if err != nil {
 			logConnError(d.target, err)
 			return err
 		}
 
-		err = doRun(driver4j, func(result neo4j.Result) error {
-			return scan(dest, result)
+		return doRun(driver4j, func(result neo4j.Result) error {
+			scanError = scan(dest, result)
+			return scanError
 		}, cypher, params...)
-		return err
 	}, func(reqError error) bool {
-		return reqError == readError || d.acceptable(reqError)
+		return reqError == scanError || d.acceptable(reqError)
 	})
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 // TxRead 事务型读数 —— 运行指定 Cypher 并读数至目标。
 func (d *driver) TxRead(tx neo4j.Transaction, dest interface{}, cypher string, params ...g.Map) error {
-	var readError error
-	err := d.brk.DoWithAcceptable(func() error {
-		err := doTxRun(tx, func(result neo4j.Result) error {
-			return scan(dest, result)
+	var scanError error
+	return d.brk.DoWithAcceptable(func() error {
+		return doTxRun(tx, func(result neo4j.Result) error {
+			scanError = scan(dest, result)
+			return scanError
 		}, cypher, params...)
-		return err
 	}, func(reqError error) bool {
-		return reqError == readError || d.acceptable(reqError)
+		return reqError == scanError || d.acceptable(reqError)
 	})
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
-// Scan 扫数 —— 运行指定 Cypher 查询并利用指定扫描器进行结果扫描。
-func (d *driver) Scan(scanner Scanner, cypher string, params ...g.Map) error {
-	var readError error
-	err := d.brk.DoWithAcceptable(func() error {
+// Run 运行 —— 并利用扫描器扫描指定Cypher的执行结果。
+func (d *driver) Run(scanner Scanner, cypher string, params ...g.Map) error {
+	return d.brk.DoWithAcceptable(func() error {
 		driver4j, err := d.Driver()
 		if err != nil {
 			logConnError(d.target, err)
 			return err
 		}
 
-		err = doRun(driver4j, scanner, cypher, params...)
-		return err
+		return doRun(driver4j, scanner, cypher, params...)
 	}, func(reqError error) bool {
-		return reqError == readError || d.acceptable(reqError)
+		return d.acceptable(reqError)
 	})
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
-// TxScan 事务型扫数 —— 运行指定 Cypher 查询并利用指定扫描器进行结果扫描。
-func (d *driver) TxScan(tx neo4j.Transaction, scanner Scanner, cypher string, params ...g.Map) error {
-	var readError error
-	err := d.brk.DoWithAcceptable(func() error {
-		err := doTxRun(tx, scanner, cypher, params...)
-		return err
+// TxRun 事务型运行 —— 利用扫描器扫描指定Cypher的执行结果。
+func (d *driver) TxRun(tx neo4j.Transaction, scanner Scanner, cypher string, params ...g.Map) error {
+	return d.brk.DoWithAcceptable(func() error {
+		return doTxRun(tx, scanner, cypher, params...)
 	}, func(reqError error) bool {
-		return reqError == readError || d.acceptable(reqError)
+		return d.acceptable(reqError)
 	})
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 // 判断错误是否可接受

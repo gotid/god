@@ -88,7 +88,7 @@ func TestNewNeo(t *testing.T) {
 		}
 	})
 
-	t.Run("最短路径查询 - 扫数", func(t *testing.T) {
+	t.Run("最短路径查询 - 运行", func(t *testing.T) {
 		cb := func(result neo4j.Result) error {
 			for result.Next() {
 				record := result.Record()
@@ -102,7 +102,12 @@ func TestNewNeo(t *testing.T) {
 			return nil
 		}
 		cypher := `MATCH p=shortestPath((bacon:Person {name:"Kevin Bacon"})-[*]-(meg:Person {name:"Meg Ryan"})) RETURN p`
-		err := neo.Scan(cb, cypher)
+		err := neo.Run(cb, cypher)
+		assert.Nil(t, err)
+	})
+
+	t.Run("创建唯一约束测试", func(t *testing.T) {
+		err := neo.Run(nil, `create constraint unq_project_id if not exists on (n:Project) assert n.Id is unique`)
 		assert.Nil(t, err)
 	})
 }

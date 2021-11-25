@@ -45,7 +45,11 @@ func doRun(driver neo4j.Driver, scanner Scanner, cypher string, params ...g.Map)
 		return err
 	}
 
-	return scanner(result)
+	if scanner != nil {
+		return scanner(result)
+	}
+
+	return nil
 }
 
 func doTxRun(tx neo4j.Transaction, scanner Scanner, cypher string, params ...g.Map) error {
@@ -70,7 +74,11 @@ func doTxRun(tx neo4j.Transaction, scanner Scanner, cypher string, params ...g.M
 		return err
 	}
 
-	return scanner(result)
+	if scanner != nil {
+		return scanner(result)
+	}
+
+	return nil
 }
 
 func logCypherError(cypher string, err error) {
