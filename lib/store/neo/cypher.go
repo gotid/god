@@ -1,6 +1,7 @@
 package neo
 
 import (
+	"fmt"
 	"time"
 
 	"git.zc0901.com/go/god/lib/g"
@@ -79,6 +80,26 @@ func doTxRun(tx neo4j.Transaction, scanner Scanner, cypher string, params ...g.M
 	}
 
 	return nil
+}
+
+func doTx(tx neo4j.Transaction, fn TransactFn) (err error) {
+	defer func() {
+		if p := recover(); p != nil {
+			if e := tx.Rollback(); e != nil {
+				err = fmt.Errorf("事务来自 %v, 回滚失败: %v", p, e)
+			} else {
+				err = fmt.Errorf("事务回滚成功，源于错误: %v", p)
+			}
+		} else if err != nil {
+			if e := tx.Rollback(); e != nil {
+				err = fmt.Errorf("事务失败: %s, 回滚失败: %s", err, e)
+			}
+		} else {
+			err = tx.Commit()
+		}
+	}()
+
+	return fn(tx)
 }
 
 func logCypherError(cypher string, err error) {

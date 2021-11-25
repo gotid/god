@@ -114,8 +114,20 @@ func TestNewNeo(t *testing.T) {
 	t.Run("获取 schema", func(t *testing.T) {
 		var dest interface{}
 		err := neo.Read(&dest, "drop constraint constraint_1ea8c423")
-		assert.Nil(t, err)
-		fmt.Println(dest)
+		assert.NotNil(t, err)
+	})
+
+	t.Run("托管式事务测试", func(t *testing.T) {
+		err := neo.Transact(func(tx neo4j.Transaction) error {
+			var dest interface{}
+			err := neo.Read(&dest, "drop constraint constraint_1ea8c423")
+			if err != nil {
+				return err
+			}
+
+			return nil
+		})
+		assert.NotNil(t, err)
 	})
 }
 
@@ -144,6 +156,16 @@ func BenchmarkRunCypherWithBreaker(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			query()
 		}
+	})
+
+	b.Run("托管的事务性操作测试", func(b *testing.B) {
+		err := neo.Transact(func(tx neo4j.Transaction) error {
+			for i := 0; i < b.N; i++ {
+				txQuery(tx)
+			}
+			return nil
+		})
+		assert.Nil(b, err)
 	})
 
 	tx, err := neo.BeginTx()

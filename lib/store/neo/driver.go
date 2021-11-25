@@ -66,6 +66,18 @@ func (d *driver) BeginTx() (neo4j.Transaction, error) {
 	return tx, nil
 }
 
+// Transact 执行事务型操作。
+func (d *driver) Transact(fn TransactFn) error {
+	tx, err := d.BeginTx()
+	if err != nil {
+		return err
+	}
+
+	return d.brk.DoWithAcceptable(func() error {
+		return doTx(tx, fn)
+	}, d.acceptable)
+}
+
 // Read 读数 —— 运行指定 Cypher 并读数至目标。
 func (d *driver) Read(dest interface{}, cypher string, params ...g.Map) error {
 	var scanError error
