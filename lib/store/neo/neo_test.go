@@ -141,7 +141,7 @@ func TestDriver_SingleOtherNode(t *testing.T) {
 }
 
 func TestDriver_CreateNode(t *testing.T) {
-	err := neo.CreateNode(&neo4j.Node{Id: 318, Labels: []string{"User"}})
+	err := neo.CreateNode(&neo4j.Node{Id: 318, Labels: []string{"User", "Project"}})
 	assert.Nil(t, err)
 }
 

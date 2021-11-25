@@ -2,6 +2,7 @@ package neo
 
 import (
 	"fmt"
+	"strings"
 
 	"git.zc0901.com/go/god/lib/g"
 
@@ -9,14 +10,27 @@ import (
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )
 
-// CreateNode 创建一个节点。
-func (d *driver) CreateNode(node *neo4j.Node) error {
-	assert.IsNotNil(node, "节点的不能为 nil")
-	assert.IsNotEmpty(node.Id, "节点Id不能为0")
+const (
+	cypherCreateNode = "CREATE (:%s %s)"
+)
 
-	fmt.Println(node)
+// CreateNode 创建一个节点。
+func (d *driver) CreateNode(nodes ...*neo4j.Node) error {
+	assert.IsNotNil(nodes, "节点的不能为 nil")
+
+	for _, node := range nodes {
+		d.buildCreateNodeCypher(node)
+	}
 
 	return nil
+}
+
+func (d *driver) buildCreateNodeCypher(node *neo4j.Node) (string, error) {
+	// cypher := fmt.Printf(cypherCreateNode, node.Labels)
+	labels := strings.Join(node.Labels, ":")
+	fmt.Println(labels)
+
+	return "", nil
 }
 
 // SingleOtherNode 返回单一关系中的另一节点。

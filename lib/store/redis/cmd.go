@@ -19,6 +19,12 @@ for _, offset in ipairs(ARGV) do
 	redis.call("setbit", KEYS[1], offset, 1)
 end
 `
+
+	unsetBitsScript = `
+for _, offset in ipairs(ARGV) do
+	redis.call("setbit", KEYS[1], offset, 0)
+end
+`
 	getBitsScript = `
 local ret = {}
 for i, offset in ipairs(ARGV) do
@@ -776,6 +782,26 @@ func (r *Redis) SetBits(key string, offsets []int64) error {
 		}
 
 		_, err = client.Eval(setBitsScript, []string{key}, args).Result()
+		if err == Nil {
+			return nil
+		}
+		return err
+	}, acceptable)
+}
+
+func (r *Redis) UnsetBits(key string, offsets []int64) error {
+	return r.brk.DoWithAcceptable(func() error {
+		client, err := getClient(r)
+		if err != nil {
+			return err
+		}
+
+		args, err := buildBitOffsetArgs(offsets)
+		if err != nil {
+			return err
+		}
+
+		_, err = client.Eval(unsetBitsScript, []string{key}, args).Result()
 		if err == Nil {
 			return nil
 		}

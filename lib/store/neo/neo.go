@@ -30,8 +30,8 @@ type Session interface {
 	// TxRun 事务型运行 —— 利用扫描器扫描指定Cypher的执行结果。
 	TxRun(tx neo4j.Transaction, scanner Scanner, cypher string, params ...g.Map) error
 
-	// CreateNode 创建一个节点。
-	CreateNode(node *neo4j.Node) error
+	// CreateNode 创建节点。
+	CreateNode(nodes ...*neo4j.Node) error
 	// SingleOtherNode 返回单一关系中的另一节点。
 	SingleOtherNode(input *neo4j.Node, rel *Relationship) (*neo4j.Node, error)
 }

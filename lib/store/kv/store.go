@@ -49,7 +49,7 @@ type (
 		SCard(key string) (int64, error)
 		Set(key string, value string) error
 		SetBit(key string, offset int64, value int) error
-		SetBits(key string, offset []int64) error
+		SetBits(key string, offset []int64, value int) error
 		SetEx(key, value string, seconds int) error
 		SetNX(key, value string) (bool, error)
 		SetNXEx(key, value string, seconds int) (bool, error)
@@ -477,7 +477,7 @@ func (cs clusterStore) SetBit(key string, offset int64, value int) error {
 	return node.SetBit(key, offset, value)
 }
 
-func (cs clusterStore) SetBits(key string, offset []int64) error {
+func (cs clusterStore) SetBits(key string, offset []int64, value int) error {
 	node, err := cs.getRedis(key)
 	if err != nil {
 		return err

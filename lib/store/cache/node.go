@@ -103,6 +103,10 @@ func (n node) SetBits(key string, offset []int64) error {
 	return n.redis.SetBits(key, offset)
 }
 
+func (n node) UnsetBits(key string, offset []int64) error {
+	return n.redis.UnsetBits(key, offset)
+}
+
 func (n node) GetBit(key string, offset int64) (int, error) {
 	return n.redis.GetBit(key, offset)
 }

@@ -69,6 +69,10 @@ func (cc CachedConn) SetBits(key string, offset []int64) error {
 	return cc.cache.SetBits(key, offset)
 }
 
+func (cc CachedConn) UnsetBits(key string, offset []int64) error {
+	return cc.cache.UnsetBits(key, offset)
+}
+
 func (cc CachedConn) GetBit(key string, offset int64) (int, error) {
 	return cc.cache.GetBit(key, offset)
 }
