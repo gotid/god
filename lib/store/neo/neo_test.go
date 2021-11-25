@@ -110,6 +110,13 @@ func TestNewNeo(t *testing.T) {
 		err := neo.Run(nil, `create constraint unq_project_id if not exists on (n:Project) assert n.Id is unique`)
 		assert.Nil(t, err)
 	})
+
+	t.Run("获取 schema", func(t *testing.T) {
+		var dest interface{}
+		err := neo.Read(&dest, "drop constraint constraint_1ea8c423")
+		assert.Nil(t, err)
+		fmt.Println(dest)
+	})
 }
 
 func BenchmarkRunCypherWithBreaker(b *testing.B) {
