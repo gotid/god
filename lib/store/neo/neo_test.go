@@ -18,8 +18,9 @@ const (
 	password = "asdfasdf"
 )
 
+var neo = NewNeo(target, username, password, "")
+
 func TestNewNeo(t *testing.T) {
-	neo := NewNeo(target, username, password, "")
 	SetSlowThreshold(10 * time.Millisecond)
 
 	t.Run("单值——简单类型测试", func(t *testing.T) {
@@ -131,14 +132,25 @@ func TestNewNeo(t *testing.T) {
 	})
 }
 
+func TestDriver_SingleOtherNode(t *testing.T) {
+	input := &neo4j.Node{Id: 1}
+	rel := NewRelationship("All", Outgoing)
+	otherNode, err := neo.SingleOtherNode(input, rel)
+	assert.Nil(t, err)
+	fmt.Println(otherNode)
+}
+
+func TestDriver_CreateNode(t *testing.T) {
+	err := neo.CreateNode(&neo4j.Node{Id: 318, Labels: []string{"User"}})
+	assert.Nil(t, err)
+}
+
 func BenchmarkRunCypherWithBreaker(b *testing.B) {
 	logx.SetLevel(logx.ErrorLevel)
 
 	var result struct {
 		Tom neo4j.Node `neo:"tom"`
 	}
-
-	neo := NewNeo(target, username, password, "")
 
 	cypher := `MATCH (tom:Person {name: "Tom Hanks"})-[:ACTED_IN]->() RETURN tom`
 

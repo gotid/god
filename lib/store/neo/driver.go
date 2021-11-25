@@ -156,7 +156,8 @@ func scan(dest interface{}, result neo4j.Result) error {
 
 	dte := reflect.TypeOf(dest).Elem()
 	dve := dv.Elem()
-	switch dte.Kind() {
+	kind := dte.Kind()
+	switch kind {
 	case reflect.Bool,
 		reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
 		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64,

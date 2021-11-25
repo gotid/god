@@ -1,6 +1,10 @@
 package assert
 
-import "git.zc0901.com/go/god/lib/g"
+import (
+	"git.zc0901.com/go/god/internal/empty"
+
+	"git.zc0901.com/go/god/lib/g"
+)
 
 func IsTrue(exp bool, msg ...string) {
 	m := "[断言失败] - 表达式必须为真"
@@ -9,6 +13,17 @@ func IsTrue(exp bool, msg ...string) {
 	}
 
 	if !exp {
+		panic(m)
+	}
+}
+
+func IsFalse(exp bool, msg ...string) {
+	m := "[断言失败] - 表达式必须为假"
+	if len(msg) == 1 {
+		m = msg[0]
+	}
+
+	if exp {
 		panic(m)
 	}
 }
@@ -31,6 +46,17 @@ func IsNotNil(o interface{}, msg ...string) {
 	}
 
 	if g.IsNil(o) {
+		panic(m)
+	}
+}
+
+func IsNotEmpty(o interface{}, msg ...string) {
+	m := "[断言失败] - 对象必须为空值"
+	if len(msg) == 1 {
+		m = msg[0]
+	}
+
+	if empty.IsEmpty(o) {
 		panic(m)
 	}
 }

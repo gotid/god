@@ -2,11 +2,12 @@ package kv
 
 import (
 	"errors"
+	"log"
+
 	"git.zc0901.com/go/god/lib/errorx"
 	"git.zc0901.com/go/god/lib/hash"
 	"git.zc0901.com/go/god/lib/store/cache"
 	"git.zc0901.com/go/god/lib/store/redis"
-	"log"
 )
 
 var ErrNoRedisNode = errors.New("无可用 redis 节点")
@@ -48,6 +49,7 @@ type (
 		SCard(key string) (int64, error)
 		Set(key string, value string) error
 		SetBit(key string, offset int64, value int) error
+		SetBits(key string, offset []int64) error
 		SetEx(key, value string, seconds int) error
 		SetNX(key, value string) (bool, error)
 		SetNXEx(key, value string, seconds int) (bool, error)

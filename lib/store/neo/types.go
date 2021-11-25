@@ -12,8 +12,49 @@ type (
 )
 
 var (
-	ErrNoScanner            = errors.New("请指定结果扫描函数")
 	ErrNotSettable          = errors.New("扫描目标不可设置")
 	ErrNotReadableValue     = errors.New("neo: 无法读取的值，检查结构字段是否大写开头")
 	ErrUnsupportedValueType = errors.New("neo: 不支持的扫描目标类型")
 )
+
+// Label 定义标签类型
+type Label string
+
+// 返回标签类型的字符串形式。
+func (l Label) String() string {
+	return string(l)
+}
+
+// RelationshipType 定义关系类型
+type RelationshipType string
+
+// 返回关系类型的字符串形式。
+func (r RelationshipType) String() string {
+	return string(r)
+}
+
+// All 默认为所有关系。
+const All RelationshipType = ""
+
+// Direction 定义关系方向类型
+type Direction string
+
+const (
+	Both     Direction = "-"
+	Outgoing Direction = "->"
+	Incoming Direction = "<-"
+)
+
+// ReverseDirection 返回翻转后的方向。
+func ReverseDirection(d Direction) Direction {
+	switch d {
+	case Both:
+		return Both
+	case Outgoing:
+		return Incoming
+	case Incoming:
+		return Outgoing
+	default:
+		panic("不支持的 Neo4j Direction")
+	}
+}
