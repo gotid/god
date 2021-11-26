@@ -29,13 +29,11 @@ var (
 func TestTx(t *testing.T) {
 	err := neo.Transact(func(tx neo4j.Transaction) error {
 		var id int64
-		ctx.Tx = tx
 		err := neo.Read(ctx, &id, `MATCH (u:User {id: 318}) RETURN u.id`)
 		assert.Nil(t, err)
 		return nil
 	})
 	assert.Nil(t, err)
-	ctx.Tx = nil
 }
 
 func TestNoRecords(t *testing.T) {
@@ -152,18 +150,18 @@ func TestNewNeo(t *testing.T) {
 		assert.NotNil(t, err)
 	})
 
-	t.Run("托管式事务测试", func(t *testing.T) {
-		err := neo.Transact(func(tx neo4j.Transaction) error {
-			var dest interface{}
-			err := neo.Read(ctx, &dest, "drop constraint constraint_1ea8c423")
-			if err != nil {
-				return err
-			}
-
-			return nil
-		})
-		assert.NotNil(t, err)
-	})
+	//t.Run("托管式事务测试", func(t *testing.T) {
+	//	err := neo.Transact(ctx, func(tx neo4j.Transaction) error {
+	//		var dest interface{}
+	//		err := neo.Read(ctx, &dest, "drop constraint constraint_1ea8c423")
+	//		if err != nil {
+	//			return err
+	//		}
+	//
+	//		return nil
+	//	})
+	//	assert.NotNil(t, err)
+	//})
 }
 
 func TestRelationship_Edge(t *testing.T) {
@@ -279,10 +277,10 @@ func BenchmarkRunCypherWithBreaker(b *testing.B) {
 		assert.Nil(b, err)
 	}
 
-	txQuery := func(tx neo4j.Transaction) {
-		err := neo.Read(ctx, &result, cypher)
-		assert.Nil(b, err)
-	}
+	//txQuery := func(tx neo4j.Transaction) {
+	//	err := neo.Read(ctx, &result, cypher)
+	//	assert.Nil(b, err)
+	//}
 
 	b.Run("断路器版自动事务测试", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
@@ -292,9 +290,12 @@ func BenchmarkRunCypherWithBreaker(b *testing.B) {
 
 	b.Run("托管的事务性操作测试", func(b *testing.B) {
 		err := neo.Transact(func(tx neo4j.Transaction) error {
+			ctx.Tx = tx
 			for i := 0; i < b.N; i++ {
-				txQuery(tx)
+				err := neo.Read(ctx, &result, cypher)
+				assert.Nil(b, err)
 			}
+
 			return nil
 		})
 		assert.Nil(b, err)
@@ -303,9 +304,11 @@ func BenchmarkRunCypherWithBreaker(b *testing.B) {
 	tx, err := neo.BeginTx()
 	assert.Nil(b, err)
 	defer tx.Close()
+	ctx.Tx = tx
 	b.Run("断路器版手动事务测试", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			txQuery(tx)
+			// txQuery(tx)
+			query()
 		}
 	})
 }

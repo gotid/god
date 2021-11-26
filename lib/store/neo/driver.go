@@ -68,6 +68,15 @@ func (d *driver) Transact(fn TransactFn) error {
 	if err != nil {
 		return err
 	}
+	defer func(tx neo4j.Transaction) {
+		if tx == nil {
+			return
+		}
+		err := tx.Close()
+		if err != nil {
+			logx.Errorf("事务关闭失败! %v", err)
+		}
+	}(tx)
 
 	return d.brk.DoWithAcceptable(func() error {
 		return doTx(tx, fn)
