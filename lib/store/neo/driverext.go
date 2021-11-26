@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
+	"git.zc0901.com/go/god/lib/g"
+
 	"git.zc0901.com/go/god/lib/logx"
 
 	"git.zc0901.com/go/god/lib/fx"
-
-	"git.zc0901.com/go/god/lib/g"
 
 	"git.zc0901.com/go/god/lib/assert"
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
@@ -23,13 +23,14 @@ ON MATCH SET n=node.props`
 )
 
 // CreateNode 创建节点。
-func (d *driver) CreateNode(nodes ...*neo4j.Node) error {
+func (d *driver) CreateNode(ctx Context, nodes ...*neo4j.Node) error {
 	assert.IsNotNil(nodes, "节点的不能为 nil")
 
 	for _, node := range nodes {
 		labels := strings.Join(node.Labels, ":")
 		cypher := fmt.Sprintf(cypherCreateNode, labels)
-		err := d.Run(nil, cypher, g.Map{"props": node.Props})
+		ctx.Params = g.Map{"props": node.Props}
+		err := d.Run(ctx, nil, cypher)
 		if err != nil {
 			return err
 		}
@@ -38,7 +39,8 @@ func (d *driver) CreateNode(nodes ...*neo4j.Node) error {
 	return nil
 }
 
-func (d *driver) MergeNode(nodes ...*neo4j.Node) error {
+// MergeNode 合并节点。
+func (d *driver) MergeNode(ctx Context, nodes ...*neo4j.Node) error {
 	nodeMap := groupNodes(nodes)
 	type lns struct {
 		Labels string
@@ -51,7 +53,7 @@ func (d *driver) MergeNode(nodes ...*neo4j.Node) error {
 		}
 	}).Parallel(func(item interface{}) {
 		v := item.(lns)
-		err := d.doMerge(v.Labels, v.Nodes)
+		err := d.doMerge(ctx, v.Labels, v.Nodes)
 		if err != nil {
 			logx.Errorf("合并失败! %v", err)
 			return
@@ -61,14 +63,15 @@ func (d *driver) MergeNode(nodes ...*neo4j.Node) error {
 	return nil
 }
 
-func (d *driver) doMerge(labels string, nodes []*neo4j.Node) error {
+func (d *driver) doMerge(ctx Context, labels string, nodes []*neo4j.Node) error {
 	vs := make([]map[string]interface{}, len(nodes))
 	for i, node := range nodes {
 		vs[i] = map[string]interface{}{
 			"props": node.Props,
 		}
 	}
-	err := d.Run(nil, fmt.Sprintf(cypherMergeNode, labels), g.Map{"nodes": vs})
+	ctx.Params = g.Map{"nodes": vs}
+	err := d.Run(ctx, nil, fmt.Sprintf(cypherMergeNode, labels))
 	if err != nil {
 		return err
 	}
@@ -77,18 +80,42 @@ func (d *driver) doMerge(labels string, nodes []*neo4j.Node) error {
 }
 
 // SingleOtherNode 返回单一关系中的另一节点。
-func (d *driver) SingleOtherNode(input *neo4j.Node, rel *Relationship) (*neo4j.Node, error) {
+func (d *driver) SingleOtherNode(ctx Context, input *neo4j.Node, rel *Relationship) (*neo4j.Node, error) {
+	assert.IsNotNil(input, "节点不可为空")
+	assert.IsNotEmpty(input.Id, "节点编号不可为0")
 	assert.IsNotNil(rel, "单一节点的关系必须明确")
 	assert.IsNotEmpty(rel.Type, "单一阶段的关系类型必须明确")
 
-	var out neo4j.Node
-	cypher := fmt.Sprintf(`MATCH (i)%s(o) WHERE id(i)=$id RETURN o`, rel.Edge())
-	err := d.Read(&out, cypher, g.Map{"id": input.Id})
+	var out struct {
+		Node neo4j.Node `neo:"o"`
+	}
+	cypher := fmt.Sprintf(`MATCH (i)%s(o) WHERE i.id=$id RETURN o`, rel.Edge())
+	ctx.Params = g.Map{"id": input.Id}
+	err := d.Read(ctx, &out, cypher)
 	if err != nil {
 		return nil, err
 	}
 
-	return &out, nil
+	return &out.Node, nil
+}
+
+// GetDegree 返回指定节点全部或某一中关系的 Degree 数量
+func (d *driver) GetDegree(ctx Context, input *neo4j.Node, rel *Relationship) (int64, error) {
+	assert.IsNotNil(input, "节点不可为空")
+	assert.IsNotEmpty(input.Id, "节点编号不可为0")
+
+	var degree int64
+	cypher := fmt.Sprintf(
+		`MATCH (i)%s() WHERE i.id=$id RETURN COUNT(r) as degree`,
+		rel.Edge("r"),
+	)
+	ctx.Params = g.Map{"id": input.Id}
+	err := d.Read(ctx, &degree, cypher)
+	if err != nil {
+		return 0, err
+	}
+
+	return degree, nil
 }
 
 // 按节点标签分组

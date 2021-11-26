@@ -61,7 +61,7 @@ func CheckStruct(object interface{}, rules interface{}, messages ...CustomMsg) *
 			errorRules = append(errorRules, name+"@"+rule)
 		}
 
-	// Map type rules does not support sequence.
+	// Params type rules does not support sequence.
 	// Format: map[key]rule
 	case map[string]string:
 		checkRules = v

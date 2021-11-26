@@ -51,7 +51,7 @@ func IsNotNil(o interface{}, msg ...string) {
 }
 
 func IsNotEmpty(o interface{}, msg ...string) {
-	m := "[断言失败] - 对象必须为空值"
+	m := "[断言失败] - 对象必须为非空值"
 	if len(msg) == 1 {
 		m = msg[0]
 	}

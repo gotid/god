@@ -60,10 +60,10 @@ func goTypeToDart(t string) string {
 		}
 
 		if len(tys) != 2 {
-			log.Fatal("Map type number !=2")
+			log.Fatal("Params type number !=2")
 		}
 
-		return "Map<String," + goTypeToDart(tys[1]) + ">"
+		return "Params<String," + goTypeToDart(tys[1]) + ">"
 	}
 
 	switch t {

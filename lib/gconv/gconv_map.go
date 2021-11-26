@@ -1,10 +1,11 @@
 package gconv
 
 import (
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/lib/gerror"
 	"reflect"
 	"strings"
+
+	"git.zc0901.com/go/god/internal/json"
+	"git.zc0901.com/go/god/lib/gerror"
 
 	"git.zc0901.com/go/god/internal/empty"
 	"git.zc0901.com/go/god/internal/utils"
@@ -210,7 +211,7 @@ func doMapConvertForMapOrStructValue(isRoot bool, value interface{}, recursive b
 		}
 		return dataMap
 	case reflect.Struct:
-		// Map converting interface check.
+		// Params converting interface check.
 		if v, ok := value.(apiMapStrAny); ok {
 			m := v.MapStrAny()
 			if recursive {

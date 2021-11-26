@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"git.zc0901.com/go/god/lib/breaker"
-	"git.zc0901.com/go/god/lib/g"
 	"git.zc0901.com/go/god/lib/logx"
 	"git.zc0901.com/go/god/lib/mapping"
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
@@ -48,21 +47,18 @@ func MustDriver(target, username, password, realm string) Driver {
 }
 
 // Driver 返回可复用的 neo4j.Driver。
-func (d *driver) Driver() (neo4j.Driver, error) {
-	return getDriver(d.target, d.username, d.password, d.realm)
+func (d *driver) Driver() neo4j.Driver {
+	return d.driver
 }
 
 // BeginTx 返回一个新的事务。
 func (d *driver) BeginTx() (neo4j.Transaction, error) {
-	driver4j, err := d.Driver()
-	if err != nil {
-		return nil, err
-	}
-	session := driver4j.NewSession(neo4j.SessionConfig{})
+	session := d.driver.NewSession(neo4j.SessionConfig{})
 	tx, err := session.BeginTransaction()
 	if err != nil {
 		return nil, err
 	}
+
 	return tx, nil
 }
 
@@ -79,56 +75,24 @@ func (d *driver) Transact(fn TransactFn) error {
 }
 
 // Read 读数 —— 运行指定 Cypher 并读数至目标。
-func (d *driver) Read(dest interface{}, cypher string, params ...g.Map) error {
+func (d *driver) Read(ctx Context, dest interface{}, cypher string) error {
 	var scanError error
 	return d.brk.DoWithAcceptable(func() error {
-		driver4j, err := d.Driver()
-		if err != nil {
-			logConnError(d.target, err)
-			return err
-		}
-
-		return doRun(driver4j, func(result neo4j.Result) error {
+		ctx.Driver = d.driver
+		return doRun(ctx, func(result neo4j.Result) error {
 			scanError = scan(dest, result)
 			return scanError
-		}, cypher, params...)
-	}, func(reqError error) bool {
-		return reqError == scanError || d.acceptable(reqError)
-	})
-}
-
-// TxRead 事务型读数 —— 运行指定 Cypher 并读数至目标。
-func (d *driver) TxRead(tx neo4j.Transaction, dest interface{}, cypher string, params ...g.Map) error {
-	var scanError error
-	return d.brk.DoWithAcceptable(func() error {
-		return doTxRun(tx, func(result neo4j.Result) error {
-			scanError = scan(dest, result)
-			return scanError
-		}, cypher, params...)
+		}, cypher)
 	}, func(reqError error) bool {
 		return reqError == scanError || d.acceptable(reqError)
 	})
 }
 
 // Run 运行 —— 并利用扫描器扫描指定Cypher的执行结果。
-func (d *driver) Run(scanner Scanner, cypher string, params ...g.Map) error {
+func (d *driver) Run(ctx Context, scanner Scanner, cypher string) error {
 	return d.brk.DoWithAcceptable(func() error {
-		driver4j, err := d.Driver()
-		if err != nil {
-			logConnError(d.target, err)
-			return err
-		}
-
-		return doRun(driver4j, scanner, cypher, params...)
-	}, func(reqError error) bool {
-		return d.acceptable(reqError)
-	})
-}
-
-// TxRun 事务型运行 —— 利用扫描器扫描指定Cypher的执行结果。
-func (d *driver) TxRun(tx neo4j.Transaction, scanner Scanner, cypher string, params ...g.Map) error {
-	return d.brk.DoWithAcceptable(func() error {
-		return doTxRun(tx, scanner, cypher, params...)
+		ctx.Driver = d.driver
+		return doRun(ctx, scanner, cypher)
 	}, func(reqError error) bool {
 		return d.acceptable(reqError)
 	})
@@ -141,10 +105,6 @@ func (d *driver) acceptable(reqError error) bool {
 		return ok
 	}
 	return ok || d.accept(reqError)
-}
-
-func logConnError(target string, err error) {
-	logx.Errorf("获取 neo4j 连接池失败 %s: %v", target, err)
 }
 
 func scan(dest interface{}, result neo4j.Result) error {
@@ -163,12 +123,12 @@ func scan(dest interface{}, result neo4j.Result) error {
 		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64,
 		reflect.Float32, reflect.Float64,
 		reflect.String:
-		err := setSimpleValue(dve, result, dv)
+		err := setOneSimple(dve, result, dv)
 		if err != nil {
 			return err
 		}
 	case reflect.Struct:
-		err := setStructValue(dve, result)
+		err := setOneStruct(dve, result)
 		if err != nil {
 			return err
 		}
@@ -227,18 +187,26 @@ func scan(dest interface{}, result neo4j.Result) error {
 	return nil
 }
 
-func setStructValue(dve reflect.Value, result neo4j.Result) error {
+func setOneStruct(dve reflect.Value, result neo4j.Result) error {
+	//record, err := result.Single()
+	//if err != nil {
+	//	return err
+	//}
+
 	for result.Next() {
 		record := result.Record()
+
 		if err := setFieldValueMap(dve, record); err != nil {
 			return err
 		}
+
 		break
 	}
+
 	return nil
 }
 
-func setSimpleValue(dve reflect.Value, result neo4j.Result, dv reflect.Value) error {
+func setOneSimple(dve reflect.Value, result neo4j.Result, dv reflect.Value) error {
 	if dve.CanSet() {
 		for result.Next() {
 			record := result.Record()

@@ -22,19 +22,25 @@ func NewRelationship(t RelationshipType, d Direction) *Relationship {
 //
 // 返回结果形如： -[:FOLLOW]-> 或 <-[f:FOLLOW]-
 func (r *Relationship) Edge(alias ...string) string {
-	var rel string
+	var ali string
 	if len(alias) > 0 {
-		rel = alias[0]
+		ali = alias[0]
 	}
 	switch r.Direction {
 	case Outgoing:
-		return r.edge("", rel, r.Type, ">")
+		return r.edge("", ali, r.Type, ">")
 	case Incoming:
-		return r.edge("<", rel, r.Type, "")
+		return r.edge("<", ali, r.Type, "")
+	case Both:
+		return r.edge("", ali, r.Type, "")
 	}
 	return ""
 }
 
 func (r *Relationship) edge(left, alias string, relType RelationshipType, right string) string {
-	return fmt.Sprintf("%s-[%s:%s]-%s", left, alias, relType, right)
+	typ := relType
+	if typ != "" {
+		typ = ":" + typ
+	}
+	return fmt.Sprintf("%s-[%s%s]-%s", left, alias, typ, right)
 }

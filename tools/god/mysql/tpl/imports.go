@@ -10,6 +10,7 @@ var (
 
 	"git.zc0901.com/go/god/lib/container/garray"
 	"git.zc0901.com/go/god/lib/gconv"
+	"git.zc0901.com/go/god/lib/fx"
 	"git.zc0901.com/go/god/lib/gutil"
 	"git.zc0901.com/go/god/lib/logx"
 	"git.zc0901.com/go/god/lib/mathx"

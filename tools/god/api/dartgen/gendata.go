@@ -18,12 +18,12 @@ class {{.Name}}{
 	{{.Name}}({ {{range .Members}}
 		this.{{lowCamelCase .Name}},{{end}}
 	});
-	factory {{.Name}}.fromJson(Map<String,dynamic> m) {
+	factory {{.Name}}.fromJson(Params<String,dynamic> m) {
 		return {{.Name}}({{range .Members}}
 			{{lowCamelCase .Name}}: {{if isDirectType .Type}}m['{{tagGet .Tag "json"}}']{{else if isClassListType .Type}}(m['{{tagGet .Tag "json"}}'] as List<dynamic>).map((i) => {{getCoreType .Type}}.fromJson(i)){{else}}{{.Type}}.fromJson(m['{{tagGet .Tag "json"}}']){{end}},{{end}}
 		);
 	}
-	Map<String,dynamic> toJson() {
+	Params<String,dynamic> toJson() {
 		return { {{range .Members}}
 			'{{tagGet .Tag "json"}}': {{if isDirectType .Type}}{{lowCamelCase .Name}}{{else if isClassListType .Type}}{{lowCamelCase .Name}}.map((i) => i.toJson()){{else}}{{lowCamelCase .Name}}.toJson(){{end}},{{end}}
 		};
@@ -33,7 +33,7 @@ class {{.Name}}{
 `
 
 func genData(dir string, api *spec.ApiSpec) error {
-	e := os.MkdirAll(dir, 0755)
+	e := os.MkdirAll(dir, 0o755)
 	if e != nil {
 		logx.Error(e)
 		return e
@@ -44,7 +44,7 @@ func genData(dir string, api *spec.ApiSpec) error {
 		return e
 	}
 
-	file, e := os.OpenFile(dir+api.Info.Title+".dart", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	file, e := os.OpenFile(dir+api.Info.Title+".dart", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0o644)
 	if e != nil {
 		logx.Error(e)
 		return e
@@ -68,7 +68,7 @@ func genTokens(dir string) error {
 	if fileExists(path) {
 		return nil
 	}
-	tokensFile, e := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	tokensFile, e := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0o644)
 	if e != nil {
 		logx.Error(e)
 		return e

@@ -33,8 +33,16 @@ func (r RelationshipType) String() string {
 	return string(r)
 }
 
-// All 默认为所有关系。
-const All RelationshipType = ""
+const (
+	// All 默认为所有关系。
+	All RelationshipType = ""
+	// View 浏览关系
+	View RelationshipType = "VIEW"
+	// Down 下载关系
+	Down RelationshipType = "DOWN"
+	// Fav 收藏关系
+	Fav RelationshipType = "FAV"
+)
 
 // Direction 定义关系方向类型
 type Direction string

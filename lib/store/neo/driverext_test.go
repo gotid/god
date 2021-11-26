@@ -30,6 +30,9 @@ func TestFxParallel(t *testing.T) {
 		}
 	}).Parallel(func(item interface{}) {
 		vs := item.([]interface{})
-		fmt.Println(vs[0])
+		ns := vs[1].([]*neo4j.Node)
+		for _, n := range ns {
+			fmt.Println(vs[0], n.Id)
+		}
 	})
 }

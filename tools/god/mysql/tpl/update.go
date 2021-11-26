@@ -13,7 +13,28 @@ func (m *{{.upperTable}}Model) Update(data {{.upperTable}}) error {
 `
 
 var UpdatePartial = `
-func (m *{{.upperTable}}Model) UpdatePartial(data g.Map) error {
+func (m *{{.upperTable}}Model) UpdatePartial(ms ...g.Params) (err error) {
+	okNum := 0
+	fx.From(func(source chan<- interface{}) {
+		for _, data := range ms {
+			source <- data
+		}
+	}).Parallel(func(item interface{}) {
+		err = m.updatePartial(item.(g.Params))
+		if err != nil {
+			return
+		}
+		okNum++
+	})
+
+	if err == nil && okNum != len(ms) {
+		err = fmt.Errorf("部分局部更新失败！待更新(%d) != 实际更新(%d)", len(ms), okNum)
+	}
+
+	return err
+}
+
+func (m *{{.upperTable}}Model) updatePartial(data g.Params) error {
 	updateArgs, err := sqlx.ExtractUpdateArgs({{.lowerTable}}FieldList, data)
 	if err != nil {
 		return err
@@ -42,7 +63,27 @@ func (m *{{.upperTable}}Model) TxUpdate(tx sqlx.TxSession, data {{.upperTable}})
 `
 
 var TxUpdatePartial = `
-func (m *{{.upperTable}}Model) TxUpdatePartial(tx sqlx.TxSession, data g.Map) error {
+func (m *{{.upperTable}}Model) TxUpdatePartial(tx sqlx.TxSession, ms ...g.Params) (err error) {
+	okNum := 0
+	fx.From(func(source chan<- interface{}) {
+		for _, data := range ms {
+			source <- data
+		}
+	}).Parallel(func(item interface{}) {
+		err = m.txUpdatePartial(tx, item.(g.Params))
+		if err != nil {
+			return
+		}
+		okNum++
+	})
+
+	if err == nil && okNum != len(ms) {
+		err = fmt.Errorf("部分事务型局部更新失败！待更新(%d) != 实际更新(%d)", len(ms), okNum)
+	}
+	return err
+}
+
+func (m *{{.upperTable}}Model) txUpdatePartial(tx sqlx.TxSession, data g.Params) error {
 	updateArgs, err := sqlx.ExtractUpdateArgs({{.lowerTable}}FieldList, data)
 	if err != nil {
 		return err

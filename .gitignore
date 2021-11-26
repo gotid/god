@@ -11,7 +11,7 @@
 
 .idea
 .idea/*.*
-tools/god/god
+tools/god/god-arm64
 **/.DS_Store
 **/logs
 !Makefile

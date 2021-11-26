@@ -40,7 +40,7 @@ func (m *{{.upperTable}}Model) FindMany(ids []{{.dataType}}, workers ...int) (li
 		nWorkers = mathx.MinInt(10, len(ids))
 	}
 
-	channel := mr.Map(func(source chan<- interface{}) {
+	channel := mr.Params(func(source chan<- interface{}) {
 		for _, id := range ids {
 			source <- id
 		}
@@ -118,7 +118,7 @@ func (m *{{.upperTable}}Model) FindManyBy{{.upperField}}s(keys []{{.dataType}}, 
 		nWorkers = mathx.MinInt(10, len(keys))
 	}
 
-	channel := mr.Map(func(source chan<- interface{}) {
+	channel := mr.Params(func(source chan<- interface{}) {
 		for _, key := range keys {
 			source <- key
 		}
