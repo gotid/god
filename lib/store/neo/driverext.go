@@ -39,17 +39,18 @@ func (d *driver) CreateNode(nodes ...*neo4j.Node) error {
 }
 
 func (d *driver) MergeNode(nodes ...*neo4j.Node) error {
-	nodeMap := labelNodes(nodes)
-	type labelNodes struct {
+	nodeMap := groupNodes(nodes)
+	type lns struct {
 		Labels string
 		Nodes  []*neo4j.Node
 	}
+
 	fx.From(func(source chan<- interface{}) {
 		for ls, ns := range nodeMap {
-			source <- labelNodes{Labels: ls, Nodes: ns}
+			source <- lns{Labels: ls, Nodes: ns}
 		}
 	}).Parallel(func(item interface{}) {
-		v := item.(labelNodes)
+		v := item.(lns)
 		err := d.doMerge(v.Labels, v.Nodes)
 		if err != nil {
 			logx.Errorf("合并失败! %v", err)
@@ -90,7 +91,8 @@ func (d *driver) SingleOtherNode(input *neo4j.Node, rel *Relationship) (*neo4j.N
 	return &out, nil
 }
 
-func labelNodes(nodes []*neo4j.Node) (ret map[string][]*neo4j.Node) {
+// 按节点标签分组
+func groupNodes(nodes []*neo4j.Node) (ret map[string][]*neo4j.Node) {
 	if len(nodes) == 0 {
 		return nil
 	}

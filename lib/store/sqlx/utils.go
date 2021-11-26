@@ -22,6 +22,7 @@ type UpdateArgs struct {
 	Args   []interface{}
 }
 
+// ExtractUpdateArgs 返回提取后的SQL更新参数。
 func ExtractUpdateArgs(allFieldList []string, updateMap g.Map) (*UpdateArgs, error) {
 	vid, ok := updateMap["id"]
 	id := gconv.Int64(vid)
