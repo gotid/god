@@ -21,6 +21,7 @@ ON MATCH SET n=node.props`
 MERGE (n2:%s {id: $id2})
 MERGE (n1)%s(n2)
 %s`
+	cypherDetachNode = `MATCH (n:%s {id: $id}) DETACH DELETE n`
 )
 
 // CreateNode 创建节点。
@@ -67,7 +68,7 @@ func (d *driver) MergeNode(ctx Context, nodes ...neo4j.Node) error {
 }
 
 // MergeNodeRelation 两个节点之间的关系。
-func (d *driver) MergeNodeRelation(ctx Context, n1 neo4j.Node, r Relation, n2 neo4j.Node) error {
+func (d *driver) Relate(ctx Context, n1 neo4j.Node, r Relation, n2 neo4j.Node) error {
 	MustFullNode(n1, "n1")
 	MustFullRelation(r, "r")
 	MustFullNode(n2, "n2")
@@ -77,6 +78,16 @@ func (d *driver) MergeNodeRelation(ctx Context, n1 neo4j.Node, r Relation, n2 ne
 		Labels(n1), Labels(n2), r.Edge("r"), r.OnSet("r"))
 	err := d.Run(ctx, nil, cypher)
 	return err
+}
+
+// DetachNode 删除节点及其关系。
+func (d *driver) DetachNode(ctx Context, n neo4j.Node) error {
+	if n.Id == 0 || len(n.Labels) == 0 {
+		return nil
+	}
+
+	ctx.Params = g.Map{"id": n.Id}
+	return d.Run(ctx, nil, fmt.Sprintf(cypherDetachNode, Labels(n)))
 }
 
 func (d *driver) doMerge(ctx Context, labels string, nodes []neo4j.Node) error {
@@ -95,7 +106,7 @@ func (d *driver) doMerge(ctx Context, labels string, nodes []neo4j.Node) error {
 	return nil
 }
 
-// SingleOtherNode 返回单一关系中的另一节点。
+// SingleOtherNode 返回单边关系中另一节点。
 func (d *driver) SingleOtherNode(ctx Context, input neo4j.Node, rel Relation) (neo4j.Node, error) {
 	assert.IsNotNil(input, "节点不可为空")
 	assert.IsNotEmpty(input.Id, "节点编号不可为0")

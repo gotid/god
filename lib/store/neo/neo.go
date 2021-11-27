@@ -28,9 +28,11 @@ type Session interface {
 	CreateNode(ctx Context, nodes ...neo4j.Node) error
 	// MergeNode 合成节点并覆盖属性。
 	MergeNode(ctx Context, nodes ...neo4j.Node) error
-	// MergeNodeRelation 合成两节点间关系。
-	MergeNodeRelation(ctx Context, n1 neo4j.Node, r Relation, n2 neo4j.Node) error
-	// SingleOtherNode 返回单一关系中的另一节点。
+	// DetachNode 删除节点及其关系。
+	DetachNode(ctx Context, n neo4j.Node) error
+	// Relate 合成两节点间关系。
+	Relate(ctx Context, n1 neo4j.Node, r Relation, n2 neo4j.Node) error
+	// SingleOtherNode 返回单边关系中另一节点。
 	SingleOtherNode(ctx Context, input neo4j.Node, rel Relation) (neo4j.Node, error)
 	// GetDegree 返回指定节点的 Degree 数量
 	GetDegree(ctx Context, input neo4j.Node, rel Relation) (int64, error)

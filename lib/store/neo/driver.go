@@ -197,20 +197,23 @@ func scan(dest interface{}, result neo4j.Result) error {
 }
 
 func setOneStruct(dve reflect.Value, result neo4j.Result) error {
-	//record, err := result.Single()
-	//if err != nil {
-	//	return err
-	//}
-
-	for result.Next() {
-		record := result.Record()
-
-		if err := setFieldValueMap(dve, record); err != nil {
-			return err
-		}
-
-		break
+	record, err := result.Single()
+	if err != nil {
+		return err
 	}
+	if err := setFieldValueMap(dve, record); err != nil {
+		return err
+	}
+
+	//for result.Next() {
+	//	record := result.Record()
+	//
+	//	if err := setFieldValueMap(dve, record); err != nil {
+	//		return err
+	//	}
+	//
+	//	break
+	//}
 
 	return nil
 }

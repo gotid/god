@@ -12,9 +12,9 @@ type (
 )
 
 var (
-	ErrNotSettable          = errors.New("扫描目标不可设置")
-	ErrNotReadableValue     = errors.New("neo: 无法读取的值，检查结构字段是否大写开头")
-	ErrUnsupportedValueType = errors.New("neo: 不支持的扫描目标类型")
+	ErrNotSettable          = errors.New("[Neo] 扫描目标不可设置")
+	ErrNotReadableValue     = errors.New("[Neo] 无法读取的值，检查结构字段是否大写开头")
+	ErrUnsupportedValueType = errors.New("[Neo] 不支持的扫描目标类型")
 )
 
 // Label 定义标签类型

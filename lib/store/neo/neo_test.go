@@ -40,13 +40,17 @@ func TestTx(t *testing.T) {
 
 func TestNoRecords(t *testing.T) {
 	var result struct {
-		Tom neo4j.Node `neo:"tom"`
+		Node neo4j.Node `neo:"n"`
 	}
 
-	cypher := `MATCH (tom:Person {name: "Tom Hanks"})-[:ACTED_IN]->() RETURN tom limit 1`
-
+	cypher := `MATCH (n:Person {name: "Tom Hanks"})-[:ACTED_IN]->() RETURN n limit 1`
 	err := neo.Read(ctx, &result, cypher)
+	assert.NotNil(t, err)
+
+	cypher = `MATCH (n:User {id: 318}) RETURN n limit 1`
+	err = neo.Read(ctx, &result, cypher)
 	assert.Nil(t, err)
+	fmt.Println(result)
 }
 
 func TestNewNeo(t *testing.T) {
@@ -190,6 +194,11 @@ func TestDriver_SingleOtherNode(t *testing.T) {
 	otherNode, err := neo.SingleOtherNode(ctx, input, rel)
 	assert.Nil(t, err)
 	fmt.Println(otherNode)
+
+	rel = NewRelation(View, Outgoing)
+	otherNode, err = neo.SingleOtherNode(ctx, input, rel)
+	assert.NotNil(t, err)
+	fmt.Println(otherNode)
 }
 
 func TestDriver_GetDegree(t *testing.T) {
@@ -258,7 +267,7 @@ func TestDriver_MergeNodeRelation(t *testing.T) {
 	r := NewRelation("FOLLOW", Outgoing, g.Map{"time": time.Now().Unix()})
 	n2 := neo4j.Node{Id: 2, Labels: []string{"User"}}
 
-	err := neo.MergeNodeRelation(ctx, n1, r, n2)
+	err := neo.Relate(ctx, n1, r, n2)
 	assert.Nil(t, err)
 }
 
