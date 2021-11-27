@@ -26,9 +26,9 @@ type Session interface {
 
 	// CreateNode 创建节点。
 	CreateNode(ctx Context, nodes ...neo4j.Node) error
-	// MergeNodes 批量合成节点并全量更新属性。
-	MergeNodes(ctx Context, nodes ...neo4j.Node) error
-	// MergeNode 合成节点并局部更新属性。
+	// ReplaceNodes 批量替换节点。
+	ReplaceNodes(ctx Context, nodes ...neo4j.Node) error
+	// MergeNode 合成节点。
 	MergeNode(ctx Context, node neo4j.Node) error
 	// DeleteNode 删除节点。
 	DeleteNode(ctx Context, n neo4j.Node) error

@@ -251,8 +251,8 @@ func TestDriver_CreateNode(t *testing.T) {
 }
 
 func TestDriver_MergeNode(t *testing.T) {
-	t.Run("批量合成", func(t *testing.T) {
-		err := neo.MergeNodes(ctx, neo4j.Node{
+	t.Run("批量替换节点", func(t *testing.T) {
+		err := neo.ReplaceNodes(ctx, neo4j.Node{
 			Id:     331,
 			Labels: []string{"User", "Project"},
 			Props: map[string]interface{}{
@@ -262,7 +262,7 @@ func TestDriver_MergeNode(t *testing.T) {
 		assert.Nil(t, err)
 	})
 
-	t.Run("局部合成", func(t *testing.T) {
+	t.Run("单个合成节点", func(t *testing.T) {
 		err := neo.MergeNode(ctx, neo4j.Node{
 			Id:     332,
 			Labels: []string{"User"},
@@ -314,7 +314,7 @@ func BenchmarkMergeNode(b *testing.B) {
 	}
 
 	fmt.Println("本批次数量 ", len(nodes))
-	err := neo.MergeNodes(ctx, nodes...)
+	err := neo.ReplaceNodes(ctx, nodes...)
 	assert.Nil(b, err)
 }
 

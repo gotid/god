@@ -46,8 +46,8 @@ func (d *driver) CreateNode(ctx Context, nodes ...neo4j.Node) error {
 	return nil
 }
 
-// MergeNodes 批量合成节点并覆盖属性。
-func (d *driver) MergeNodes(ctx Context, nodes ...neo4j.Node) error {
+// ReplaceNodes 批量替换节点。
+func (d *driver) ReplaceNodes(ctx Context, nodes ...neo4j.Node) error {
 	assert.IsNotNil(nodes, "节点不能为空")
 
 	nodeMap := groupNodes(nodes)
