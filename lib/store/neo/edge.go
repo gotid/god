@@ -2,7 +2,6 @@ package neo
 
 import (
 	"fmt"
-	"strings"
 
 	"git.zc0901.com/go/god/lib/g"
 )
@@ -41,7 +40,7 @@ func (r *Relation) Edge(alias ...string) string {
 //
 // 返回结果形如： -[:VIEW {time:123]-> 或 <-[r:VIEW {time:123]-
 func (r *Relation) EdgeWithParams(alias ...string) string {
-	return r.edge(alias, " "+r.parseParams())
+	return r.edge(alias, " "+MakeProps(r.Params))
 }
 
 // OnSet 返回关系设置字符串。
@@ -50,8 +49,8 @@ func (r *Relation) EdgeWithParams(alias ...string) string {
 //
 // 返回结果形如： -[:VIEW]->, ON CREATE SET ..., ON MATCH SET ...
 func (r *Relation) OnSet(alias string) string {
-	onCreateSet := fmt.Sprintf("ON CREATE SET %s=%s", alias, r.parseParams())
-	onMergeSet := fmt.Sprintf("ON MATCH SET %s", r.parseParams2(alias))
+	onCreateSet := fmt.Sprintf("ON CREATE SET %s=%s", alias, MakeProps(r.Params))
+	onMergeSet := MakeOnMatchSet(alias, r.Params)
 	return onCreateSet + "\n" + onMergeSet
 }
 
@@ -80,55 +79,4 @@ func (r *Relation) edgeString(left, alias string, relType RelationType, params, 
 	}
 
 	return fmt.Sprintf("%s-[%s%s%s]-%s", left, alias, typ, params, right)
-}
-
-// 解析用于neo4j中key不包括双引号的字典。
-func (r *Relation) parseParams() string {
-	if r.Params == nil {
-		return ""
-	}
-
-	b := strings.Builder{}
-	b.WriteString("{")
-	index := 0
-	for k, v := range r.Params {
-		index++
-		b.WriteString(k)
-		b.WriteString(":")
-		switch v.(type) {
-		case string:
-			b.WriteString(fmt.Sprintf(`"%s"`, v))
-		default:
-			b.WriteString(fmt.Sprintf("%v", v))
-		}
-		if index != len(r.Params) {
-			b.WriteRune(',')
-		}
-	}
-	b.WriteString("}")
-	return b.String()
-}
-
-// 解析用于neo4j中key不包括双引号的字典。
-func (r *Relation) parseParams2(alias string) string {
-	if r.Params == nil {
-		return ""
-	}
-
-	b := strings.Builder{}
-	index := 0
-	for k, v := range r.Params {
-		index++
-		b.WriteString(fmt.Sprintf("%s.%s=", alias, k))
-		switch v.(type) {
-		case string:
-			b.WriteString(fmt.Sprintf(`"%s"`, v))
-		default:
-			b.WriteString(fmt.Sprintf("%v", v))
-		}
-		if index != len(r.Params) {
-			b.WriteRune(',')
-		}
-	}
-	return b.String()
 }

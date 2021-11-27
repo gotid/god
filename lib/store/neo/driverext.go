@@ -13,15 +13,20 @@ import (
 
 const (
 	cypherCreateNode = "CREATE (:%s $props)"
-	cypherMergeNode  = `UNWIND $nodes as node
+	cypherMergeNodes = `UNWIND $nodes as node
 MERGE (n:%s {id:node.props.id})
 ON CREATE SET n=node.props
 ON MATCH SET n=node.props`
-	cypherMergeNodeRelation = `MERGE (n1:%s {id: $id1})
+	cypherMergeNode = `MERGE (n:%s {id: $id})
+%s`
+	cypherDeleteNode       = `MATCH (n:%s {id: $id}) DELETE n`
+	cypherDetachDeleteNode = `MATCH (n:%s {id: $id}) DETACH DELETE n`
+
+	cypherCreateRelation = `MERGE (n1:%s {id: $id1})
 MERGE (n2:%s {id: $id2})
 MERGE (n1)%s(n2)
 %s`
-	cypherDetachNode = `MATCH (n:%s {id: $id}) DETACH DELETE n`
+	cypherDeleteRelation = `MATCH (n1:%s {id: $id1})%s(n2:%s {id: $id2}) DELETE r`
 )
 
 // CreateNode 创建节点。
@@ -41,8 +46,8 @@ func (d *driver) CreateNode(ctx Context, nodes ...neo4j.Node) error {
 	return nil
 }
 
-// MergeNode 合并节点并覆盖属性。
-func (d *driver) MergeNode(ctx Context, nodes ...neo4j.Node) error {
+// MergeNodes 批量合成节点并覆盖属性。
+func (d *driver) MergeNodes(ctx Context, nodes ...neo4j.Node) error {
 	assert.IsNotNil(nodes, "节点不能为空")
 
 	nodeMap := groupNodes(nodes)
@@ -57,7 +62,7 @@ func (d *driver) MergeNode(ctx Context, nodes ...neo4j.Node) error {
 		}
 	}).Parallel(func(item interface{}) {
 		v := item.(lns)
-		err := d.doMerge(ctx, v.Labels, v.Nodes)
+		err := d.doGroupMerge(ctx, v.Labels, v.Nodes)
 		if err != nil {
 			logx.Errorf("合并失败! %v", err)
 			return
@@ -67,38 +72,77 @@ func (d *driver) MergeNode(ctx Context, nodes ...neo4j.Node) error {
 	return nil
 }
 
-// MergeNodeRelation 两个节点之间的关系。
-func (d *driver) Relate(ctx Context, n1 neo4j.Node, r Relation, n2 neo4j.Node) error {
+// MergeNode 合成节点并更新属性。
+func (d *driver) MergeNode(ctx Context, node neo4j.Node) error {
+	assert.IsNotNil(node, "节点不能为空")
+
+	ctx.Params = g.Map{"id": node.Id}
+	err := d.Run(ctx, nil, fmt.Sprintf(cypherMergeNode,
+		Labels(node),
+		MakeOnMatchSet("n", node.Props),
+	))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// CreateRelation 合成两节点间关系。
+func (d *driver) CreateRelation(ctx Context, n1 neo4j.Node, r Relation, n2 neo4j.Node) error {
 	MustFullNode(n1, "n1")
 	MustFullRelation(r, "r")
 	MustFullNode(n2, "n2")
 
 	ctx.Params = g.Map{"id1": n1.Id, "id2": n2.Id}
-	cypher := fmt.Sprintf(cypherMergeNodeRelation,
+	cypher := fmt.Sprintf(cypherCreateRelation,
 		Labels(n1), Labels(n2), r.Edge("r"), r.OnSet("r"))
 	err := d.Run(ctx, nil, cypher)
 	return err
 }
 
-// DetachNode 删除节点及其关系。
-func (d *driver) DetachNode(ctx Context, n neo4j.Node) error {
+// DeleteRelation 删除两节点间关系。
+func (d *driver) DeleteRelation(ctx Context, n1 neo4j.Node, r Relation, n2 neo4j.Node) error {
+	MustFullNode(n1, "n1")
+	MustFullRelation(r, "r")
+	MustFullNode(n2, "n2")
+
+	ctx.Params = g.Map{"id1": n1.Id, "id2": n2.Id}
+	cypher := fmt.Sprintf(cypherDeleteRelation, Labels(n1), r.Edge("r"), Labels(n2))
+	err := d.Run(ctx, nil, cypher)
+	return err
+}
+
+// DeleteNode 删除节点。
+func (d *driver) DeleteNode(ctx Context, n neo4j.Node) error {
 	if n.Id == 0 || len(n.Labels) == 0 {
 		return nil
 	}
 
 	ctx.Params = g.Map{"id": n.Id}
-	return d.Run(ctx, nil, fmt.Sprintf(cypherDetachNode, Labels(n)))
+	return d.Run(ctx, nil, fmt.Sprintf(cypherDeleteNode, Labels(n)))
 }
 
-func (d *driver) doMerge(ctx Context, labels string, nodes []neo4j.Node) error {
+// DetachDeleteNode 删除节点及其关系。
+func (d *driver) DetachDeleteNode(ctx Context, n neo4j.Node) error {
+	if n.Id == 0 || len(n.Labels) == 0 {
+		return nil
+	}
+
+	ctx.Params = g.Map{"id": n.Id}
+	return d.Run(ctx, nil, fmt.Sprintf(cypherDetachDeleteNode, Labels(n)))
+}
+
+func (d *driver) doGroupMerge(ctx Context, labels string, nodes []neo4j.Node) error {
 	vs := make([]map[string]interface{}, len(nodes))
 	for i, node := range nodes {
+		node.Props["id"] = node.Id // cypher 中无法通过 node.id 获取
 		vs[i] = map[string]interface{}{
 			"props": node.Props,
 		}
 	}
 	ctx.Params = g.Map{"nodes": vs}
-	err := d.Run(ctx, nil, fmt.Sprintf(cypherMergeNode, labels))
+	err := d.Run(ctx, nil, fmt.Sprintf(cypherMergeNodes, labels))
 	if err != nil {
 		return err
 	}

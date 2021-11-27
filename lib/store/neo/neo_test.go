@@ -88,6 +88,7 @@ func TestNewNeo(t *testing.T) {
 		cypher := `MATCH (cloudAtlas:Movie {title: "Cloud Atlas"})<-[:DIRECTED]-(directors) RETURN directors.name`
 		err := neo.Read(ctx, &names, cypher)
 		assert.Nil(t, err)
+		fmt.Println(names)
 		//assert.Len(t, names, 3)
 		//assert.EqualValues(t,
 		//	[]string{"Tom Tykwer", "Lana Wachowski", "Lilly Wachowski"},
@@ -250,24 +251,45 @@ func TestDriver_CreateNode(t *testing.T) {
 }
 
 func TestDriver_MergeNode(t *testing.T) {
-	id := int64(318)
-	err := neo.MergeNode(ctx, neo4j.Node{
-		Id:     id,
-		Labels: []string{"User", "Project"},
-		Props: map[string]interface{}{
-			"id":       id,
-			"nickname": "自在",
-		},
+	t.Run("批量合成", func(t *testing.T) {
+		err := neo.MergeNodes(ctx, neo4j.Node{
+			Id:     331,
+			Labels: []string{"User", "Project"},
+			Props: map[string]interface{}{
+				"name": "朱邵",
+			},
+		})
+		assert.Nil(t, err)
 	})
-	assert.Nil(t, err)
+
+	t.Run("局部合成", func(t *testing.T) {
+		err := neo.MergeNode(ctx, neo4j.Node{
+			Id:     332,
+			Labels: []string{"User"},
+			Props: map[string]interface{}{
+				"star": 5,
+				"time": time.Now(),
+			},
+		})
+		assert.Nil(t, err)
+	})
 }
 
-func TestDriver_MergeNodeRelation(t *testing.T) {
+func TestDriver_CreateRelation(t *testing.T) {
 	n1 := neo4j.Node{Id: 1, Labels: []string{"User"}}
 	r := NewRelation("FOLLOW", Outgoing, g.Map{"time": time.Now().Unix()})
 	n2 := neo4j.Node{Id: 2, Labels: []string{"User"}}
 
-	err := neo.Relate(ctx, n1, r, n2)
+	err := neo.CreateRelation(ctx, n1, r, n2)
+	assert.Nil(t, err)
+}
+
+func TestDriver_DeleteRelation(t *testing.T) {
+	n1 := neo4j.Node{Id: 1, Labels: []string{"User"}}
+	r := NewRelation("FOLLOW", Outgoing, g.Map{"time": time.Now().Unix()})
+	n2 := neo4j.Node{Id: 2, Labels: []string{"User"}}
+
+	err := neo.DeleteRelation(ctx, n1, r, n2)
 	assert.Nil(t, err)
 }
 
@@ -292,7 +314,7 @@ func BenchmarkMergeNode(b *testing.B) {
 	}
 
 	fmt.Println("本批次数量 ", len(nodes))
-	err := neo.MergeNode(ctx, nodes...)
+	err := neo.MergeNodes(ctx, nodes...)
 	assert.Nil(b, err)
 }
 
