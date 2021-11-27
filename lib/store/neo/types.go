@@ -25,23 +25,23 @@ func (l Label) String() string {
 	return string(l)
 }
 
-// RelationshipType 定义关系类型
-type RelationshipType string
+// RelationType 定义关系类型
+type RelationType string
 
 // 返回关系类型的字符串形式。
-func (r RelationshipType) String() string {
+func (r RelationType) String() string {
 	return string(r)
 }
 
 const (
 	// All 默认为所有关系。
-	All RelationshipType = ""
+	All RelationType = ""
 	// View 浏览关系
-	View RelationshipType = "VIEW"
+	View RelationType = "VIEW"
 	// Down 下载关系
-	Down RelationshipType = "DOWN"
+	Down RelationType = "DOWN"
 	// Fav 收藏关系
-	Fav RelationshipType = "FAV"
+	Fav RelationType = "FAV"
 )
 
 // Direction 定义关系方向类型

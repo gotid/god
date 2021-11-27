@@ -12,10 +12,10 @@ import (
 func TestFxParallel(t *testing.T) {
 	type ln struct {
 		Labels string
-		Nodes  []*neo4j.Node
+		Nodes  []neo4j.Node
 	}
 
-	nodes := []*neo4j.Node{
+	nodes := []neo4j.Node{
 		{Id: 1, Labels: []string{"User"}},
 		{Id: 2, Labels: []string{"User"}},
 		{Id: 3, Labels: []string{"Project"}},
@@ -30,7 +30,7 @@ func TestFxParallel(t *testing.T) {
 		}
 	}).Parallel(func(item interface{}) {
 		vs := item.([]interface{})
-		ns := vs[1].([]*neo4j.Node)
+		ns := vs[1].([]neo4j.Node)
 		for _, n := range ns {
 			fmt.Println(vs[0], n.Id)
 		}

@@ -1,6 +1,8 @@
 package assert
 
 import (
+	"strings"
+
 	"git.zc0901.com/go/god/internal/empty"
 
 	"git.zc0901.com/go/god/lib/g"
@@ -8,8 +10,8 @@ import (
 
 func IsTrue(exp bool, msg ...string) {
 	m := "[断言失败] - 表达式必须为真"
-	if len(msg) == 1 {
-		m = msg[0]
+	if len(msg) > 1 {
+		m = strings.Join(msg, " ")
 	}
 
 	if !exp {
@@ -19,8 +21,8 @@ func IsTrue(exp bool, msg ...string) {
 
 func IsFalse(exp bool, msg ...string) {
 	m := "[断言失败] - 表达式必须为假"
-	if len(msg) == 1 {
-		m = msg[0]
+	if len(msg) > 1 {
+		m = strings.Join(msg, " ")
 	}
 
 	if exp {
@@ -30,8 +32,8 @@ func IsFalse(exp bool, msg ...string) {
 
 func IsNil(o interface{}, msg ...string) {
 	m := "[断言失败] - 对象必须为空"
-	if len(msg) == 1 {
-		m = msg[0]
+	if len(msg) > 1 {
+		m = strings.Join(msg, " ")
 	}
 
 	if !g.IsNil(o) {
@@ -41,8 +43,8 @@ func IsNil(o interface{}, msg ...string) {
 
 func IsNotNil(o interface{}, msg ...string) {
 	m := "[断言失败] - 对象必须非空"
-	if len(msg) == 1 {
-		m = msg[0]
+	if len(msg) > 1 {
+		m = strings.Join(msg, " ")
 	}
 
 	if g.IsNil(o) {
@@ -52,8 +54,8 @@ func IsNotNil(o interface{}, msg ...string) {
 
 func IsNotEmpty(o interface{}, msg ...string) {
 	m := "[断言失败] - 对象必须为非空值"
-	if len(msg) == 1 {
-		m = msg[0]
+	if len(msg) > 1 {
+		m = strings.Join(msg, " ")
 	}
 
 	if empty.IsEmpty(o) {
@@ -63,8 +65,8 @@ func IsNotEmpty(o interface{}, msg ...string) {
 
 func HasLength(v string, msg ...string) {
 	m := "[断言失败] - 字符串必须有长度"
-	if len(msg) == 1 {
-		m = msg[0]
+	if len(msg) > 1 {
+		m = strings.Join(msg, " ")
 	}
 
 	if len(v) == 0 {
@@ -74,8 +76,8 @@ func HasLength(v string, msg ...string) {
 
 func IsAll(vs []interface{}, msg ...string) {
 	m := "[断言失败] - 必须为非空数组"
-	if len(msg) == 1 {
-		m = msg[0]
+	if len(msg) > 1 {
+		m = strings.Join(msg, " ")
 	}
 
 	for _, v := range vs {

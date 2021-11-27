@@ -6,6 +6,8 @@ import (
 	"testing"
 	"time"
 
+	"git.zc0901.com/go/god/lib/g"
+
 	"git.zc0901.com/go/god/lib/stringx"
 
 	"git.zc0901.com/go/god/lib/logx"
@@ -75,8 +77,6 @@ func TestNewNeo(t *testing.T) {
 		err := neo.Read(ctx, &user, `MATCH (i)-[:VIEW]->(n) WHERE i.id=6 RETURN n limit 1`)
 		assert.Nil(t, err)
 		fmt.Println(user)
-		assert.Equal(t, int64(318), user.Node.Props["id"])
-		assert.Equal(t, "自在", user.Node.Props["nickname"])
 	})
 
 	t.Run("多值——简单类型测试", func(t *testing.T) {
@@ -165,13 +165,28 @@ func TestNewNeo(t *testing.T) {
 }
 
 func TestRelationship_Edge(t *testing.T) {
-	r := NewRelationship(View, Both)
-	fmt.Println(r.Edge())
+	r := NewRelation(View, Both)
+	assert.Equal(t, "-[:VIEW]-", r.Edge())
+
+	r = NewRelation(View, Incoming)
+	assert.Equal(t, "<-[r:VIEW]-", r.Edge("r"))
+
+	r = NewRelation(View, Outgoing, g.Map{
+		"name":    "zs",
+		"age":     123,
+		"enabled": true,
+		"time":    time.Now().Unix(),
+	})
+	fmt.Println("仅关系边", r.Edge("r"))
+	fmt.Println("带参关系边", r.EdgeWithParams("r"))
+
+	onset := r.OnSet("r")
+	fmt.Println(onset)
 }
 
 func TestDriver_SingleOtherNode(t *testing.T) {
-	input := &neo4j.Node{Id: 6}
-	rel := NewRelationship(Down, Outgoing)
+	input := neo4j.Node{Id: 6}
+	rel := NewRelation(Down, Outgoing)
 	otherNode, err := neo.SingleOtherNode(ctx, input, rel)
 	assert.Nil(t, err)
 	fmt.Println(otherNode)
@@ -179,32 +194,32 @@ func TestDriver_SingleOtherNode(t *testing.T) {
 
 func TestDriver_GetDegree(t *testing.T) {
 	t.Run("全部双向关系数量", func(t *testing.T) {
-		input := &neo4j.Node{Id: 6}
-		rel := NewRelationship(All, Both)
+		input := neo4j.Node{Id: 6}
+		rel := NewRelation(All, Both)
 		degree, err := neo.GetDegree(ctx, input, rel)
 		assert.Nil(t, err)
 		assert.Equal(t, int64(4), degree)
 	})
 
 	t.Run("双向浏览数量", func(t *testing.T) {
-		input := &neo4j.Node{Id: 6}
-		rel := NewRelationship(View, Both)
+		input := neo4j.Node{Id: 6}
+		rel := NewRelation(View, Both)
 		degree, err := neo.GetDegree(ctx, input, rel)
 		assert.Nil(t, err)
 		assert.Equal(t, int64(3), degree)
 	})
 
 	t.Run("浏览数量", func(t *testing.T) {
-		input := &neo4j.Node{Id: 6}
-		rel := NewRelationship(View, Outgoing)
+		input := neo4j.Node{Id: 6}
+		rel := NewRelation(View, Outgoing)
 		degree, err := neo.GetDegree(ctx, input, rel)
 		assert.Nil(t, err)
 		assert.Equal(t, int64(2), degree)
 	})
 
 	t.Run("被下载数量", func(t *testing.T) {
-		input := &neo4j.Node{Id: 319}
-		rel := NewRelationship(Down, Incoming)
+		input := neo4j.Node{Id: 319}
+		rel := NewRelation(Down, Incoming)
 		degree, err := neo.GetDegree(ctx, input, rel)
 		assert.Nil(t, err)
 		assert.Equal(t, int64(1), degree)
@@ -214,7 +229,7 @@ func TestDriver_GetDegree(t *testing.T) {
 func TestDriver_CreateNode(t *testing.T) {
 	rand.Seed(time.Now().UnixNano())
 	id := rand.Int63()
-	err := neo.CreateNode(ctx, &neo4j.Node{
+	err := neo.CreateNode(ctx, neo4j.Node{
 		Id:     id,
 		Labels: []string{"User", "Project"},
 		Props: map[string]interface{}{
@@ -227,7 +242,7 @@ func TestDriver_CreateNode(t *testing.T) {
 
 func TestDriver_MergeNode(t *testing.T) {
 	id := int64(318)
-	err := neo.MergeNode(ctx, &neo4j.Node{
+	err := neo.MergeNode(ctx, neo4j.Node{
 		Id:     id,
 		Labels: []string{"User", "Project"},
 		Props: map[string]interface{}{
@@ -238,17 +253,26 @@ func TestDriver_MergeNode(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func TestDriver_MergeNodeRelation(t *testing.T) {
+	n1 := neo4j.Node{Id: 1, Labels: []string{"User"}}
+	r := NewRelation("FOLLOW", Outgoing, g.Map{"time": time.Now().Unix()})
+	n2 := neo4j.Node{Id: 2, Labels: []string{"User"}}
+
+	err := neo.MergeNodeRelation(ctx, n1, r, n2)
+	assert.Nil(t, err)
+}
+
 func BenchmarkMergeNode(b *testing.B) {
 	logx.Disable()
 
-	nodes := make([]*neo4j.Node, 0)
+	nodes := make([]neo4j.Node, 0)
 	labels := []string{"User", "Project"}
 
 	for i := 0; i < b.N; i++ {
 		n := rand.Intn(2)
 		id := rand.Int63()
 		label := labels[n]
-		nodes = append(nodes, &neo4j.Node{
+		nodes = append(nodes, neo4j.Node{
 			Id:     id,
 			Labels: []string{label},
 			Props: map[string]interface{}{
