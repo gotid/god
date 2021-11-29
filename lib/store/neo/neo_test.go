@@ -28,6 +28,55 @@ var (
 	ctx = Context{}
 )
 
+type User struct {
+	Node
+	Props UserProps
+}
+
+type UserProps struct {
+	Props
+	Nickname string `json:"nickname"`
+}
+
+func (n *User) InnerProps() g.Map {
+	return g.Map{
+		"id":       n.Props.Id,
+		"nickname": n.Props.Nickname,
+	}
+}
+
+func TestNode_ToNeo4j(t *testing.T) {
+	u := User{
+		Node: Node{Labels: []string{"User"}},
+		Props: UserProps{
+			Props:    Props{Id: 318},
+			Nickname: "自在",
+		},
+	}
+
+	node := u.ToNeo4j(u.InnerProps())
+	fmt.Println(node.Props)
+}
+
+func TestNeo_FromNeo4j(t *testing.T) {
+	var result []struct {
+		Node neo4j.Node `neo:"n"`
+	}
+	err := neo.Read(ctx, &result, "MATCH (n:User) RETURN n LIMIT 25")
+	assert.Nil(t, err)
+	fmt.Println(result)
+
+	for _, v := range result {
+		var u User
+		err := ConvNode(v.Node, &u)
+		assert.Nil(t, err)
+		fmt.Println("编号昵称", u.Props.Id, u.Props.Nickname)
+		fmt.Println("标签", u.Labels)
+		fmt.Println("内部属性", u.InnerProps())
+		fmt.Println()
+	}
+}
+
 func TestTx(t *testing.T) {
 	err := neo.Transact(func(tx neo4j.Transaction) error {
 		var id int64

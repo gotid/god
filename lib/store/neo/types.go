@@ -81,8 +81,8 @@ const (
 	Incoming Direction = "<-"
 )
 
-// ReverseDirection 返回翻转后的方向。
-func ReverseDirection(d Direction) Direction {
+// Reverse 返回翻转后的方向。
+func (d Direction) Reverse() Direction {
 	switch d {
 	case Both:
 		return Both
