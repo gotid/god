@@ -10,7 +10,7 @@ import (
 
 func IsTrue(exp bool, msg ...string) {
 	m := "[断言失败] - 表达式必须为真"
-	if len(msg) > 1 {
+	if len(msg) > 0 {
 		m = strings.Join(msg, " ")
 	}
 
@@ -21,7 +21,7 @@ func IsTrue(exp bool, msg ...string) {
 
 func IsFalse(exp bool, msg ...string) {
 	m := "[断言失败] - 表达式必须为假"
-	if len(msg) > 1 {
+	if len(msg) > 0 {
 		m = strings.Join(msg, " ")
 	}
 
@@ -32,7 +32,7 @@ func IsFalse(exp bool, msg ...string) {
 
 func IsNil(o interface{}, msg ...string) {
 	m := "[断言失败] - 对象必须为空"
-	if len(msg) > 1 {
+	if len(msg) > 0 {
 		m = strings.Join(msg, " ")
 	}
 
@@ -43,7 +43,7 @@ func IsNil(o interface{}, msg ...string) {
 
 func IsNotNil(o interface{}, msg ...string) {
 	m := "[断言失败] - 对象必须非空"
-	if len(msg) > 1 {
+	if len(msg) > 0 {
 		m = strings.Join(msg, " ")
 	}
 
@@ -54,7 +54,7 @@ func IsNotNil(o interface{}, msg ...string) {
 
 func IsNotEmpty(o interface{}, msg ...string) {
 	m := "[断言失败] - 对象必须为非空值"
-	if len(msg) > 1 {
+	if len(msg) > 0 {
 		m = strings.Join(msg, " ")
 	}
 
@@ -65,7 +65,7 @@ func IsNotEmpty(o interface{}, msg ...string) {
 
 func HasLength(v string, msg ...string) {
 	m := "[断言失败] - 字符串必须有长度"
-	if len(msg) > 1 {
+	if len(msg) > 0 {
 		m = strings.Join(msg, " ")
 	}
 
@@ -76,7 +76,7 @@ func HasLength(v string, msg ...string) {
 
 func IsAll(vs []interface{}, msg ...string) {
 	m := "[断言失败] - 必须为非空数组"
-	if len(msg) > 1 {
+	if len(msg) > 0 {
 		m = strings.Join(msg, " ")
 	}
 
