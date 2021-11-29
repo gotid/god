@@ -29,10 +29,10 @@ func (l Label) String() string {
 type Labels []Label
 
 // FromLabels 返回一个标签切片组。
-func FromLabels(ls ...Label) Labels {
+func FromLabels(ls ...string) Labels {
 	ret := Labels{}
 	for i := range ls {
-		ret = append(ret, ls[i])
+		ret = append(ret, Label(ls[i]))
 	}
 	return ret
 }
