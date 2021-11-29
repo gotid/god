@@ -2,6 +2,7 @@ package neo
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )
@@ -44,6 +45,12 @@ func (labels Labels) Stringify() []string {
 		ret = append(ret, label.String())
 	}
 	return ret
+}
+
+// String 返回字符串化的标签特征形式。
+func (labels Labels) String() string {
+	ls := labels.Stringify()
+	return strings.Join(ls, ":")
 }
 
 // RelationType 定义关系类型
