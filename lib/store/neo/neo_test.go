@@ -57,7 +57,7 @@ func TestDriver_MergeNode(t *testing.T) {
 			Labels: []string{"User"},
 			Props: map[string]interface{}{
 				"nickname":    "自在",
-				"create_time": time.Now(),
+				"create_time": time.Now().Unix(),
 			},
 		})
 		assert.Nil(t, err)

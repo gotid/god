@@ -25,6 +25,27 @@ func (l Label) String() string {
 	return string(l)
 }
 
+// Labels 定义一个标签切片类型
+type Labels []Label
+
+// FromLabels 返回一个标签切片组。
+func FromLabels(ls ...Label) Labels {
+	ret := Labels{}
+	for i := range ls {
+		ret = append(ret, ls[i])
+	}
+	return ret
+}
+
+// Stringify 返回字符串化的标签切片形式。
+func (labels Labels) Stringify() []string {
+	ret := make([]string, 0)
+	for _, label := range labels {
+		ret = append(ret, label.String())
+	}
+	return ret
+}
+
 // RelationType 定义关系类型
 type RelationType string
 

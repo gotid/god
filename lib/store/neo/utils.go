@@ -12,8 +12,8 @@ import (
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )
 
-// Labels 返回 neo4j.Node 标签切片的特征字符串。
-func Labels(n neo4j.Node) string {
+// LabelExp 返回 neo4j.Node 标签的特征字符串。
+func LabelExp(n neo4j.Node) string {
 	return strings.Join(n.Labels, ":")
 }
 
@@ -21,7 +21,7 @@ func Labels(n neo4j.Node) string {
 func MustFullNode(node neo4j.Node, name string) {
 	assert.IsNotNil(node, name, "节点不能为空")
 	assert.IsNotEmpty(node.Id, name, "Id 不能为空")
-	assert.IsNotEmpty(Labels(node), name, "标签不能为空")
+	assert.IsNotEmpty(LabelExp(node), name, "标签不能为空")
 }
 
 // MustFullRelation 必须为完整关系，否则退出程序。
