@@ -34,8 +34,8 @@ type Session interface {
 	DeleteNode(ctx Context, n neo4j.Node) error
 	// DetachDeleteNode 删除节点及其关系。
 	DetachDeleteNode(ctx Context, n neo4j.Node) error
-	// CreateRelation 合成两节点间关系。
-	CreateRelation(ctx Context, n1 neo4j.Node, r Relation, n2 neo4j.Node) error
+	// MergeRelation 合成两节点间关系。
+	MergeRelation(ctx Context, n1 neo4j.Node, r Relation, n2 neo4j.Node) error
 	// DeleteRelation 删除两节点间关系。
 	DeleteRelation(ctx Context, n1 neo4j.Node, r Relation, n2 neo4j.Node) error
 	// SingleOtherNode 返回单边关系中另一节点。
@@ -56,7 +56,7 @@ type TransactFn func(tx neo4j.Transaction) error
 type Context struct {
 	Tx     neo4j.Transaction
 	Params g.Map
-	Driver neo4j.Driver
+	driver neo4j.Driver
 }
 
 // Map 返回一个没有事务的映射参数

@@ -30,7 +30,7 @@ func doRun(ctx Context, scanner Scanner, cypher string) error {
 	if ctx.Tx != nil {
 		result, err = ctx.Tx.Run(cypher, ctx.Params)
 	} else {
-		session := ctx.Driver.NewSession(neo4j.SessionConfig{})
+		session := ctx.driver.NewSession(neo4j.SessionConfig{})
 		defer session.Close()
 		result, err = session.Run(cypher, ctx.Params)
 	}

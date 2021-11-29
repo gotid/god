@@ -87,7 +87,7 @@ func (d *driver) Transact(fn TransactFn) error {
 func (d *driver) Read(ctx Context, dest interface{}, cypher string) error {
 	var scanError error
 	return d.brk.DoWithAcceptable(func() error {
-		ctx.Driver = d.driver
+		ctx.driver = d.driver
 		return doRun(ctx, func(result neo4j.Result) error {
 			scanError = scan(dest, result)
 			return scanError
@@ -100,7 +100,7 @@ func (d *driver) Read(ctx Context, dest interface{}, cypher string) error {
 // Run 运行 —— 并利用扫描器扫描指定Cypher的执行结果。
 func (d *driver) Run(ctx Context, scanner Scanner, cypher string) error {
 	return d.brk.DoWithAcceptable(func() error {
-		ctx.Driver = d.driver
+		ctx.driver = d.driver
 		return doRun(ctx, scanner, cypher)
 	}, func(reqError error) bool {
 		return d.acceptable(reqError)

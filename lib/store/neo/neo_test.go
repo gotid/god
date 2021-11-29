@@ -38,6 +38,62 @@ func TestTx(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func TestDriver_CreateNode(t *testing.T) {
+	err := neo.CreateNode(ctx, neo4j.Node{
+		Id:     318,
+		Labels: []string{"User"},
+		Props: map[string]interface{}{
+			"id":       318,
+			"nickname": "朱邵",
+		},
+	})
+	assert.Nil(t, err)
+}
+
+func TestDriver_MergeNode(t *testing.T) {
+	t.Run("批量替换节点", func(t *testing.T) {
+		err := neo.ReplaceNodes(ctx, neo4j.Node{
+			Id:     318,
+			Labels: []string{"User"},
+			Props: map[string]interface{}{
+				"nickname":    "自在",
+				"create_time": time.Now(),
+			},
+		})
+		assert.Nil(t, err)
+	})
+
+	t.Run("单个合成节点", func(t *testing.T) {
+		err := neo.MergeNode(ctx, neo4j.Node{
+			Id:     318,
+			Labels: []string{"User"},
+			Props: map[string]interface{}{
+				"star":        5,
+				"update_time": time.Now(),
+			},
+		})
+		assert.Nil(t, err)
+	})
+}
+
+func TestDriver_CreateRelation(t *testing.T) {
+	n1 := neo4j.Node{Id: 1, Labels: []string{"User"}}
+	r := NewRelation("FOLLOW", Outgoing, g.Map{"time": time.Now().Unix()})
+	n2 := neo4j.Node{Id: 2, Labels: []string{"User"}}
+
+	err := neo.MergeRelation(ctx, n1, r, n2)
+	assert.Nil(t, err)
+}
+
+func TestDriver_DeleteRelation(t *testing.T) {
+	n1 := neo4j.Node{Id: 1, Labels: []string{"User"}}
+	r := NewRelation("FOLLOW", Outgoing, g.Map{"time": time.Now().Unix()})
+	n2 := neo4j.Node{Id: 2, Labels: []string{"User"}}
+
+	err := neo.DeleteRelation(ctx, n1, r, n2)
+	assert.Nil(t, err)
+}
+
 func TestNoRecords(t *testing.T) {
 	var result struct {
 		Node neo4j.Node `neo:"n"`
@@ -234,63 +290,6 @@ func TestDriver_GetDegree(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, int64(1), degree)
 	})
-}
-
-func TestDriver_CreateNode(t *testing.T) {
-	rand.Seed(time.Now().UnixNano())
-	id := rand.Int63()
-	err := neo.CreateNode(ctx, neo4j.Node{
-		Id:     id,
-		Labels: []string{"User", "Project"},
-		Props: map[string]interface{}{
-			"id":       id,
-			"nickname": "自自在在",
-		},
-	})
-	assert.Nil(t, err)
-}
-
-func TestDriver_MergeNode(t *testing.T) {
-	t.Run("批量替换节点", func(t *testing.T) {
-		err := neo.ReplaceNodes(ctx, neo4j.Node{
-			Id:     331,
-			Labels: []string{"User", "Project"},
-			Props: map[string]interface{}{
-				"name": "朱邵",
-			},
-		})
-		assert.Nil(t, err)
-	})
-
-	t.Run("单个合成节点", func(t *testing.T) {
-		err := neo.MergeNode(ctx, neo4j.Node{
-			Id:     332,
-			Labels: []string{"User"},
-			Props: map[string]interface{}{
-				"star": 5,
-				"time": time.Now(),
-			},
-		})
-		assert.Nil(t, err)
-	})
-}
-
-func TestDriver_CreateRelation(t *testing.T) {
-	n1 := neo4j.Node{Id: 1, Labels: []string{"User"}}
-	r := NewRelation("FOLLOW", Outgoing, g.Map{"time": time.Now().Unix()})
-	n2 := neo4j.Node{Id: 2, Labels: []string{"User"}}
-
-	err := neo.CreateRelation(ctx, n1, r, n2)
-	assert.Nil(t, err)
-}
-
-func TestDriver_DeleteRelation(t *testing.T) {
-	n1 := neo4j.Node{Id: 1, Labels: []string{"User"}}
-	r := NewRelation("FOLLOW", Outgoing, g.Map{"time": time.Now().Unix()})
-	n2 := neo4j.Node{Id: 2, Labels: []string{"User"}}
-
-	err := neo.DeleteRelation(ctx, n1, r, n2)
-	assert.Nil(t, err)
 }
 
 func BenchmarkMergeNode(b *testing.B) {

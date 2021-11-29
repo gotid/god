@@ -22,7 +22,7 @@ ON MATCH SET n=node.props`
 	cypherDeleteNode       = `MATCH (n:%s {id: $id}) DELETE n`
 	cypherDetachDeleteNode = `MATCH (n:%s {id: $id}) DETACH DELETE n`
 
-	cypherCreateRelation = `MERGE (n1:%s {id: $id1})
+	cypherMergeRelation = `MERGE (n1:%s {id: $id1})
 MERGE (n2:%s {id: $id2})
 MERGE (n1)%s(n2)
 %s`
@@ -88,14 +88,14 @@ func (d *driver) MergeNode(ctx Context, node neo4j.Node) error {
 	return nil
 }
 
-// CreateRelation 合成两节点间关系。
-func (d *driver) CreateRelation(ctx Context, n1 neo4j.Node, r Relation, n2 neo4j.Node) error {
+// MergeRelation 合成两节点间关系。
+func (d *driver) MergeRelation(ctx Context, n1 neo4j.Node, r Relation, n2 neo4j.Node) error {
 	MustFullNode(n1, "n1")
 	MustFullRelation(r, "r")
 	MustFullNode(n2, "n2")
 
 	ctx.Params = g.Map{"id1": n1.Id, "id2": n2.Id}
-	cypher := fmt.Sprintf(cypherCreateRelation,
+	cypher := fmt.Sprintf(cypherMergeRelation,
 		Labels(n1), Labels(n2), r.Edge("r"), r.OnSet("r"))
 	err := d.Run(ctx, nil, cypher)
 	return err
