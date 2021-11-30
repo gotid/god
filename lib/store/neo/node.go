@@ -23,9 +23,13 @@ type Node struct {
 }
 
 // NewNode 返回一个新的节点。
-func NewNode(ls Labels) *Node {
+func NewNode(label ...Label) *Node {
+	ls := make([]string, len(label))
+	for i := 0; i < len(label); i++ {
+		ls[i] = label[i].String()
+	}
 	return &Node{
-		Labels: ls.Stringify(),
+		Labels: ls,
 	}
 }
 
