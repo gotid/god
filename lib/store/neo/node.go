@@ -1,9 +1,7 @@
 package neo
 
 import (
-	"git.zc0901.com/go/god/lib/g"
 	"git.zc0901.com/go/god/lib/gconv"
-	jsoniter "github.com/json-iterator/go"
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )
 
@@ -33,25 +31,11 @@ var _ ProxyNode = (*Node)(nil)
 
 // ToNeo4j 将自定义节点转为 neo4j.Node。
 func (n *Node) ToNeo4j(props interface{}) neo4j.Node {
-	m := n.innerProps(props)
+	m := gconv.Map(props)
 	return neo4j.Node{
 		Labels: n.Labels,
 		Props:  m,
 	}
-}
-
-func (n *Node) innerProps(props interface{}) g.Map {
-	m := g.Map{}
-	json, err := jsoniter.MarshalToString(props)
-	if err != nil {
-		return nil
-	}
-
-	err = jsoniter.UnmarshalFromString(json, &m)
-	if err != nil {
-		return nil
-	}
-	return m
 }
 
 // ConvNode 从 neo4j.Node 转为自定义结构体。

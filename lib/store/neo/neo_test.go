@@ -45,6 +45,20 @@ func (n *User) InnerProps() g.Map {
 	}
 }
 
+func TestInnerProps(t *testing.T) {
+	node := NewNode("Project")
+	n := node.ToNeo4j(struct {
+		Id    int64   `json:"id"`
+		Score float64 `json:"score"`
+	}{
+		Id:    318,
+		Score: 3.2,
+	})
+	fmt.Println(n.Props["id"], n.Props["score"])
+	fmt.Printf("%T\n", n.Props["id"])
+	fmt.Printf("%T\n", n.Props["score"])
+}
+
 func TestNode_ToNeo4j(t *testing.T) {
 	u := User{
 		Node: Node{Labels: []string{"User"}},
@@ -107,14 +121,24 @@ func TestDriver_CreateNode(t *testing.T) {
 
 func TestDriver_MergeNode(t *testing.T) {
 	t.Run("批量替换节点", func(t *testing.T) {
-		err := neo.ReplaceNodes(ctx, neo4j.Node{
-			Id:     318,
-			Labels: []string{"User"},
-			Props: map[string]interface{}{
-				"nickname":    "自在",
-				"create_time": time.Now().Unix(),
-			},
+		node := NewNode("Project")
+		n := node.ToNeo4j(struct {
+			Id    int64   `json:"id"`
+			Score float64 `json:"score"`
+		}{
+			Id:    318,
+			Score: 3.2,
 		})
+
+		//n = neo4j.Node{
+		//	Id:     318,
+		//	Labels: []string{"User"},
+		//	Props: map[string]interface{}{
+		//		"nickname":    "自在",
+		//		"create_time": time.Now().Unix(),
+		//	},
+		//}
+		err := neo.ReplaceNodes(ctx, n)
 		assert.Nil(t, err)
 	})
 
@@ -179,7 +203,7 @@ func TestNewNeo(t *testing.T) {
 			Id   int64  `neo:"id"`
 			Name string `neo:"name"`
 		}
-		err := neo.Read(ctx, &user, `MATCH (u:User {id: 318}) RETURN u.id as id, u.nickname as name`)
+		err := neo.Read(ctx, &user, `MATCH (u:Project {id: 318}) RETURN u.id as id, u.nickname as name`)
 		assert.Nil(t, err)
 		assert.Equal(t, int64(318), user.Id)
 		assert.Equal(t, "自在", user.Name)
