@@ -38,6 +38,11 @@ func FromLabels(ls ...string) Labels {
 	return ret
 }
 
+// FromLabel 返回一个标签切片组。
+func FromLabel(l Label) Labels {
+	return Labels{l}
+}
+
 // Stringify 返回字符串化的标签切片形式。
 func (labels Labels) Stringify() []string {
 	ret := make([]string, 0)

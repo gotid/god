@@ -22,6 +22,13 @@ type Node struct {
 	Labels []string
 }
 
+// NewNode 返回一个新的节点。
+func NewNode(ls Labels) *Node {
+	return &Node{
+		Labels: ls.Stringify(),
+	}
+}
+
 var _ ProxyNode = (*Node)(nil)
 
 func (n *Node) InnerProps() g.Map {
