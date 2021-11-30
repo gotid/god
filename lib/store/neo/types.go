@@ -52,6 +52,15 @@ func (labels Labels) Stringify() []string {
 	return ret
 }
 
+// Slice 返回标签切片形式。
+func (labels Labels) Slice() []Label {
+	ret := make([]Label, 0)
+	for _, label := range labels {
+		ret = append(ret, label)
+	}
+	return ret
+}
+
 // String 返回字符串化的标签特征形式。
 func (labels Labels) String() string {
 	ls := labels.Stringify()
