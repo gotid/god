@@ -27,9 +27,9 @@ func NewRelation(t RelationType, d Direction, m ...g.Map) Relation {
 }
 
 // WithEdgeParams 设置是否携带边参。
-func (r *Relation) WithEdgeParams(b bool) *Relation {
+func (r *Relation) WithEdgeParams(b bool) Relation {
 	r.withEdgeParams = b
-	return r
+	return *r
 }
 
 // Edge 返回关系特征字符串。
