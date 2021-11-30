@@ -136,7 +136,6 @@ func (d *driver) DetachDeleteNode(ctx Context, n neo4j.Node) error {
 func (d *driver) doGroupMerge(ctx Context, labels string, nodes []neo4j.Node) error {
 	vs := make([]map[string]interface{}, len(nodes))
 	for i, node := range nodes {
-		node.Props["id"] = node.Id // cypher 中无法通过 node.id 获取
 		vs[i] = map[string]interface{}{
 			"props": node.Props,
 		}
