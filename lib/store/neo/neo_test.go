@@ -34,7 +34,7 @@ type User struct {
 }
 
 type UserProps struct {
-	Props
+	Id       int64  `json:"id"`
 	Nickname string `json:"nickname"`
 }
 
@@ -49,7 +49,7 @@ func TestNode_ToNeo4j(t *testing.T) {
 	u := User{
 		Node: Node{Labels: []string{"User"}},
 		Props: UserProps{
-			Props:    Props{Id: 318},
+			Id:       318,
 			Nickname: "自在",
 		},
 	}
@@ -70,7 +70,7 @@ func TestNeo_FromNeo4j(t *testing.T) {
 		var u User
 		err := ConvNode(v.Node, &u)
 		assert.Nil(t, err)
-		fmt.Println("编号昵称", u.Props.Id, u.Props.Nickname)
+		fmt.Println("编号昵称", u.Props, u.Props.Nickname)
 		fmt.Println("标签", u.Labels)
 		fmt.Println("内部属性", u.InnerProps())
 		fmt.Println()
@@ -88,15 +88,21 @@ func TestTx(t *testing.T) {
 }
 
 func TestDriver_CreateNode(t *testing.T) {
-	err := neo.CreateNode(ctx, neo4j.Node{
-		Id:     318,
-		Labels: []string{"User"},
-		Props: map[string]interface{}{
-			"id":       318,
-			"nickname": "朱邵",
-		},
-	})
+	var id int64
+	err := neo.Read(ctx, &id, "match (n:User {id: 318}) return n.id limit 1")
 	assert.Nil(t, err)
+
+	if id == 0 {
+		err = neo.CreateNode(ctx, neo4j.Node{
+			Id:     318,
+			Labels: []string{"User"},
+			Props: map[string]interface{}{
+				"id":       318,
+				"nickname": "朱邵",
+			},
+		})
+		assert.Nil(t, err)
+	}
 }
 
 func TestDriver_MergeNode(t *testing.T) {

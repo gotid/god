@@ -40,7 +40,7 @@ func (m *{{.upperTable}}Model) FindMany(ids []{{.dataType}}, workers ...int) (li
 		nWorkers = mathx.MinInt(10, len(ids))
 	}
 
-	channel := mr.Params(func(source chan<- interface{}) {
+	channel := mr.Map(func(source chan<- interface{}) {
 		for _, id := range ids {
 			source <- id
 		}

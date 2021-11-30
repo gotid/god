@@ -13,7 +13,7 @@ func genTag(fieldName string) (string, error) {
 
 	output, err := util.With("tag").Parse(tpl.Tag).Execute(map[string]interface{}{
 		"field":      fieldName,
-		"fieldCamel": stringx.From(fieldName).ToCamel(),
+		"fieldCamel": stringx.From(stringx.From(fieldName).ToCamel()).UnTitle(),
 	})
 	if err != nil {
 		return "", err

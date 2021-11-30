@@ -13,14 +13,14 @@ func (m *{{.upperTable}}Model) Update(data {{.upperTable}}) error {
 `
 
 var UpdatePartial = `
-func (m *{{.upperTable}}Model) UpdatePartial(ms ...g.Params) (err error) {
+func (m *{{.upperTable}}Model) UpdatePartial(ms ...g.Map) (err error) {
 	okNum := 0
 	fx.From(func(source chan<- interface{}) {
 		for _, data := range ms {
 			source <- data
 		}
 	}).Parallel(func(item interface{}) {
-		err = m.updatePartial(item.(g.Params))
+		err = m.updatePartial(item.(g.Map))
 		if err != nil {
 			return
 		}
@@ -34,7 +34,7 @@ func (m *{{.upperTable}}Model) UpdatePartial(ms ...g.Params) (err error) {
 	return err
 }
 
-func (m *{{.upperTable}}Model) updatePartial(data g.Params) error {
+func (m *{{.upperTable}}Model) updatePartial(data g.Map) error {
 	updateArgs, err := sqlx.ExtractUpdateArgs({{.lowerTable}}FieldList, data)
 	if err != nil {
 		return err
@@ -63,14 +63,14 @@ func (m *{{.upperTable}}Model) TxUpdate(tx sqlx.TxSession, data {{.upperTable}})
 `
 
 var TxUpdatePartial = `
-func (m *{{.upperTable}}Model) TxUpdatePartial(tx sqlx.TxSession, ms ...g.Params) (err error) {
+func (m *{{.upperTable}}Model) TxUpdatePartial(tx sqlx.TxSession, ms ...g.Map) (err error) {
 	okNum := 0
 	fx.From(func(source chan<- interface{}) {
 		for _, data := range ms {
 			source <- data
 		}
 	}).Parallel(func(item interface{}) {
-		err = m.txUpdatePartial(tx, item.(g.Params))
+		err = m.txUpdatePartial(tx, item.(g.Map))
 		if err != nil {
 			return
 		}
@@ -83,7 +83,7 @@ func (m *{{.upperTable}}Model) TxUpdatePartial(tx sqlx.TxSession, ms ...g.Params
 	return err
 }
 
-func (m *{{.upperTable}}Model) txUpdatePartial(tx sqlx.TxSession, data g.Params) error {
+func (m *{{.upperTable}}Model) txUpdatePartial(tx sqlx.TxSession, data g.Map) error {
 	updateArgs, err := sqlx.ExtractUpdateArgs({{.lowerTable}}FieldList, data)
 	if err != nil {
 		return err
