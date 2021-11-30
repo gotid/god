@@ -8,9 +8,10 @@ import (
 
 // Relation 表示一个带方向的关系边。
 type Relation struct {
-	Type      RelationType
-	Direction Direction
-	Params    g.Map
+	Type           RelationType
+	Direction      Direction
+	Params         g.Map
+	withEdgeParams bool
 }
 
 // NewRelation 返回一个新的关系边。
@@ -25,12 +26,21 @@ func NewRelation(t RelationType, d Direction, m ...g.Map) Relation {
 	return r
 }
 
+// WithEdgeParams 设置是否携带边参。
+func (r *Relation) WithEdgeParams(b bool) *Relation {
+	r.withEdgeParams = b
+	return r
+}
+
 // Edge 返回关系特征字符串。
 //
 // alias 用于指定关系别名。
 //
 // 返回结果形如： -[:VIEW]-> 或 <-[r:VIEW]-
 func (r *Relation) Edge(alias ...string) string {
+	if r.withEdgeParams {
+		return r.EdgeWithParams(alias...)
+	}
 	return r.edge(alias, "")
 }
 

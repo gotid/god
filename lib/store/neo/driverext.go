@@ -96,7 +96,7 @@ func (d *driver) MergeRelation(ctx Context, n1 neo4j.Node, r Relation, n2 neo4j.
 
 	ctx.Params = g.Map{"id1": n1.Id, "id2": n2.Id}
 	cypher := fmt.Sprintf(cypherMergeRelation,
-		LabelExp(n1), LabelExp(n2), r.Edge("r"), r.OnSet("r"))
+		LabelExp(n1), LabelExp(n2), r.EdgeWithParams("r"), r.OnSet("r"))
 	err := d.Run(ctx, nil, cypher)
 	return err
 }
