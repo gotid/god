@@ -75,7 +75,7 @@ func doTx(c *conn, beginTx beginTxFn, transact TransactFn) (err error) {
 			if e := tx.Rollback(); e != nil {
 				err = fmt.Errorf("事务来自 %v, 回滚失败: %v", p, e)
 			} else {
-				err = fmt.Errorf("事务回滚成功，源于错误: %v", p)
+				err = fmt.Errorf("事务回滚成功，回滚原因： %v", p)
 			}
 		} else if err != nil {
 			if e := tx.Rollback(); e != nil {

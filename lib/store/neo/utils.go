@@ -35,7 +35,7 @@ func MustFullRelation(r Relation, name string) {
 //
 // {user: "abc", age: 123}
 func MakeProps(params g.Map) string {
-	if params == nil {
+	if len(params) == 0 {
 		return ""
 	}
 
@@ -62,7 +62,7 @@ func MakeProps(params g.Map) string {
 
 // MakeOnMatchSet 返回 ON MATCH SET 字符串。
 func MakeOnMatchSet(alias string, params g.Map) string {
-	if params == nil {
+	if len(params) == 0 {
 		return ""
 	}
 

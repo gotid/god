@@ -45,7 +45,7 @@ func doRun(ctx Context, scanner Scanner, cypher string) error {
 	}
 
 	if err != nil {
-		logCypherError(cypher, err)
+		logx.Errorf("[Neo] %s >>> 查询语句：%s", err.Error(), cypher)
 		return err
 	}
 
@@ -62,7 +62,7 @@ func doTx(tx neo4j.Transaction, fn TransactFn) (err error) {
 			if e := tx.Rollback(); e != nil {
 				err = fmt.Errorf("事务来自 %v, 回滚失败: %v", p, e)
 			} else {
-				err = fmt.Errorf("事务回滚成功，源于错误: %v", p)
+				err = fmt.Errorf("事务回滚成功，回滚原因： %v", p)
 			}
 		} else if err != nil {
 			if e := tx.Rollback(); e != nil {
@@ -74,10 +74,4 @@ func doTx(tx neo4j.Transaction, fn TransactFn) (err error) {
 	}()
 
 	return fn(tx)
-}
-
-func logCypherError(cypher string, err error) {
-	if err != nil {
-		logx.Errorf("[Neo] %s >>> %s", err.Error(), cypher)
-	}
 }

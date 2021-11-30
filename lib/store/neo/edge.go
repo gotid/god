@@ -49,6 +49,9 @@ func (r *Relation) EdgeWithParams(alias ...string) string {
 //
 // 返回结果形如： -[:VIEW]->, ON CREATE SET ..., ON MATCH SET ...
 func (r *Relation) OnSet(alias string) string {
+	if len(r.Params) == 0 {
+		return ""
+	}
 	onCreateSet := fmt.Sprintf("ON CREATE SET %s=%s", alias, MakeProps(r.Params))
 	onMergeSet := MakeOnMatchSet(alias, r.Params)
 	return onCreateSet + "\n" + onMergeSet

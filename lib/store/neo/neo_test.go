@@ -323,6 +323,12 @@ func TestRelationship_Edge(t *testing.T) {
 	r = NewRelation(View, Incoming)
 	assert.Equal(t, "<-[r:VIEW]-", r.Edge("r"))
 
+	r = NewRelation(View, Outgoing)
+	assert.Equal(t, "", r.OnSet("r"))
+
+	r = NewRelation(View, Outgoing, g.Map{})
+	assert.Equal(t, "", r.OnSet("r"))
+
 	r = NewRelation(View, Outgoing, g.Map{
 		"name":    "zs",
 		"age":     123,
