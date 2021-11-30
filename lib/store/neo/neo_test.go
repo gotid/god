@@ -38,6 +38,17 @@ type UserProps struct {
 	Nickname string `json:"nickname"`
 }
 
+type Page struct {
+	Node
+	Props PageProps
+}
+
+type PageProps struct {
+	Id   int64  `json:"id"`
+	Name string `json:"name"`
+	App  string `json:"app"`
+}
+
 func (n *User) InnerProps() g.Map {
 	return g.Map{
 		"id":       n.Props.Id,
@@ -76,18 +87,19 @@ func TestNeo_FromNeo4j(t *testing.T) {
 	var result []struct {
 		Node neo4j.Node `neo:"n"`
 	}
-	err := neo.Read(ctx, &result, "MATCH (n:User) RETURN n LIMIT 25")
+	err := neo.Read(ctx, &result, "MATCH (n:Page) RETURN n LIMIT 25")
 	assert.Nil(t, err)
 	fmt.Println(result)
 
 	for _, v := range result {
-		var u User
-		err := ConvNode(v.Node, &u)
+		var o Page
+		err := ConvNode(v.Node, &o)
 		assert.Nil(t, err)
-		fmt.Println("编号昵称", u.Props, u.Props.Nickname)
-		fmt.Println("标签", u.Labels)
-		fmt.Println("内部属性", u.InnerProps())
-		fmt.Println()
+		fmt.Println(o)
+		// fmt.Println("编号名称", o.Id, o.Props.Id, o.Props.Name)
+		// fmt.Println("标签", o.Labels)
+		// fmt.Println("内部属性", o.ToNeo4j(o.Props))
+		// fmt.Println()
 	}
 }
 
@@ -203,10 +215,10 @@ func TestNewNeo(t *testing.T) {
 			Id   int64  `neo:"id"`
 			Name string `neo:"name"`
 		}
-		err := neo.Read(ctx, &user, `MATCH (u:Project {id: 318}) RETURN u.id as id, u.nickname as name`)
+		err := neo.Read(ctx, &user, `MATCH (u:User {id: 318}) RETURN u.id as id, u.nickname as name`)
 		assert.Nil(t, err)
 		assert.Equal(t, int64(318), user.Id)
-		assert.Equal(t, "自在", user.Name)
+		fmt.Println(user)
 	})
 
 	t.Run("单值——结构体测试2", func(t *testing.T) {

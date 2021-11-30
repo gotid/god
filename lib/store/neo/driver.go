@@ -197,23 +197,23 @@ func scan(dest interface{}, result neo4j.Result) error {
 }
 
 func setOneStruct(dve reflect.Value, result neo4j.Result) error {
-	record, err := result.Single()
-	if err != nil {
-		return err
-	}
-	if err := setFieldValueMap(dve, record); err != nil {
-		return err
-	}
-
-	//for result.Next() {
-	//	record := result.Record()
-	//
-	//	if err := setFieldValueMap(dve, record); err != nil {
-	//		return err
-	//	}
-	//
-	//	break
+	//record, err := result.Single()
+	//if err != nil {
+	//	return err
 	//}
+	//if err := setFieldValueMap(dve, record); err != nil {
+	//	return err
+	//}
+
+	for result.Next() {
+		record := result.Record()
+
+		if err := setFieldValueMap(dve, record); err != nil {
+			return err
+		}
+
+		break
+	}
 
 	return nil
 }
@@ -222,7 +222,9 @@ func setOneSimple(dve reflect.Value, result neo4j.Result, dv reflect.Value) erro
 	if dve.CanSet() {
 		for result.Next() {
 			record := result.Record()
-			reflect.Indirect(dv).Set(reflect.ValueOf(record.Values[0]))
+			if v := record.Values[0]; v != nil {
+				reflect.Indirect(dv).Set(reflect.ValueOf(v))
+			}
 			return nil
 		}
 	} else {
@@ -257,7 +259,7 @@ func setFieldValueMap(structValue reflect.Value, record *neo4j.Record) error {
 			if !field.CanAddr() || !field.Addr().CanInterface() {
 				return ErrNotReadableValue
 			}
-			if v, ok := record.Get(fieldName); ok {
+			if v, ok := record.Get(fieldName); ok && v != nil {
 				field.Set(reflect.ValueOf(v))
 			}
 		}
