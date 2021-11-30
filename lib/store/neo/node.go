@@ -4,12 +4,17 @@ import (
 	"errors"
 	"reflect"
 
+	"git.zc0901.com/go/god/lib/g"
+
 	"git.zc0901.com/go/god/lib/gconv"
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )
 
 // ProxyNode 表示一个 neo4j 的代理节点。
 type ProxyNode interface {
+	// Neo4j 自定义节点转为 neo4j.Node（不带属性）。
+	Neo4j() neo4j.Node
+
 	// ToNeo4j 自定义节点转为 neo4j.Node。
 	ToNeo4j(props interface{}, excludeKeys ...string) neo4j.Node
 }
@@ -33,16 +38,28 @@ func NewNode(label ...Label) *Node {
 
 var _ ProxyNode = (*Node)(nil)
 
+// Neo4j 将自定义节点转为 neo4j.Node（不带属性）。
+func (n *Node) Neo4j() neo4j.Node {
+	return neo4j.Node{
+		Id:     n.Id,
+		Labels: n.Labels,
+	}
+}
+
 // ToNeo4j 将自定义节点转为 neo4j.Node。
 func (n *Node) ToNeo4j(props interface{}, excludeKeys ...string) neo4j.Node {
-	m := gconv.Map(props)
-	for _, key := range excludeKeys {
-		delete(m, key)
-	}
 	id := int64(0)
-	if v, ok := m["id"]; ok {
-		id = v.(int64)
+	m := g.Map{}
+	if props != nil {
+		m = gconv.Map(props)
+		for _, key := range excludeKeys {
+			delete(m, key)
+		}
+		if v, ok := m["id"]; ok {
+			id = v.(int64)
+		}
 	}
+
 	return neo4j.Node{
 		Id:     id,
 		Labels: n.Labels,
