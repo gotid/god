@@ -417,8 +417,9 @@ func (s Stream) walkUnlimited(fn WalkFunc, option *rxOption) Stream {
 			threading.GoSafe(func() {
 				defer func() {
 					wg.Done()
-					fn(item, pipe)
 				}()
+
+				fn(item, pipe)
 			})
 		}
 

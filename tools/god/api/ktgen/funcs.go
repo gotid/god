@@ -49,9 +49,9 @@ func parseType(t string) string {
 			log.Fatal(e)
 		}
 		if len(tys) != 2 {
-			log.Fatal("Params type number !=2")
+			log.Fatal("Map type number !=2")
 		}
-		return "Params<String," + parseType(tys[1]) + ">"
+		return "Map<String," + parseType(tys[1]) + ">"
 	}
 
 	switch t {

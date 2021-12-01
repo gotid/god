@@ -21,8 +21,8 @@ import '../vars/vars.dart';
 /// data:为你要post的结构体，我们会帮你转换成json字符串;
 /// ok函数:请求成功的时候调用，fail函数：请求失败的时候会调用，eventually函数：无论成功失败都会调用
 Future apiPost(String path, dynamic data,
-    {Params<String, String> header,
-    Function(Params<String, dynamic>) ok,
+    {Map<String, String> header,
+    Function(Map<String, dynamic>) ok,
     Function(String) fail,
     Function eventually}) async {
   await _apiRequest('POST', path, data,
@@ -33,8 +33,8 @@ Future apiPost(String path, dynamic data,
 ///
 /// ok函数:请求成功的时候调用，fail函数：请求失败的时候会调用，eventually函数：无论成功失败都会调用
 Future apiGet(String path,
-    {Params<String, String> header,
-    Function(Params<String, dynamic>) ok,
+    {Map<String, String> header,
+    Function(Map<String, dynamic>) ok,
     Function(String) fail,
     Function eventually}) async {
   await _apiRequest('GET', path, null,
@@ -42,8 +42,8 @@ Future apiGet(String path,
 }
 
 Future _apiRequest(String method, String path, dynamic data,
-    {Params<String, String> header,
-    Function(Params<String, dynamic>) ok,
+    {Map<String, String> header,
+    Function(Map<String, dynamic>) ok,
     Function(String) fail,
     Function eventually}) async {
   var tokens = await getTokens();
@@ -80,7 +80,7 @@ Future _apiRequest(String method, String path, dynamic data,
     if (rp.statusCode == 404) {
       if (fail != null) fail('404 not found');
     } else {
-      Params<String, dynamic> base = jsonDecode(body);
+      Map<String, dynamic> base = jsonDecode(body);
       if (rp.statusCode == 200) {
         if (base['code'] != 0) {
           if (fail != null) fail(base['desc']);
@@ -113,7 +113,7 @@ const tokensFileContent = `class Tokens {
       this.refreshToken,
       this.refreshExpire,
       this.refreshAfter});
-  factory Tokens.fromJson(Params<String, dynamic> m) {
+  factory Tokens.fromJson(Map<String, dynamic> m) {
     return Tokens(
         accessToken: m['access_token'],
         accessExpire: m['access_expire'],
@@ -121,7 +121,7 @@ const tokensFileContent = `class Tokens {
         refreshExpire: m['refresh_expire'],
         refreshAfter: m['refresh_after']);
   }
-  Params<String, dynamic> toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'access_token': accessToken,
       'access_expire': accessExpire,

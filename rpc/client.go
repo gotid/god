@@ -19,8 +19,6 @@ var (
 	WithNonBlock = internal.WithNonBlock
 	// WithTimeout 自定义超时时间。
 	WithTimeout = internal.WithTimeout
-	// WithRetry 设为自动重连。
-	WithRetry = internal.WithRetry
 	// WithTransportCredentials 自定义安全拨号证书。
 	WithTransportCredentials = internal.WithTransportCredentials
 	// WithUnaryClientInterceptor 自定义自定义一元客户端拦截器。
@@ -69,9 +67,7 @@ func NewClient(c ClientConf, options ...ClientOption) (Client, error) {
 	if c.Timeout > 0 {
 		opts = append(opts, WithTimeout(time.Duration(c.Timeout)*time.Millisecond))
 	}
-	if c.Retry {
-		opts = append(opts, WithRetry())
-	}
+
 	opts = append(opts, options...)
 
 	var target string

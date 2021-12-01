@@ -2,6 +2,7 @@ package logx
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -53,6 +54,16 @@ func (mw *mockWriter) String() string {
 	mw.lock.Lock()
 	defer mw.lock.Unlock()
 	return mw.builder.String()
+}
+
+func TestErrorfWithWrappedError(t *testing.T) {
+	SetLevel(ErrorLevel)
+	const message = "there"
+	writer := new(mockWriter)
+	errorLog = writer
+	atomic.StoreUint32(&initialized, 1)
+	Errorf("hello %w", errors.New(message))
+	assert.True(t, strings.Contains(writer.builder.String(), "hello there"))
 }
 
 func TestFileLineFileMode(t *testing.T) {

@@ -18,12 +18,12 @@ class {{.Name}}{
 	{{.Name}}({ {{range .Members}}
 		this.{{lowCamelCase .Name}},{{end}}
 	});
-	factory {{.Name}}.fromJson(Params<String,dynamic> m) {
+	factory {{.Name}}.fromJson(Map<String,dynamic> m) {
 		return {{.Name}}({{range .Members}}
 			{{lowCamelCase .Name}}: {{if isDirectType .Type}}m['{{tagGet .Tag "json"}}']{{else if isClassListType .Type}}(m['{{tagGet .Tag "json"}}'] as List<dynamic>).map((i) => {{getCoreType .Type}}.fromJson(i)){{else}}{{.Type}}.fromJson(m['{{tagGet .Tag "json"}}']){{end}},{{end}}
 		);
 	}
-	Params<String,dynamic> toJson() {
+	Map<String,dynamic> toJson() {
 		return { {{range .Members}}
 			'{{tagGet .Tag "json"}}': {{if isDirectType .Type}}{{lowCamelCase .Name}}{{else if isClassListType .Type}}{{lowCamelCase .Name}}.map((i) => i.toJson()){{else}}{{lowCamelCase .Name}}.toJson(){{end}},{{end}}
 		};

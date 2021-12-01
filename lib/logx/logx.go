@@ -264,7 +264,7 @@ func ErrorCaller(callDepth int, v ...interface{}) {
 
 // ErrorCallerf 将带上下文的格式化值写入错误日志。
 func ErrorCallerf(callDepth int, format string, v ...interface{}) {
-	syncErrorText(fmt.Sprintf(format, v...), callDepth+callerInnerDepth)
+	syncErrorText(fmt.Errorf(format, v...).Error(), callDepth+callerInnerDepth)
 }
 
 // ErrorStack 将值和调用堆栈一起写入错误日志。

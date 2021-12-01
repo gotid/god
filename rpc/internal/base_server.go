@@ -19,7 +19,6 @@ type (
 	baseServer struct {
 		address            string
 		metrics            *stat.Metrics
-		maxRetries         int
 		options            []grpc.ServerOption
 		unaryInterceptors  []grpc.UnaryServerInterceptor
 		streamInterceptors []grpc.StreamServerInterceptor
@@ -28,9 +27,8 @@ type (
 
 func newBaseServer(address string, opts *serverOptions) *baseServer {
 	return &baseServer{
-		address:    address,
-		metrics:    opts.metrics,
-		maxRetries: opts.maxRetries,
+		address: address,
+		metrics: opts.metrics,
 	}
 }
 

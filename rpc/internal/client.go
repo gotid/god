@@ -30,7 +30,6 @@ type (
 	ClientOptions struct {
 		NonBlock    bool
 		Secure      bool
-		Retry       bool
 		Timeout     time.Duration
 		DialOptions []grpc.DialOption
 	}
@@ -85,7 +84,6 @@ func (c *client) buildDialOptions(opts ...ClientOption) []grpc.DialOption {
 			clientinterceptors.PrometheusInterceptor,               // 监控报警
 			clientinterceptors.BreakerInterceptor,                  // 自动熔断
 			clientinterceptors.TimeoutInterceptor(cliOpts.Timeout), // 超时控制
-			clientinterceptors.RetryInterceptor(cliOpts.Retry),     // 连接重试
 		),
 		WithStreamClientInterceptors(
 			clientinterceptors.StreamTraceInterceptor,
@@ -135,13 +133,6 @@ func WithNonBlock() ClientOption {
 func WithTimeout(timeout time.Duration) ClientOption {
 	return func(options *ClientOptions) {
 		options.Timeout = timeout
-	}
-}
-
-// WithRetry 设为自动重连。
-func WithRetry() ClientOption {
-	return func(options *ClientOptions) {
-		options.Retry = true
 	}
 }
 

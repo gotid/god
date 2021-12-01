@@ -58,7 +58,6 @@ func (s *server) Start(register RegisterFn) error {
 	// 一元拦截器
 	unaryInterceptors := []grpc.UnaryServerInterceptor{
 		serverinterceptors.UnaryTraceInterceptor,           // 链路跟踪
-		serverinterceptors.RetryInterceptor(s.maxRetries),  // 连接重试
 		serverinterceptors.UnaryCrashInterceptor,           // 异常捕获
 		serverinterceptors.UnaryStatInterceptor(s.metrics), // 数据统计
 		serverinterceptors.UnaryPrometheusInterceptor,      // 监控报警
@@ -97,12 +96,5 @@ func (s *server) Start(register RegisterFn) error {
 func WithMetrics(metrics *stat.Metrics) ServerOption {
 	return func(options *serverOptions) {
 		options.metrics = metrics
-	}
-}
-
-// WithMaxRetries 自定义连接重试次数。
-func WithMaxRetries(maxRetries int) ServerOption {
-	return func(options *serverOptions) {
-		options.maxRetries = maxRetries
 	}
 }

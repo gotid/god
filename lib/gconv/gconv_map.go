@@ -211,7 +211,7 @@ func doMapConvertForMapOrStructValue(isRoot bool, value interface{}, recursive b
 		}
 		return dataMap
 	case reflect.Struct:
-		// Params converting interface check.
+		// Map converting interface check.
 		if v, ok := value.(apiMapStrAny); ok {
 			m := v.MapStrAny()
 			if recursive {
