@@ -13,7 +13,7 @@ const (
 	defaultRandLen = 8
 	letterIdxBits  = 6                    // 6位表示一个字母索引
 	letterIdxMax   = 63 / letterIdxBits   // 63位的字母指数拟合
-	letterIdxMask  = 1<<letterIdxBits - 1 // All 1-bits, as many as letterIdxBits
+	letterIdxMask  = 1<<letterIdxBits - 1 // Clean 1-bits, as many as letterIdxBits
 	letterBytes    = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 )
 

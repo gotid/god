@@ -1,6 +1,8 @@
 package stringx
 
-import "git.zc0901.com/go/god/lib/lang"
+import (
+	"git.zc0901.com/go/god/lib/lang"
+)
 
 const defaultMask = '*'
 
@@ -8,6 +10,7 @@ type (
 	// Trie 定义了一个单词查找树接口。
 	Trie interface {
 		Filter(s string) (string, []string, bool)
+		FilterWithFn(text string, fn func(string) string) (sentence string)
 		FindKeywords(s string) []string
 	}
 
@@ -53,10 +56,28 @@ func (n *trieNode) Filter(text string) (sentence string, keywords []string, foun
 
 	for _, match := range scopes {
 		// we don't care about overlaps, not bringing a performance improvement
-		n.replaceWithAsterisk(chars, match.start, match.stop)
+		n.replaceWithMask(chars, match.start, match.stop)
 	}
 
 	return string(chars), keywords, len(keywords) > 0
+}
+
+func (n *trieNode) FilterWithFn(text string, fn func(string) string) (sentence string) {
+	runes := []rune(text)
+	if len(runes) == 0 {
+		return text
+	}
+
+	scopes := n.findKeywordScopes(runes)
+	replace := make(map[string]string)
+
+	for _, score := range scopes {
+		part := string(runes[score.start:score.stop])
+		replace[part] = fn(part)
+	}
+	text = NewReplacer(replace).Replace(text)
+
+	return text
 }
 
 func (n *trieNode) FindKeywords(text string) []string {
@@ -127,7 +148,7 @@ func (n *trieNode) findKeywordScopes(chars []rune) []scope {
 	return scopes
 }
 
-func (n *trieNode) replaceWithAsterisk(chars []rune, start, stop int) {
+func (n *trieNode) replaceWithMask(chars []rune, start, stop int) {
 	for i := start; i < stop; i++ {
 		chars[i] = n.mask
 	}

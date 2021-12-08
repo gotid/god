@@ -3,11 +3,12 @@ package gpool
 
 import (
 	"errors"
+	"time"
+
 	"git.zc0901.com/go/god/lib/container/glist"
 	"git.zc0901.com/go/god/lib/container/gtype"
 	"git.zc0901.com/go/god/lib/os/gtime"
 	"git.zc0901.com/go/god/lib/os/gtimer"
-	"time"
 )
 
 // Pool is an Object-Reusable Pool.
@@ -96,7 +97,6 @@ func (p *Pool) Clear() {
 	} else {
 		p.list.RemoveAll()
 	}
-
 }
 
 // Get picks and returns an item from pool. If the pool is empty and NewFunc is defined,
@@ -148,7 +148,7 @@ func (p *Pool) checkExpireItems() {
 		}
 		gtimer.Exit()
 	}
-	// All items do not expire.
+	// Clean items do not expire.
 	if p.TTL == 0 {
 		return
 	}
@@ -157,7 +157,7 @@ func (p *Pool) checkExpireItems() {
 	// Retrieve the current timestamp in milliseconds, it expires the items
 	// by comparing with this timestamp. It is not accurate comparison for
 	// every items expired, but high performance.
-	var timestampMilli = gtime.TimestampMilli()
+	timestampMilli := gtime.TimestampMilli()
 	for {
 		if latestExpire > timestampMilli {
 			break
