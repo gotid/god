@@ -61,6 +61,7 @@ func TestSeg_CutForSearch(t *testing.T) {
 		CombineMap,
 		SynonymMap,
 		[][]string{},
+		true,
 	)
 
 	q := "客厅 现代 轻奢 红色房子"
@@ -71,6 +72,7 @@ func TestSeg_CutForSearch(t *testing.T) {
 	// q = "卫生间 墙砖"
 	// q = "imola白色瓷砖"
 	q = "白色瓷砖"
+	q = "岛台 瓷砖"
 	start := time.Now().UnixMicro()
 	keywords := segmenter.CutForSearch(q, 6, false)
 	fmt.Println("⌚️ 耗时", time.Now().UnixMicro()-start, "微秒")

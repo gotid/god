@@ -72,6 +72,7 @@ func NewSegmenter(dict string,
 		s.groups = [][]string{
 			{"风", "空"},
 			{"色", "空"},
+			{"色", "材"},
 			{"材", "局"},
 			{"空", "物"},
 			{"形", "物"},
