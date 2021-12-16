@@ -87,6 +87,8 @@ func (segmenter *Segmenter) CutForSearch(q string, dist int, domainMode ...bool)
 		{"风", "空"},
 		//{"风", "物"},
 		{"色", "空"},
+		{"材", "局"},
+		{"空", "物"},
 		{"形", "物"},
 		{"色", "物"},
 		{"纹", "物"},
