@@ -110,7 +110,7 @@ func doQuery(db session, scanner func(*sql.Rows) error, query string, args ...in
 	rows, err := db.Query(query, args...)
 	duration := time.Since(startTime)
 
-	if duration > defaultSlowThreshold {
+	if duration > slowThreshold.Load() {
 		logx.WithDuration(duration).Slowf("[SQL] doQuery - %s", stmt)
 	} else {
 		logx.WithDuration(duration).Infof("[SQL] doQuery: %s", stmt)
@@ -122,9 +122,7 @@ func doQuery(db session, scanner func(*sql.Rows) error, query string, args ...in
 	}
 
 	// 关闭数据库连接，释放资源
-	defer func() {
-		_ = rows.Close()
-	}()
+	defer rows.Close()
 
 	return scanner(rows)
 }
@@ -161,7 +159,7 @@ func doExec(db session, query string, args ...interface{}) (sql.Result, error) {
 	result, err := db.Exec(query, nvArgs...)
 	duration := time.Since(startTime)
 
-	if duration > defaultSlowThreshold {
+	if duration > slowThreshold.Load() {
 		logx.WithDuration(duration).Slowf("[SQL] 慢执行(%v) - %+v", duration, stmt)
 	} else {
 		logx.WithDuration(duration).Infof("[SQL] 执行: %+v", stmt)

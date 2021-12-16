@@ -34,6 +34,7 @@ type Segmenter struct {
 	combineMap   map[string]string
 	synonymMap   map[string]string
 	cleaner      clean.Cleaner
+	groups       [][]string // 领域标签组合方式
 	debugMode    bool
 }
 
@@ -51,12 +52,15 @@ type Keyword struct {
 func NewSegmenter(dict string,
 	stopWords []string,
 	combineWords []string, combineMap map[string]string,
-	synonymMap map[string]string, debug ...bool) *Segmenter {
+	synonymMap map[string]string,
+	groups [][]string,
+	debug ...bool) *Segmenter {
 	s := &Segmenter{
 		jieba:        gojieba.NewJieba(gojieba.DICT_PATH, gojieba.HMM_PATH, dict),
 		stopWords:    stopWords,
 		combineWords: combineWords, combineMap: combineMap,
 		synonymMap: synonymMap,
+		groups:     groups,
 	}
 	s.cleaner = clean.NewCleaner(
 		"hello world",
@@ -64,6 +68,20 @@ func NewSegmenter(dict string,
 		clean.WithCombineWords(combineWords, combineMap),
 		clean.WithSynonymWords(synonymMap),
 	)
+	if len(s.groups) == 0 {
+		s.groups = [][]string{
+			{"风", "空"},
+			{"色", "空"},
+			{"材", "局"},
+			{"空", "物"},
+			{"形", "物"},
+			{"色", "物"},
+			{"纹", "物"},
+			{"材", "物"},
+			{"特", "物"},
+			{"牌", "物"},
+		}
+	}
 	if len(debug) > 0 {
 		s.debugMode = debug[0]
 	}
@@ -82,26 +100,12 @@ func (segmenter *Segmenter) CutForSearch(q string, dist int, domainMode ...bool)
 		dist = 1
 	}
 
-	// 组词
-	groups := [][]string{
-		{"风", "空"},
-		//{"风", "物"},
-		{"色", "空"},
-		{"材", "局"},
-		{"空", "物"},
-		{"形", "物"},
-		{"色", "物"},
-		{"纹", "物"},
-		{"材", "物"},
-		{"特", "物"},
-		{"牌", "物"},
-	}
 	usedIdxSet := gset.NewIntSet()
 	cb := func(usedIdx []int) {
 		usedIdxSet.Add(usedIdx...)
 	}
 	result := make(map[string]Keyword)
-	for _, group := range groups {
+	for _, group := range segmenter.groups {
 		m := segmenter.Combine(keywords, group[0], group[1], dist, cb)
 		for kw, keyword := range m {
 			v, exists := result[kw]
