@@ -70,6 +70,7 @@ func TestSeg_CutForSearch(t *testing.T) {
 	q = "卫生间 白色瓷砖墙面"
 	// q = "卫生间 墙砖"
 	// q = "imola白色瓷砖"
+	q = "白色瓷砖"
 	start := time.Now().UnixMicro()
 	keywords := segmenter.CutForSearch(q, 6, false)
 	fmt.Println("⌚️ 耗时", time.Now().UnixMicro()-start, "微秒")

@@ -141,6 +141,15 @@ func (segmenter *Segmenter) CutForSearch(q string, dist int, domainMode ...bool)
 	// 排词
 	ret := segmenter.sort(result)
 
+	// 补充
+	if len(ret) == 0 {
+		ret = append(ret, Keyword{
+			Word:   q,
+			Tag:    "未知",
+			Weight: 0,
+		})
+	}
+
 	return ret
 }
 
