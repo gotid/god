@@ -1,4 +1,4 @@
-package baidu
+package baidufanyi
 
 import (
 	"fmt"
@@ -7,13 +7,13 @@ import (
 	"strings"
 	"sync"
 
+	"git.zc0901.com/go/god/lib/translate/translator"
+
 	"git.zc0901.com/go/god/lib/logx"
 
 	"git.zc0901.com/go/god/lib/stringx"
 
 	"github.com/imroc/req"
-
-	"git.zc0901.com/go/god/lib/translate"
 
 	v8 "rogchap.com/v8go"
 )
@@ -73,7 +73,7 @@ type Translate struct {
 	token, gtk string
 }
 
-var _ translate.Translator = (*Translate)(nil)
+var _ translator.Translator = (*Translate)(nil)
 
 var instance *Translate
 
@@ -91,7 +91,8 @@ var header = req.Header{
 	"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36",
 }
 
-func MustNew() translate.Translator {
+// Must 返回百度翻译器。
+func Must() translator.Translator {
 	once.Do(func() {
 		ctx := v8.NewContext() // 使用新的虚拟机创建新的V8上下文
 		_, err := ctx.RunScript(signSource, "sign.js")

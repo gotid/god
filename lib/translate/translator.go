@@ -1,9 +1,6 @@
 package translate
 
-// Translator 表示一个翻译器。
-type Translator interface {
-	// Zh2En 中译英
-	Zh2En(query string) string
-	// En2Zh 英译中
-	En2Zh(query string) string
-}
+import "git.zc0901.com/go/god/lib/translate/baidufanyi"
+
+// Baidu 返回一个百度翻译器。
+var Baidu = baidufanyi.Must()

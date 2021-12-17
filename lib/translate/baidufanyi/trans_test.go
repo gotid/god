@@ -1,4 +1,4 @@
-package baidu
+package baidufanyi
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 )
 
 func TestTranslate_Translate(t *testing.T) {
-	trans := MustNew()
+	trans := Must()
 
 	result := trans.Zh2En("欧式客厅")
 	fmt.Println(result)
