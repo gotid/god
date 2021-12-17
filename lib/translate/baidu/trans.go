@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"git.zc0901.com/go/god/lib/logx"
 	"git.zc0901.com/go/god/lib/stringx"
@@ -69,6 +70,7 @@ type Translate struct {
 	translator.DefaultTranslator
 	ctx        *v8.Context
 	token, gtk string
+	time       bool
 }
 
 var _ translator.Translator = (*Translate)(nil)
@@ -104,6 +106,10 @@ func Must() translator.Translator {
 	return instance
 }
 
+func (t *Translate) Time(b bool) {
+	t.time = b
+}
+
 func (t *Translate) Zh2En(query string) string {
 	return t.translate(query, "zh", "en")
 }
@@ -134,6 +140,12 @@ func (t *Translate) translate(query, from, to string) string {
 	if !stringx.Contains(translator.ValidCodes, from) ||
 		!stringx.Contains(translator.ValidCodes, to) {
 		return query
+	}
+	if t.time {
+		start := time.Now()
+		defer func() {
+			logx.Infof("耗时: %v毫秒", time.Now().Sub(start).Milliseconds())
+		}()
 	}
 	t.ensureToken()
 	sign, err := t.sign(query, t.gtk)

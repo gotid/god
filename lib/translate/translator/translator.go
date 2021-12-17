@@ -6,11 +6,13 @@ import (
 
 // Translator 表示一个翻译器。
 type Translator interface {
+	// Time 是否开启计时
+	Time(b bool)
 	// Zh2En 中译英
 	Zh2En(query string) string
 	// En2Zh 英译中
 	En2Zh(query string) string
-	// ToCn 自动转成中文
+	// ToZh 自动转成中文
 	ToZh(query string) string
 	// ToEn 自动转为英文
 	ToEn(query string) string

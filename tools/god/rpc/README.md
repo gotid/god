@@ -14,17 +14,17 @@ Goctl Rpc是`goctl`脚手架下的一个rpc服务代码生成模块，支持prot
 
 ### 方式一：快速生成greet服务
 
-  通过命令 `goctl rpc new ${servieName}`生成
+通过命令 `goctl rpc new ${servieName}`生成
 
-  如生成greet rpc服务：
+如生成greet rpc服务：
 
-  ```Bash
-  goctl rpc new greet
-  ```
+```Bash
+goctl rpc new greet
+```
 
-  执行后代码结构如下:
+执行后代码结构如下:
 
-  ```golang
+```golang
 .
 ├── etc             // yaml配置文件
 │   └── greet.yaml
@@ -35,29 +35,29 @@ Goctl Rpc是`goctl`脚手架下的一个rpc服务代码生成模块，支持prot
 ├── greet.proto     // proto 文件
 ├── greetclient     // call logic ②
 │   └── greet.go
-└── internal        
-    ├── config      // yaml配置对应的实体
-    │   └── config.go
-    ├── logic       // 业务代码
-    │   └── pinglogic.go
-    ├── server      // rpc server
-    │   └── greetserver.go
-    └── svc         // 依赖资源
-        └── servicecontext.go
-  ```
+└── internal
+├── config      // yaml配置对应的实体
+│   └── config.go
+├── logic       // 业务代码
+│   └── pinglogic.go
+├── server      // rpc server
+│   └── greetserver.go
+└── svc         // 依赖资源
+└── servicecontext.go
+```
 
 > ① pb文件夹名（老版本文件夹固定为pb）称取自于proto文件中option go_package的值最后一层级按照一定格式进行转换，若无此声明，则取自于package的值，大致代码如下：
 
 ```go
-  if option.Name == "go_package" {
-    ret.GoPackage = option.Constant.Source
-  }
-  ...
-  if len(ret.GoPackage) == 0 {
-    ret.GoPackage = ret.Package.Name
-  }
-  ret.PbPackage = GoSanitized(filepath.Base(ret.GoPackage))
-  ...
+if option.Name == "go_package" {
+ret.GoPackage = option.Constant.Source
+}
+...
+if len(ret.GoPackage) == 0 {
+ret.GoPackage = ret.Package.Name
+}
+ret.PbPackage = GoSanitized(filepath.Base(ret.GoPackage))
+...
 ```
 > GoSanitized方法请参考google.golang.org/protobuf@v1.25.0/internal/strs/strings.go:71
 
@@ -65,7 +65,7 @@ Goctl Rpc是`goctl`脚手架下的一个rpc服务代码生成模块，支持prot
 
 ```go
 if strings.ToLower(proto.Service.Name) == strings.ToLower(proto.GoPackage) {
-	callDir = filepath.Join(ctx.WorkDir, strings.ToLower(stringx.From(proto.Service.Name+"_client").ToCamel()))
+callDir = filepath.Join(ctx.WorkDir, strings.ToLower(stringx.From(proto.Service.Name+"_client").ToCamel()))
 }
 ```
 
@@ -75,40 +75,40 @@ rpc一键生成常见问题解决，见 <a href="#常见问题解决">常见问�
 
 * 生成proto模板
 
-  ```Bash
-  goctl rpc template -o=user.proto
-  ```
+```Bash
+goctl rpc template -o=user.proto
+```
 
-  ```golang
-  syntax = "proto3";
+```golang
+syntax = "proto3";
 
-  package remote;
+package remote;
 
-  message Request {
-    // 用户名
-    string username = 1;
-    // 用户密码
-    string password = 2;
-  }
+message Request {
+// 用户名
+string username = 1;
+// 用户密码
+string password = 2;
+}
 
-  message Response {
-    // 用户名称
-    string name = 1;
-    // 用户性别
-    string gender = 2;
-  }
+message Response {
+// 用户名称
+string name = 1;
+// 用户性别
+string gender = 2;
+}
 
-  service User {
-    // 登录
-    rpc Login(Request)returns(Response);
-  }
-  ```
+service User {
+// 登录
+rpc Login(Request)returns(Response);
+}
+```
 
 * 生成rpc服务代码
 
-  ```Bash
-  goctl rpc proto -src=user.proto
-  ```
+```Bash
+goctl rpc proto -src=user.proto
+```
 
 ## 准备工作
 
@@ -126,16 +126,16 @@ goctl rpc proto -h
 
 ```Bash
 NAME:
-   goctl rpc proto - generate rpc from proto
+goctl rpc proto - generate rpc from proto
 
 USAGE:
-   goctl rpc proto [command options] [arguments...]
+goctl rpc proto [command options] [arguments...]
 
 OPTIONS:
-   --src value, -s value         the file path of the proto source file
-   --proto_path value, -I value  native command of protoc, specify the directory in which to search for imports. [optional]
-   --dir value, -d value         the target path of the code
-   --idea                        whether the command execution environment is from idea plugin. [optional]
+--src value, -s value         the file path of the proto source file
+--proto_path value, -I value  native command of protoc, specify the directory in which to search for imports. [optional]
+--dir value, -d value         the target path of the code
+--idea                        whether the command execution environment is from idea plugin. [optional]
 ```
 
 ### 参数说明
@@ -158,18 +158,18 @@ OPTIONS:
 ### 注意事项
 
 * `google.golang.org/grpc`需要降级到 `v1.29.1`，且protoc-gen-go版本不能高于v1.3.2（see [https://github.com/grpc/grpc-go/issues/3347](https://github.com/grpc/grpc-go/issues/3347)）即
-  
-  ```shell script
-  replace google.golang.org/grpc => google.golang.org/grpc v1.29.1
-  ```
+
+```shell script
+replace google.golang.org/grpc => google.golang.org/grpc v1.29.1
+```
 
 * proto不支持暂多文件同时生成
 * proto不支持外部依赖包引入，message不支持inline
 * 目前main文件、shared文件、handler文件会被强制覆盖，而和开发人员手动需要编写的则不会覆盖生成，这一类在代码头部均有
 
 ```shell script
-    // Code generated by god. DO NOT EDIT!
-    // Source: xxx.proto
+// Code generated by god. DO NOT EDIT!
+// Source: xxx.proto
 ```
 
 的标识，请注意不要将也写业务性代码写在里面。
@@ -188,15 +188,15 @@ package greet;
 import "base/common.proto"
 
 message Request {
-  string ping = 1;
+string ping = 1;
 }
 
 message Response {
-  string pong = 1;
+string pong = 1;
 }
 
 service Greet {
-  rpc Ping(base.In) returns(base.Out);// request和return 不支持import
+rpc Ping(base.In) returns(base.Out);// request和return 不支持import
 }
 
 ```
@@ -211,15 +211,15 @@ package greet;
 import "base/common.proto";
 
 message Request {
-  base.In in = 1;// 支持import
+base.In in = 1;// 支持import
 }
 
 message Response {
- base.Out out = 2;// 支持import
+base.Out out = 2;// 支持import
 }
 
 service Greet {
-  rpc Ping(Request) returns(Response);
+rpc Ping(Request) returns(Response);
 }
 ```
 
@@ -227,39 +227,39 @@ service Greet {
 
 * 错误一:
 
-  ```golang
-  pb/xx.pb.go:220:7: undefined: grpc.ClientConnInterface
-  pb/xx.pb.go:224:11: undefined: grpc.SupportPackageIsVersion6
-  pb/xx.pb.go:234:5: undefined: grpc.ClientConnInterface
-  pb/xx.pb.go:237:24: undefined: grpc.ClientConnInterface
-  ```
+```golang
+pb/xx.pb.go:220:7: undefined: grpc.ClientConnInterface
+pb/xx.pb.go:224:11: undefined: grpc.SupportPackageIsVersion6
+pb/xx.pb.go:234:5: undefined: grpc.ClientConnInterface
+pb/xx.pb.go:237:24: undefined: grpc.ClientConnInterface
+```
 
-  解决方法：请将`protoc-gen-go`版本降至v1.3.2及一下
+解决方法：请将`protoc-gen-go`版本降至v1.3.2及一下
 
 * 错误二:
 
-  ```golang
+```golang
 
-  # go.etcd.io/etcd/clientv3/balancer/picker
-  ../../../go/pkg/mod/go.etcd.io/etcd@v0.0.0-20200402134248-51bdeb39e698/clientv3/balancer/picker/err.go:25:9: cannot use &errPicker literal (type *errPicker) as type Picker in return argument:*errPicker does not implement Picker (wrong type for Pick method)
-    have Pick(context.Context, balancer.PickInfo) (balancer.SubConn, func(balancer.DoneInfo), error)
-    want Pick(balancer.PickInfo) (balancer.PickResult, error)
-    ../../../go/pkg/mod/go.etcd.io/etcd@v0.0.0-20200402134248-51bdeb39e698/clientv3/balancer/picker/roundrobin_balanced.go:33:9: cannot use &rrBalanced literal (type *rrBalanced) as type Picker in return argument:
-    *rrBalanced does not implement Picker (wrong type for Pick method)
-		have Pick(context.Context, balancer.PickInfo) (balancer.SubConn, func(balancer.DoneInfo), error)
-    want Pick(balancer.PickInfo) (balancer.PickResult, error)
-    #git.zc0901.com/go/god/rpc/internal/balancer/p2c
-    ../../../go/pkg/mod/github.com/tal-tech/go-zero@v1.0.12/zrpc/internal/balancer/p2c/p2c.go:41:32: not enough arguments in call to base.NewBalancerBuilder
-	have (string, *p2cPickerBuilder)
-  want (string, base.PickerBuilder, base.Config)
-  ../../../go/pkg/mod/github.com/tal-tech/go-zero@v1.0.12/zrpc/internal/balancer/p2c/p2c.go:58:9: cannot use &p2cPicker literal (type *p2cPicker) as type balancer.Picker in return argument:
-	*p2cPicker does not implement balancer.Picker (wrong type for Pick method)
-		have Pick(context.Context, balancer.PickInfo) (balancer.SubConn, func(balancer.DoneInfo), error)
-		want Pick(balancer.PickInfo) (balancer.PickResult, error)
-  ```
+# go.etcd.io/etcd/clientv3/balancer/picker
+../../../go/pkg/mod/go.etcd.io/etcd@v0.0.0-20200402134248-51bdeb39e698/clientv3/balancer/picker/err.go:25:9: cannot use &errPicker literal (type *errPicker) as type Picker in return argument:*errPicker does not implement Picker (wrong type for Pick method)
+have Pick(context.Context, balancer.PickInfo) (balancer.SubConn, func(balancer.DoneInfo), error)
+want Pick(balancer.PickInfo) (balancer.PickResult, error)
+../../../go/pkg/mod/go.etcd.io/etcd@v0.0.0-20200402134248-51bdeb39e698/clientv3/balancer/picker/roundrobin_balanced.go:33:9: cannot use &rrBalanced literal (type *rrBalanced) as type Picker in return argument:
+*rrBalanced does not implement Picker (wrong type for Pick method)
+have Pick(context.Context, balancer.PickInfo) (balancer.SubConn, func(balancer.DoneInfo), error)
+want Pick(balancer.PickInfo) (balancer.PickResult, error)
+#git.zc0901.com/go/god/rpc/internal/balancer/p2c
+../../../go/pkg/mod/github.com/tal-tech/go-zero@v1.0.12/zrpc/internal/balancer/p2c/p2c.go:41:32: not enough arguments in call to base.NewBalancerBuilder
+have (string, *p2cPickerBuilder)
+want (string, base.PickerBuilder, base.Config)
+../../../go/pkg/mod/github.com/tal-tech/go-zero@v1.0.12/zrpc/internal/balancer/p2c/p2c.go:58:9: cannot use &p2cPicker literal (type *p2cPicker) as type balancer.Picker in return argument:
+*p2cPicker does not implement balancer.Picker (wrong type for Pick method)
+have Pick(context.Context, balancer.PickInfo) (balancer.SubConn, func(balancer.DoneInfo), error)
+want Pick(balancer.PickInfo) (balancer.PickResult, error)
+```
 
-  解决方法：
-  
-    ```golang
-    replace google.golang.org/grpc => google.golang.org/grpc v1.29.1
-    ```
+解决方法：
+
+```golang
+replace google.golang.org/grpc => google.golang.org/grpc v1.29.1
+```

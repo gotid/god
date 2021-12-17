@@ -19,10 +19,12 @@ require (
 	github.com/google/uuid v1.1.2
 	github.com/grokify/html-strip-tags-go v0.0.0-20200923094847-079d207a09f1
 	github.com/iancoleman/strcase v0.1.2
+	github.com/imroc/req v0.3.2
 	github.com/json-iterator/go v1.1.11
 	github.com/justinas/alice v1.2.0
 	github.com/logrusorgru/aurora v2.0.3+incompatible
 	github.com/neo4j/neo4j-go-driver/v4 v4.4.0
+	github.com/pemistahl/lingua-go v1.0.4
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.11.0
 	github.com/prometheus/common v0.26.0
@@ -50,26 +52,22 @@ require (
 )
 
 require (
-	github.com/abadojack/whatlanggo v1.0.1 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
 	github.com/alicebob/gopher-json v0.0.0-20200520072559-a9ecdc9d1d3a // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.1 // indirect
-	github.com/chrisport/go-lang-detector v0.0.0-20201227125515-a4270979d85f // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/imroc/req v0.3.2 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/openzipkin/zipkin-go v0.2.5 // indirect
-	github.com/pemistahl/lingua-go v1.0.4 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/procfs v0.6.0 // indirect

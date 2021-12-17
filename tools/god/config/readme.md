@@ -40,7 +40,7 @@
 goctl api go test.api -dir . -style gozero
 ```
 ```shell script
- goctl rpc proto -src test.proto -dir . -style go_zero
+goctl rpc proto -src test.proto -dir . -style go_zero
 ```
 ```shell script
 goctl model mysql datasource -url="" -table="*" -dir ./snake -style GoZero
