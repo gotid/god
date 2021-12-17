@@ -1,4 +1,4 @@
-package baidufanyi
+package baidu
 
 import (
 	"fmt"

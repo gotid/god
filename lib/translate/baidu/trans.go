@@ -1,4 +1,4 @@
-package baidufanyi
+package baidu
 
 import (
 	"fmt"
@@ -100,20 +100,31 @@ func Must() translator.Translator {
 			panic(err)
 		}
 		instance = &Translate{ctx: ctx}
-
-		token, gtk := instance.getTokenAndGtk()
-		instance.token = token
-		instance.gtk = gtk
 	})
 	return instance
 }
 
+func (t *Translate) ensureToken() {
+	if t.token == "" {
+		token, gtk := instance.getTokenAndGtk()
+		instance.token = token
+		instance.gtk = gtk
+	}
+}
+
 func (t *Translate) Zh2En(query string) string {
+	t.ensureToken()
 	return t.translate(query, "zh", "en")
 }
 
 func (t *Translate) En2Zh(query string) string {
+	t.ensureToken()
 	return t.translate(query, "en", "zh")
+}
+
+func (t *Translate) Detect(query string) string {
+	// TODO implement me
+	panic("implement me")
 }
 
 func (t *Translate) translate(query, from, to string) string {
@@ -134,12 +145,15 @@ func (t *Translate) translate(query, from, to string) string {
 		"domain":            "common",
 	}, header)
 	if err != nil {
+		logx.Errorf("百度翻译失败: %v", err)
 		return ""
 	}
 
 	ss := resp.String()
 	s := reDst.FindAllStringSubmatch(ss, -1)
 	if s == nil {
+		logx.Error("百度翻译结果查找失败:", zhToUnicode(ss))
+
 		return ""
 	}
 	if to == "zh" {
