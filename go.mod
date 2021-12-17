@@ -9,6 +9,7 @@ require (
 	github.com/clbanning/mxj v1.8.4
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/emicklei/proto v1.9.0
+	github.com/forPelevin/gomoji v0.0.0-20210718160015-5fcf0e405128
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-sql-driver/mysql v1.5.0
@@ -27,6 +28,7 @@ require (
 	github.com/prometheus/common v0.26.0
 	github.com/spaolacci/murmur3 v1.1.0
 	github.com/stretchr/testify v1.7.0
+	github.com/tmdvs/Go-Emoji-Utils v1.1.0
 	github.com/urfave/cli v1.22.5
 	github.com/xwb1989/sqlparser v0.0.0-20180606152119-120387863bf2
 	github.com/yanyiwu/gojieba v1.1.2
@@ -44,6 +46,7 @@ require (
 	google.golang.org/protobuf v1.26.0
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
+	rogchap.com/v8go v0.7.0
 )
 
 require (
@@ -57,10 +60,9 @@ require (
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/forPelevin/gomoji v0.0.0-20210718160015-5fcf0e405128 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
+	github.com/imroc/req v0.3.2 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
-	github.com/konsorten/go-windows-terminal-sequences v1.0.3 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
@@ -74,17 +76,13 @@ require (
 	github.com/tidwall/gjson v1.12.1 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
-	github.com/tmdvs/Go-Emoji-Utils v1.1.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.31.0 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.17.0 // indirect
-	golang.org/x/mod v0.5.1 // indirect
 	golang.org/x/sys v0.0.0-20211019181941-9d821ace8654 // indirect
-	golang.org/x/tools v0.1.8 // indirect
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/genproto v0.0.0-20210602131652-f16073e35f0c // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6 // indirect
 )
