@@ -7,14 +7,10 @@ import (
 	"strings"
 	"sync"
 
-	"git.zc0901.com/go/god/lib/translate/translator"
-
 	"git.zc0901.com/go/god/lib/logx"
-
 	"git.zc0901.com/go/god/lib/stringx"
-
+	"git.zc0901.com/go/god/lib/translate/translator"
 	"github.com/imroc/req"
-
 	v8 "rogchap.com/v8go"
 )
 
@@ -68,7 +64,9 @@ function e(r, gtk) {
 }
 var i = null;`
 
+// Translate 是一个百度翻译器。
 type Translate struct {
+	translator.DefaultTranslator
 	ctx        *v8.Context
 	token, gtk string
 }
@@ -99,39 +97,45 @@ func Must() translator.Translator {
 		if err != nil {
 			panic(err)
 		}
-		instance = &Translate{ctx: ctx}
+		instance = &Translate{
+			ctx: ctx,
+		}
 	})
 	return instance
 }
 
-func (t *Translate) ensureToken() {
-	if t.token == "" {
-		token, gtk := instance.getTokenAndGtk()
-		instance.token = token
-		instance.gtk = gtk
-	}
-}
-
 func (t *Translate) Zh2En(query string) string {
-	t.ensureToken()
 	return t.translate(query, "zh", "en")
 }
 
 func (t *Translate) En2Zh(query string) string {
-	t.ensureToken()
 	return t.translate(query, "en", "zh")
 }
 
-func (t *Translate) Detect(query string) string {
-	// TODO implement me
-	panic("implement me")
+func (t *Translate) ToZh(query string) string {
+	from := t.Detect(query)
+	if from == "" || from == "zh" {
+		return query
+	}
+
+	return t.translate(query, from, "zh")
+}
+
+func (t *Translate) ToEn(query string) string {
+	from := t.Detect(query)
+	if from == "" || from == "en" {
+		return query
+	}
+
+	return t.translate(query, from, "en")
 }
 
 func (t *Translate) translate(query, from, to string) string {
-	if !stringx.Contains([]string{"zh", "en"}, from) ||
-		!stringx.Contains([]string{"zh", "en"}, to) {
-		return ""
+	if !stringx.Contains(translator.ValidCodes, from) ||
+		!stringx.Contains(translator.ValidCodes, to) {
+		return query
 	}
+	t.ensureToken()
 	sign, err := t.sign(query, t.gtk)
 	url := fmt.Sprintf("https://fanyi.baidu.com/v2transapi?from=%s&to=%s", from, to)
 	resp, err := req.Post(url, req.Param{
@@ -146,7 +150,7 @@ func (t *Translate) translate(query, from, to string) string {
 	}, header)
 	if err != nil {
 		logx.Errorf("百度翻译失败: %v", err)
-		return ""
+		return query
 	}
 
 	ss := resp.String()
@@ -154,7 +158,7 @@ func (t *Translate) translate(query, from, to string) string {
 	if s == nil {
 		logx.Error("百度翻译结果查找失败:", zhToUnicode(ss))
 
-		return ""
+		return query
 	}
 	if to == "zh" {
 		return zhToUnicode(s[0][1])
@@ -188,6 +192,14 @@ func (t *Translate) tokenAndGtk() (token, gtk string) {
 	gtk = gt[0][1]
 
 	return token, gtk
+}
+
+func (t *Translate) ensureToken() {
+	if t.token == "" {
+		token, gtk := instance.getTokenAndGtk()
+		instance.token = token
+		instance.gtk = gtk
+	}
 }
 
 func (t *Translate) sign(query, gtk string) (string, error) {
