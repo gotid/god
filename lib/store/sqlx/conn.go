@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"git.zc0901.com/go/god/lib/breaker"
+	"github.com/gotid/god/lib/breaker"
 )
 
 const (

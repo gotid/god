@@ -1,9 +1,10 @@
 package gconv
 
 import (
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/lib/gerror"
 	"reflect"
+
+	"github.com/gotid/god/internal/json"
+	"github.com/gotid/god/lib/gerror"
 )
 
 // Structs converts any slice to given struct slice.

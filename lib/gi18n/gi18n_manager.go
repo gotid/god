@@ -3,17 +3,18 @@ package gi18n
 import (
 	"errors"
 	"fmt"
-	"git.zc0901.com/go/god/internal/intlog"
-	"git.zc0901.com/go/god/lib/encoding/gjson"
-	"git.zc0901.com/go/god/lib/os/gfile"
-	"git.zc0901.com/go/god/lib/os/gfsnotify"
-	"git.zc0901.com/go/god/lib/os/glog"
-	"git.zc0901.com/go/god/lib/os/gres"
 	"strings"
 	"sync"
 
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/gregex"
+	"github.com/gotid/god/internal/intlog"
+	"github.com/gotid/god/lib/encoding/gjson"
+	"github.com/gotid/god/lib/os/gfile"
+	"github.com/gotid/god/lib/os/gfsnotify"
+	"github.com/gotid/god/lib/os/glog"
+	"github.com/gotid/god/lib/os/gres"
+
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/gregex"
 )
 
 // Manager, it is concurrent safe, supporting hot reload.
@@ -31,10 +32,8 @@ type Options struct {
 	Delimiters []string // Delimiters for variable parsing.
 }
 
-var (
-	// defaultDelimiters defines the default key variable delimiters.
-	defaultDelimiters = []string{"{#", "}"}
-)
+// defaultDelimiters defines the default key variable delimiters.
+var defaultDelimiters = []string{"{#", "}"}
 
 // New creates and returns a new i18n manager.
 // The optional parameter <option> specifies the custom options for i18n manager.

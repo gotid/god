@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"git.zc0901.com/go/god/lib/stringx"
-	"git.zc0901.com/go/god/tools/god/mysql/converter"
+	"github.com/gotid/god/lib/stringx"
+	"github.com/gotid/god/tools/god/mysql/converter"
 	"github.com/xwb1989/sqlparser"
 )
 

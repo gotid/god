@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"strings"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
-	"git.zc0901.com/go/god/tools/god/api/util"
+	"github.com/gotid/god/tools/god/api/spec"
+	"github.com/gotid/god/tools/god/api/util"
 )
 
 func lowCamelCase(s string) string {

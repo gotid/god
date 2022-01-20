@@ -6,7 +6,7 @@ import (
 	"runtime"
 	"time"
 
-	"git.zc0901.com/go/god/lib/translate"
+	"github.com/gotid/god/lib/translate"
 	"github.com/urfave/cli"
 )
 

@@ -4,18 +4,18 @@ import (
 	"io/ioutil"
 	"os"
 
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/logx"
 )
 
 func genVars(dir string) error {
-	e := os.MkdirAll(dir, 0755)
+	e := os.MkdirAll(dir, 0o755)
 	if e != nil {
 		logx.Error(e)
 		return e
 	}
 
 	if !fileExists(dir + "vars.dart") {
-		e = ioutil.WriteFile(dir+"vars.dart", []byte(`const serverHost='demo-crm.xiaoheiban.cn';`), 0644)
+		e = ioutil.WriteFile(dir+"vars.dart", []byte(`const serverHost='demo-crm.xiaoheiban.cn';`), 0o644)
 		if e != nil {
 			logx.Error(e)
 			return e
@@ -56,7 +56,7 @@ Future<Tokens> getTokens() async {
     return null;
   }
 }
-`), 0644)
+`), 0o644)
 		if e != nil {
 			logx.Error(e)
 			return e

@@ -2,8 +2,9 @@ package gjson
 
 import (
 	"bytes"
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/lib/gconv"
+
+	"github.com/gotid/god/internal/json"
+	"github.com/gotid/god/lib/gconv"
 )
 
 // Valid checks whether <data> is a valid JSON data type.
@@ -37,7 +38,7 @@ func DecodeTo(data interface{}, v interface{}) error {
 	// Do not use number, it converts float64 to json.Number type,
 	// which actually a string type. It causes converting issue for other data formats,
 	// for example: yaml.
-	//decoder.UseNumber()
+	// decoder.UseNumber()
 	return decoder.Decode(v)
 }
 

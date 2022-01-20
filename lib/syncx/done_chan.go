@@ -1,8 +1,9 @@
 package syncx
 
 import (
-	"git.zc0901.com/go/god/lib/lang"
 	"sync"
+
+	"github.com/gotid/god/lib/lang"
 )
 
 // DoneChan 可多次关闭和等待完成的通道（优雅通知关闭）

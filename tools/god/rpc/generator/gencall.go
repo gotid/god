@@ -5,14 +5,14 @@ import (
 	"path/filepath"
 	"strings"
 
-	"git.zc0901.com/go/god/lib/fs"
+	"github.com/gotid/god/lib/fs"
 
-	"git.zc0901.com/go/god/lib/collection"
-	"git.zc0901.com/go/god/lib/stringx"
-	conf "git.zc0901.com/go/god/tools/god/config"
-	"git.zc0901.com/go/god/tools/god/rpc/parser"
-	"git.zc0901.com/go/god/tools/god/util"
-	"git.zc0901.com/go/god/tools/god/util/format"
+	"github.com/gotid/god/lib/collection"
+	"github.com/gotid/god/lib/stringx"
+	conf "github.com/gotid/god/tools/god/config"
+	"github.com/gotid/god/tools/god/rpc/parser"
+	"github.com/gotid/god/tools/god/util"
+	"github.com/gotid/god/tools/god/util/format"
 )
 
 const (
@@ -27,7 +27,7 @@ import (
 
 	{{.package}}
 
-	"git.zc0901.com/go/god/rpc"
+	"github.com/gotid/god/rpc"
 )
 
 type (

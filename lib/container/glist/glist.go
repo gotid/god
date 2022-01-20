@@ -4,9 +4,10 @@ package glist
 import (
 	"bytes"
 	"container/list"
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/internal/rwmutex"
-	"git.zc0901.com/go/god/lib/gconv"
+
+	"github.com/gotid/god/internal/json"
+	"github.com/gotid/god/internal/rwmutex"
+	"github.com/gotid/god/lib/gconv"
 )
 
 type (

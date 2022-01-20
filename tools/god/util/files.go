@@ -1,10 +1,11 @@
 package util
 
 import (
-	"git.zc0901.com/go/god/lib/fs"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/gotid/god/lib/fs"
 )
 
 const goctlDir = ".goctl"

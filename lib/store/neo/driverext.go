@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"git.zc0901.com/go/god/lib/assert"
-	"git.zc0901.com/go/god/lib/fx"
-	"git.zc0901.com/go/god/lib/g"
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/assert"
+	"github.com/gotid/god/lib/fx"
+	"github.com/gotid/god/lib/g"
+	"github.com/gotid/god/lib/logx"
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )
 

@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"net/http/httputil"
 
-	"git.zc0901.com/go/god/api/token"
-	"git.zc0901.com/go/god/lib/logx"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gotid/god/api/token"
+	"github.com/gotid/god/lib/logx"
 )
 
 const (

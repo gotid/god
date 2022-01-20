@@ -1,12 +1,12 @@
 package gjson
 
 import (
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/lib/encoding/gini"
-	"git.zc0901.com/go/god/lib/encoding/gtoml"
-	"git.zc0901.com/go/god/lib/encoding/gxml"
-	"git.zc0901.com/go/god/lib/encoding/gyaml"
-	"git.zc0901.com/go/god/lib/gconv"
+	"github.com/gotid/god/internal/json"
+	"github.com/gotid/god/lib/encoding/gini"
+	"github.com/gotid/god/lib/encoding/gtoml"
+	"github.com/gotid/god/lib/encoding/gxml"
+	"github.com/gotid/god/lib/encoding/gyaml"
+	"github.com/gotid/god/lib/gconv"
 )
 
 // ========================================================================

@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"git.zc0901.com/go/god/lib/errorx"
-	"git.zc0901.com/go/god/lib/fx"
-	"git.zc0901.com/go/god/lib/lang"
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/errorx"
+	"github.com/gotid/god/lib/fx"
+	"github.com/gotid/god/lib/lang"
+	"github.com/gotid/god/lib/logx"
 )
 
 const (

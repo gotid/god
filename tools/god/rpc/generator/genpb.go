@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	conf "git.zc0901.com/go/god/tools/god/config"
-	"git.zc0901.com/go/god/tools/god/rpc/execx"
-	"git.zc0901.com/go/god/tools/god/rpc/parser"
+	conf "github.com/gotid/god/tools/god/config"
+	"github.com/gotid/god/tools/god/rpc/execx"
+	"github.com/gotid/god/tools/god/rpc/parser"
 )
 
 func (g *defaultGenerator) GenPb(ctx DirContext, protoImportPath []string, proto parser.Proto, _ *conf.Config) error {

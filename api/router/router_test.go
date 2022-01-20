@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"git.zc0901.com/go/god/api/httpx"
-	"git.zc0901.com/go/god/api/pathvar"
+	"github.com/gotid/god/api/httpx"
+	"github.com/gotid/god/api/pathvar"
 	"github.com/stretchr/testify/assert"
 )
 

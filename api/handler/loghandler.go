@@ -14,14 +14,14 @@ import (
 	"strings"
 	"time"
 
-	"git.zc0901.com/go/god/lib/syncx"
+	"github.com/gotid/god/lib/syncx"
 
-	"git.zc0901.com/go/god/api/httpx"
-	"git.zc0901.com/go/god/api/internal"
-	"git.zc0901.com/go/god/lib/iox"
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/timex"
-	"git.zc0901.com/go/god/lib/utils"
+	"github.com/gotid/god/api/httpx"
+	"github.com/gotid/god/api/internal"
+	"github.com/gotid/god/lib/iox"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/timex"
+	"github.com/gotid/god/lib/utils"
 )
 
 const (

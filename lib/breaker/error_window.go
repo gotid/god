@@ -2,10 +2,11 @@ package breaker
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/mathx"
-	"git.zc0901.com/go/god/lib/timex"
 	"strings"
 	"sync"
+
+	"github.com/gotid/god/lib/mathx"
+	"github.com/gotid/god/lib/timex"
 )
 
 const (

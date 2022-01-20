@@ -2,7 +2,8 @@ package serverinterceptors
 
 import (
 	"context"
-	"git.zc0901.com/go/god/rpc/internal/auth"
+
+	"github.com/gotid/god/rpc/internal/auth"
 	"google.golang.org/grpc"
 )
 

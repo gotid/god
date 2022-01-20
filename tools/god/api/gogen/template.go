@@ -3,7 +3,7 @@ package gogen
 import (
 	"fmt"
 
-	"git.zc0901.com/go/god/tools/god/util"
+	"github.com/gotid/god/tools/god/util"
 	"github.com/urfave/cli"
 )
 

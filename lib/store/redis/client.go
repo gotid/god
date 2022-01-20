@@ -3,13 +3,14 @@ package redis
 import (
 	"crypto/tls"
 	"fmt"
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/mapping"
-	"git.zc0901.com/go/god/lib/syncx"
-	"git.zc0901.com/go/god/lib/timex"
-	"github.com/go-redis/redis"
 	"io"
 	"strings"
+
+	"github.com/go-redis/redis"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/mapping"
+	"github.com/gotid/god/lib/syncx"
+	"github.com/gotid/god/lib/timex"
 )
 
 const (

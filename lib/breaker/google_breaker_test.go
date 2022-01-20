@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"git.zc0901.com/go/god/lib/collection"
-	"git.zc0901.com/go/god/lib/mathx"
+	"github.com/gotid/god/lib/collection"
+	"github.com/gotid/god/lib/mathx"
 	"github.com/stretchr/testify/assert"
 )
 

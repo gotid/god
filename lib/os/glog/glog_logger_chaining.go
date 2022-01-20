@@ -4,8 +4,8 @@ import (
 	"context"
 	"io"
 
-	"git.zc0901.com/go/god/internal/intlog"
-	"git.zc0901.com/go/god/lib/os/gfile"
+	"github.com/gotid/god/internal/intlog"
+	"github.com/gotid/god/lib/os/gfile"
 )
 
 // Ctx is a chaining function,

@@ -4,7 +4,7 @@ package gvalid
 import (
 	"strings"
 
-	"git.zc0901.com/go/god/lib/gregex"
+	"github.com/gotid/god/lib/gregex"
 )
 
 // Refer to Laravel validation: https://laravel.com/docs/5.5/validation#available-validation-rules

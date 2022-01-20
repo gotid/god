@@ -1,9 +1,9 @@
 package svc
 
 import (
-	"git.zc0901.com/go/god/example/test/cmd/api/internal/config"
-	"git.zc0901.com/go/god/example/test/cmd/rpc/testclient"
-	"git.zc0901.com/go/god/rpc"
+	"github.com/gotid/god/example/test/cmd/api/internal/config"
+	"github.com/gotid/god/example/test/cmd/rpc/testclient"
+	"github.com/gotid/god/rpc"
 )
 
 type ServiceContext struct {

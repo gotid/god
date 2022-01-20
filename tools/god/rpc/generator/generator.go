@@ -1,8 +1,8 @@
 package generator
 
 import (
-	conf "git.zc0901.com/go/god/tools/god/config"
-	"git.zc0901.com/go/god/tools/god/rpc/parser"
+	conf "github.com/gotid/god/tools/god/config"
+	"github.com/gotid/god/tools/god/rpc/parser"
 )
 
 type Generator interface {

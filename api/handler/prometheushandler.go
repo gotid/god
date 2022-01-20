@@ -5,10 +5,10 @@ import (
 	"strconv"
 	"time"
 
-	"git.zc0901.com/go/god/api/internal/security"
-	"git.zc0901.com/go/god/lib/prometheus"
-	"git.zc0901.com/go/god/lib/prometheus/metric"
-	"git.zc0901.com/go/god/lib/timex"
+	"github.com/gotid/god/api/internal/security"
+	"github.com/gotid/god/lib/prometheus"
+	"github.com/gotid/god/lib/prometheus/metric"
+	"github.com/gotid/god/lib/timex"
 )
 
 const serverNamespace = "http_server"

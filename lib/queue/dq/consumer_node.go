@@ -1,10 +1,11 @@
 package dq
 
 import (
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/syncx"
-	"github.com/beanstalkd/go-beanstalk"
 	"time"
+
+	"github.com/beanstalkd/go-beanstalk"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/syncx"
 )
 
 type (

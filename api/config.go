@@ -3,7 +3,7 @@ package api
 import (
 	"time"
 
-	"git.zc0901.com/go/god/lib/service"
+	"github.com/gotid/god/lib/service"
 )
 
 type (

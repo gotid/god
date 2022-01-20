@@ -2,13 +2,14 @@ package tsgen
 
 import (
 	"errors"
-	"git.zc0901.com/go/god/lib/fs"
 	"path"
 	"strings"
 	"text/template"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
-	apiutil "git.zc0901.com/go/god/tools/god/api/util"
+	"github.com/gotid/god/lib/fs"
+
+	"github.com/gotid/god/tools/god/api/spec"
+	apiutil "github.com/gotid/god/tools/god/api/util"
 )
 
 const (

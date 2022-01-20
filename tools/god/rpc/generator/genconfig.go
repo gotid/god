@@ -1,20 +1,21 @@
 package generator
 
 import (
-	"git.zc0901.com/go/god/lib/fs"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 
-	conf "git.zc0901.com/go/god/tools/god/config"
-	"git.zc0901.com/go/god/tools/god/rpc/parser"
-	"git.zc0901.com/go/god/tools/god/util"
-	"git.zc0901.com/go/god/tools/god/util/format"
+	"github.com/gotid/god/lib/fs"
+
+	conf "github.com/gotid/god/tools/god/config"
+	"github.com/gotid/god/tools/god/rpc/parser"
+	"github.com/gotid/god/tools/god/util"
+	"github.com/gotid/god/tools/god/util/format"
 )
 
 const configTemplate = `package config
 
-import "git.zc0901.com/go/god/rpc"
+import "github.com/gotid/god/rpc"
 
 type Config struct {
 	rpc.ServerConf

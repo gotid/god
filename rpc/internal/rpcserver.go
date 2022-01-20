@@ -3,9 +3,9 @@ package internal
 import (
 	"net"
 
-	"git.zc0901.com/go/god/lib/proc"
-	"git.zc0901.com/go/god/lib/stat"
-	"git.zc0901.com/go/god/rpc/internal/serverinterceptors"
+	"github.com/gotid/god/lib/proc"
+	"github.com/gotid/god/lib/stat"
+	"github.com/gotid/god/rpc/internal/serverinterceptors"
 	"google.golang.org/grpc"
 )
 

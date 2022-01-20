@@ -3,10 +3,10 @@ package logic
 import (
 	"context"
 
-	"git.zc0901.com/go/god/example/graceful/dns/rpc/graceful"
-	"git.zc0901.com/go/god/example/graceful/dns/rpc/internal/svc"
+	"github.com/gotid/god/example/graceful/dns/rpc/graceful"
+	"github.com/gotid/god/example/graceful/dns/rpc/internal/svc"
 
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/logx"
 )
 
 type GraceLogic struct {

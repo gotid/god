@@ -1,16 +1,15 @@
 package gfile
 
 import (
-	"git.zc0901.com/go/god/lib/gregex"
 	"os"
 	"runtime"
 	"strings"
+
+	"github.com/gotid/god/lib/gregex"
 )
 
-var (
-	// goRootForFilter is used for stack filtering purpose.
-	goRootForFilter = runtime.GOROOT()
-)
+// goRootForFilter is used for stack filtering purpose.
+var goRootForFilter = runtime.GOROOT()
 
 func init() {
 	if goRootForFilter != "" {

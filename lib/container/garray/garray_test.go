@@ -2,8 +2,9 @@ package garray_test
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/container/garray"
 	"testing"
+
+	"github.com/gotid/god/lib/container/garray"
 )
 
 func TestArray_Contains(t *testing.T) {

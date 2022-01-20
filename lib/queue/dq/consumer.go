@@ -1,12 +1,13 @@
 package dq
 
 import (
-	"git.zc0901.com/go/god/lib/hash"
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/service"
-	"git.zc0901.com/go/god/lib/store/redis"
 	"strconv"
 	"time"
+
+	"github.com/gotid/god/lib/hash"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/service"
+	"github.com/gotid/god/lib/store/redis"
 )
 
 const (
@@ -72,7 +73,7 @@ func (c *consumerCluster) Consume(consume Consume) {
 
 // 打开队列任务内容体
 func (c *consumerCluster) unwrap(body []byte) ([]byte, bool) {
-	var pos = -1
+	pos := -1
 	for i := 0; i < maxCheckBytes && i < len(body); i++ {
 		if body[i] == timeSep {
 			pos = i

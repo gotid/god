@@ -5,9 +5,9 @@ import (
 	"io"
 	"strings"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
-	apiutil "git.zc0901.com/go/god/tools/god/api/util"
-	"git.zc0901.com/go/god/tools/god/util"
+	"github.com/gotid/god/tools/god/api/spec"
+	apiutil "github.com/gotid/god/tools/god/api/util"
+	"github.com/gotid/god/tools/god/util"
 )
 
 func writeProperty(writer io.Writer, member spec.Member, indent int, prefixForType func(string) string) error {

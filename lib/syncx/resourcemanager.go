@@ -4,7 +4,7 @@ import (
 	"io"
 	"sync"
 
-	"git.zc0901.com/go/god/lib/errorx"
+	"github.com/gotid/god/lib/errorx"
 )
 
 // ResourceManager 是一个管理复用资源的管理器。

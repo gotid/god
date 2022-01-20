@@ -8,9 +8,9 @@ import (
 	"strings"
 	"text/template"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
-	apiutil "git.zc0901.com/go/god/tools/god/api/util"
-	"git.zc0901.com/go/god/tools/god/util"
+	"github.com/gotid/god/tools/god/api/spec"
+	apiutil "github.com/gotid/god/tools/god/api/util"
+	"github.com/gotid/god/tools/god/util"
 )
 
 const getSetTemplate = `
@@ -60,7 +60,7 @@ func writeIndent(writer io.Writer, indent int) {
 }
 
 func indentString(indent int) string {
-	var result = ""
+	result := ""
 	for i := 0; i < indent; i++ {
 		result += "\t"
 	}

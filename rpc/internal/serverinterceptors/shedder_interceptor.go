@@ -4,8 +4,8 @@ import (
 	"context"
 	"sync"
 
-	"git.zc0901.com/go/god/lib/load"
-	"git.zc0901.com/go/god/lib/stat"
+	"github.com/gotid/god/lib/load"
+	"github.com/gotid/god/lib/stat"
 	"google.golang.org/grpc"
 )
 

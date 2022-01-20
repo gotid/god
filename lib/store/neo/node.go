@@ -4,9 +4,9 @@ import (
 	"errors"
 	"reflect"
 
-	"git.zc0901.com/go/god/lib/g"
+	"github.com/gotid/god/lib/g"
 
-	"git.zc0901.com/go/god/lib/gconv"
+	"github.com/gotid/god/lib/gconv"
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )
 

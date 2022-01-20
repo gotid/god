@@ -2,9 +2,10 @@ package gtimer
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/container/glist"
-	"git.zc0901.com/go/god/lib/container/gtype"
 	"time"
+
+	"github.com/gotid/god/lib/container/glist"
+	"github.com/gotid/god/lib/container/gtype"
 )
 
 // Timer is a Hierarchical Timing Wheel manager for timing jobs.

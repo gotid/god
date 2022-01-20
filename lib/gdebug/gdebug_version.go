@@ -1,10 +1,11 @@
 package gdebug
 
 import (
-	"git.zc0901.com/go/god/lib/crypto/gmd5"
-	"git.zc0901.com/go/god/lib/encoding/ghash"
 	"io/ioutil"
 	"strconv"
+
+	"github.com/gotid/god/lib/crypto/gmd5"
+	"github.com/gotid/god/lib/encoding/ghash"
 )
 
 // BinVersion returns the version of current running binary.

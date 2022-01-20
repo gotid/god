@@ -1,11 +1,12 @@
 package gcache
 
 import (
-	"git.zc0901.com/go/god/lib/container/glist"
-	"git.zc0901.com/go/god/lib/container/gmap"
-	"git.zc0901.com/go/god/lib/container/gtype"
-	"git.zc0901.com/go/god/lib/os/gtimer"
 	"time"
+
+	"github.com/gotid/god/lib/container/glist"
+	"github.com/gotid/god/lib/container/gmap"
+	"github.com/gotid/god/lib/container/gtype"
+	"github.com/gotid/god/lib/os/gtimer"
 )
 
 // LRU cache object.

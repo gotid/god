@@ -7,7 +7,7 @@ import (
 	"encoding/base64"
 	"errors"
 
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/logx"
 )
 
 var ErrPaddingSize = errors.New("填充尺寸错误")

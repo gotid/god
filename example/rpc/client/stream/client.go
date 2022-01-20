@@ -4,11 +4,12 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"git.zc0901.com/go/god/example/rpc/pb/stream"
-	"git.zc0901.com/go/god/lib/conf"
-	"git.zc0901.com/go/god/rpc"
 	"log"
 	"sync"
+
+	"github.com/gotid/god/example/rpc/pb/stream"
+	"github.com/gotid/god/lib/conf"
+	"github.com/gotid/god/rpc"
 )
 
 var configFile = flag.String("f", "config.yaml", "配置文件")
@@ -20,7 +21,7 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 
 	// 新建rpc客户端
-	//client := rpc.MustNewClient(c)
+	// client := rpc.MustNewClient(c)
 	client, err := rpc.NewClientNoAuth(c.Etcd)
 	if err != nil {
 		log.Fatal(err)

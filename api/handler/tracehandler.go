@@ -8,7 +8,7 @@ import (
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 	oteltrace "go.opentelemetry.io/otel/trace"
 
-	"git.zc0901.com/go/god/lib/trace"
+	"github.com/gotid/god/lib/trace"
 )
 
 // TraceHandler 返回一个处理 opentelemetry 的中间件。

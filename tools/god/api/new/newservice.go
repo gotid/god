@@ -1,14 +1,15 @@
 package new
 
 import (
-	"git.zc0901.com/go/god/lib/fs"
 	"os"
 	"path/filepath"
 	"strings"
 	"text/template"
 
-	"git.zc0901.com/go/god/tools/god/api/gogen"
-	conf "git.zc0901.com/go/god/tools/god/config"
+	"github.com/gotid/god/lib/fs"
+
+	"github.com/gotid/god/tools/god/api/gogen"
+	conf "github.com/gotid/god/tools/god/config"
 	"github.com/urfave/cli"
 )
 

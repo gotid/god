@@ -15,9 +15,10 @@ package gtimer
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/internal/cmdenv"
 	"math"
 	"time"
+
+	"github.com/gotid/god/internal/cmdenv"
 )
 
 const (

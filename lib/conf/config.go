@@ -2,11 +2,12 @@ package conf
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/mapping"
 	"io/ioutil"
 	"log"
 	"os"
 	"path"
+
+	"github.com/gotid/god/lib/mapping"
 )
 
 var loaders = map[string]func([]byte, interface{}) error{

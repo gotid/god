@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"runtime/debug"
 
-	"git.zc0901.com/go/god/api/internal"
+	"github.com/gotid/god/api/internal"
 )
 
 // RecoverHandler 返回一个异常捕获中间件。

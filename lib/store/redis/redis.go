@@ -1,9 +1,10 @@
 package redis
 
 import (
-	"git.zc0901.com/go/god/lib/breaker"
-	red "github.com/go-redis/redis"
 	"time"
+
+	red "github.com/go-redis/redis"
+	"github.com/gotid/god/lib/breaker"
 )
 
 const (

@@ -8,9 +8,9 @@ package gracefulservice
 import (
 	"context"
 
-	"git.zc0901.com/go/god/example/graceful/dns/rpc/graceful"
+	"github.com/gotid/god/example/graceful/dns/rpc/graceful"
 
-	"git.zc0901.com/go/god/rpc"
+	"github.com/gotid/god/rpc"
 )
 
 type (

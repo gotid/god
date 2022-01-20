@@ -3,7 +3,7 @@ package neo
 import (
 	"fmt"
 
-	"git.zc0901.com/go/god/lib/g"
+	"github.com/gotid/god/lib/g"
 )
 
 // Relation 表示一个带方向的关系边。

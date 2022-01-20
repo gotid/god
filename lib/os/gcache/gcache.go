@@ -3,8 +3,9 @@
 package gcache
 
 import (
-	"git.zc0901.com/go/god/lib/container/gvar"
 	"time"
+
+	"github.com/gotid/god/lib/container/gvar"
 )
 
 // Default cache object.

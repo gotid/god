@@ -7,14 +7,14 @@ import (
 	"net/http"
 	"time"
 
-	"git.zc0901.com/go/god/api/httpx"
+	"github.com/gotid/god/api/httpx"
 
-	"git.zc0901.com/go/god/api/handler"
-	"git.zc0901.com/go/god/api/internal"
-	"git.zc0901.com/go/god/api/router"
-	"git.zc0901.com/go/god/lib/codec"
-	"git.zc0901.com/go/god/lib/load"
-	"git.zc0901.com/go/god/lib/stat"
+	"github.com/gotid/god/api/handler"
+	"github.com/gotid/god/api/internal"
+	"github.com/gotid/god/api/router"
+	"github.com/gotid/god/lib/codec"
+	"github.com/gotid/god/lib/load"
+	"github.com/gotid/god/lib/stat"
 	"github.com/justinas/alice"
 )
 

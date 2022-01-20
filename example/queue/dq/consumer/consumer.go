@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/queue/dq"
-	"git.zc0901.com/go/god/lib/store/redis"
+
+	"github.com/gotid/god/lib/queue/dq"
+	"github.com/gotid/god/lib/store/redis"
 )
 
 func main() {
@@ -25,7 +26,7 @@ func main() {
 	})
 
 	consumer.Consume(func(body []byte) {
-		//time.Sleep(1* time.Second)
+		// time.Sleep(1* time.Second)
 		fmt.Println(body)
 	})
 }

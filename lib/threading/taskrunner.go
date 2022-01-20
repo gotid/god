@@ -1,8 +1,8 @@
 package threading
 
 import (
-	"git.zc0901.com/go/god/lib/lang"
-	"git.zc0901.com/go/god/lib/rescue"
+	"github.com/gotid/god/lib/lang"
+	"github.com/gotid/god/lib/rescue"
 )
 
 // TaskRunner 用于控制协程数的并发任务执行者。

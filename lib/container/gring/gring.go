@@ -3,8 +3,9 @@ package gring
 
 import (
 	"container/ring"
-	"git.zc0901.com/go/god/internal/rwmutex"
-	"git.zc0901.com/go/god/lib/container/gtype"
+
+	"github.com/gotid/god/internal/rwmutex"
+	"github.com/gotid/god/lib/container/gtype"
 )
 
 // Ring is a struct of ring structure.

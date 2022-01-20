@@ -5,10 +5,10 @@ import (
 	"sync"
 	"time"
 
-	"git.zc0901.com/go/god/lib/executors"
+	"github.com/gotid/god/lib/executors"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/syncx"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/syncx"
 )
 
 var (

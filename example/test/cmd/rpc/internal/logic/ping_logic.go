@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
-	"git.zc0901.com/go/god/example/test/cmd/rpc/internal/svc"
-	"git.zc0901.com/go/god/example/test/cmd/rpc/test"
+	"github.com/gotid/god/example/test/cmd/rpc/internal/svc"
+	"github.com/gotid/god/example/test/cmd/rpc/test"
 
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/logx"
 )
 
 type PingLogic struct {

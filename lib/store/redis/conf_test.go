@@ -1,9 +1,10 @@
 package redis
 
 import (
-	"git.zc0901.com/go/god/lib/stringx"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/gotid/god/lib/stringx"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestConf_Validate(t *testing.T) {
@@ -51,6 +52,7 @@ func TestConf_Validate(t *testing.T) {
 		})
 	}
 }
+
 func TestKeyConf_Validate(t *testing.T) {
 	tests := []struct {
 		name string

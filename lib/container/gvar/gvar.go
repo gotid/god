@@ -2,12 +2,13 @@
 package gvar
 
 import (
-	"git.zc0901.com/go/god/internal/empty"
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/lib/container/gtype"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/os/gtime"
 	"time"
+
+	"github.com/gotid/god/internal/empty"
+	"github.com/gotid/god/internal/json"
+	"github.com/gotid/god/lib/container/gtype"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/os/gtime"
 )
 
 // Var is an universal variable type implementer.

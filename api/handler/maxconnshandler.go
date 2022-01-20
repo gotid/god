@@ -3,9 +3,9 @@ package handler
 import (
 	"net/http"
 
-	"git.zc0901.com/go/god/api/internal"
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/syncx"
+	"github.com/gotid/god/api/internal"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/syncx"
 )
 
 // MaxConns 返回一个限制并发连接数的中间件。

@@ -1,14 +1,13 @@
 package gregex_test
 
 import (
-	"git.zc0901.com/go/god/lib/gregex"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/gotid/god/lib/gregex"
+	"github.com/stretchr/testify/assert"
 )
 
-var (
-	PatternErr = `([\d+`
-)
+var PatternErr = `([\d+`
 
 func Test_Quote(t *testing.T) {
 	s1 := `[foo]` //`\[foo\]`
@@ -16,14 +15,14 @@ func Test_Quote(t *testing.T) {
 }
 
 func Test_Validate(t *testing.T) {
-	var s1 = `(.+):(\d+)`
+	s1 := `(.+):(\d+)`
 	assert.Equal(t, gregex.Validate(s1), nil)
 	s1 = `((.+):(\d+)`
 	assert.Equal(t, gregex.Validate(s1) == nil, false)
 }
 
 func Test_IsMatch(t *testing.T) {
-	var pattern = `(.+):(\d+)`
+	pattern := `(.+):(\d+)`
 	s1 := []byte(`sfs:2323`)
 	assert.Equal(t, gregex.IsMatch(pattern, s1), true)
 	s1 = []byte(`sfs2323`)
@@ -35,7 +34,7 @@ func Test_IsMatch(t *testing.T) {
 }
 
 func Test_IsMatchString(t *testing.T) {
-	var pattern = `(.+):(\d+)`
+	pattern := `(.+):(\d+)`
 	s1 := `sfs:2323`
 	assert.Equal(t, gregex.IsMatchString(pattern, s1), true)
 	s1 = `sfs2323`

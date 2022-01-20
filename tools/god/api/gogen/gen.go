@@ -3,7 +3,6 @@ package gogen
 import (
 	"errors"
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
 	"os"
 	"path"
 	"path/filepath"
@@ -12,11 +11,13 @@ import (
 	"sync"
 	"time"
 
-	"git.zc0901.com/go/god/lib/logx"
-	apiformat "git.zc0901.com/go/god/tools/god/api/format"
-	"git.zc0901.com/go/god/tools/god/api/parser"
-	apiutil "git.zc0901.com/go/god/tools/god/api/util"
-	"git.zc0901.com/go/god/tools/god/config"
+	"github.com/gotid/god/lib/fs"
+
+	"github.com/gotid/god/lib/logx"
+	apiformat "github.com/gotid/god/tools/god/api/format"
+	"github.com/gotid/god/tools/god/api/parser"
+	apiutil "github.com/gotid/god/tools/god/api/util"
+	"github.com/gotid/god/tools/god/config"
 	"github.com/logrusorgru/aurora"
 	"github.com/urfave/cli"
 )

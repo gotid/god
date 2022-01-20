@@ -1,9 +1,10 @@
 package gvalid
 
 import (
-	"git.zc0901.com/go/god/lib/gconv"
 	"strconv"
 	"strings"
+
+	"github.com/gotid/god/lib/gconv"
 )
 
 // checkLength checks <value> using length rules.

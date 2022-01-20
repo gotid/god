@@ -1,8 +1,9 @@
 package gconv
 
 import (
-	"git.zc0901.com/go/god/lib/gerror"
 	"reflect"
+
+	"github.com/gotid/god/lib/gerror"
 )
 
 // Scan automatically calls Struct or Structs function according to the type of parameter

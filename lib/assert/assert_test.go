@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"git.zc0901.com/go/god/internal/empty"
+	"github.com/gotid/god/internal/empty"
 )
 
 type RelationshipType string

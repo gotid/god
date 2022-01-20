@@ -4,8 +4,8 @@ import (
 	"os"
 	"text/template"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/tools/god/api/spec"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/tools/god/api/spec"
 )
 
 const apiTemplate = `import 'api.dart';
@@ -30,7 +30,7 @@ Future {{pathToFuncName .Path}}( {{if ne .Method "get"}}{{with .RequestType}}{{.
 {{end}}`
 
 func genApi(dir string, api *spec.ApiSpec) error {
-	e := os.MkdirAll(dir, 0755)
+	e := os.MkdirAll(dir, 0o755)
 	if e != nil {
 		logx.Error(e)
 		return e
@@ -41,7 +41,7 @@ func genApi(dir string, api *spec.ApiSpec) error {
 		return e
 	}
 
-	file, e := os.OpenFile(dir+api.Info.Title+".dart", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	file, e := os.OpenFile(dir+api.Info.Title+".dart", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0o644)
 	if e != nil {
 		logx.Error(e)
 		return e
@@ -64,7 +64,7 @@ func genApiFile(dir string) error {
 	if fileExists(path) {
 		return nil
 	}
-	apiFile, e := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	apiFile, e := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0o644)
 	if e != nil {
 		logx.Error(e)
 		return e

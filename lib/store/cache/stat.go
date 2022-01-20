@@ -4,7 +4,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/logx"
 )
 
 const statInterval = time.Minute // 缓存统计周期

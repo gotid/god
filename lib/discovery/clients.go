@@ -2,8 +2,9 @@ package discovery
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/discovery/internal"
 	"strings"
+
+	"github.com/gotid/god/lib/discovery/internal"
 )
 
 const timeToLive int64 = 10

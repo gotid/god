@@ -2,9 +2,10 @@
 package gcron
 
 import (
-	"git.zc0901.com/go/god/lib/os/gtimer"
 	"math"
 	"time"
+
+	"github.com/gotid/god/lib/os/gtimer"
 )
 
 const (
@@ -15,10 +16,8 @@ const (
 	gDefaultTimes = math.MaxInt32
 )
 
-var (
-	// Default cron object.
-	defaultCron = New()
-)
+// Default cron object.
+var defaultCron = New()
 
 // SetLogPath sets the logging folder path for default cron object.
 func SetLogPath(path string) {

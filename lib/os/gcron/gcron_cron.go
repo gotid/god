@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	"git.zc0901.com/go/god/lib/container/garray"
-	"git.zc0901.com/go/god/lib/container/gmap"
-	"git.zc0901.com/go/god/lib/container/gtype"
-	"git.zc0901.com/go/god/lib/os/glog"
-	"git.zc0901.com/go/god/lib/os/gtimer"
+	"github.com/gotid/god/lib/container/garray"
+	"github.com/gotid/god/lib/container/gmap"
+	"github.com/gotid/god/lib/container/gtype"
+	"github.com/gotid/god/lib/os/glog"
+	"github.com/gotid/god/lib/os/gtimer"
 )
 
 type Cron struct {

@@ -3,8 +3,8 @@ package serverinterceptors
 import (
 	"context"
 
-	"git.zc0901.com/go/god/lib/breaker"
-	"git.zc0901.com/go/god/rpc/internal/codes"
+	"github.com/gotid/god/lib/breaker"
+	"github.com/gotid/god/rpc/internal/codes"
 	"google.golang.org/grpc"
 )
 

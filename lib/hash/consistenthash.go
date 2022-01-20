@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"sync"
 
-	"git.zc0901.com/go/god/lib/lang"
-	"git.zc0901.com/go/god/lib/mapping"
+	"github.com/gotid/god/lib/lang"
+	"github.com/gotid/god/lib/mapping"
 )
 
 const (

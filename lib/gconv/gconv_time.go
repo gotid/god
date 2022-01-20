@@ -3,8 +3,8 @@ package gconv
 import (
 	"time"
 
-	"git.zc0901.com/go/god/internal/utils"
-	"git.zc0901.com/go/god/lib/os/gtime"
+	"github.com/gotid/god/internal/utils"
+	"github.com/gotid/god/lib/os/gtime"
 )
 
 // Time converts <i> to time.Time.

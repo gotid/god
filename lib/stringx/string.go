@@ -2,10 +2,11 @@ package stringx
 
 import (
 	"errors"
-	"git.zc0901.com/go/god/lib/lang"
 	"math"
 	"strconv"
 	"strings"
+
+	"github.com/gotid/god/lib/lang"
 )
 
 var (

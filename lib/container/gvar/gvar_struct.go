@@ -1,7 +1,7 @@
 package gvar
 
 import (
-	"git.zc0901.com/go/god/lib/gconv"
+	"github.com/gotid/god/lib/gconv"
 )
 
 // Struct maps value of <v> to <pointer>.

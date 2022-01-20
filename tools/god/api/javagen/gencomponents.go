@@ -2,15 +2,16 @@ package javagen
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
 	"io"
 	"path"
 	"strings"
 	"text/template"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
-	apiutil "git.zc0901.com/go/god/tools/god/api/util"
-	"git.zc0901.com/go/god/tools/god/util"
+	"github.com/gotid/god/lib/fs"
+
+	"github.com/gotid/god/tools/god/api/spec"
+	apiutil "github.com/gotid/god/tools/god/api/util"
+	"github.com/gotid/god/tools/god/util"
 )
 
 const (

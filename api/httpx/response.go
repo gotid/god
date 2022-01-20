@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"sync"
 
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/logx"
 )
 
 var (

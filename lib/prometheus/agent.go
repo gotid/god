@@ -2,12 +2,13 @@ package prometheus
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/syncx"
-	"git.zc0901.com/go/god/lib/threading"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
 	"sync"
+
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/syncx"
+	"github.com/gotid/god/lib/threading"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var (
@@ -15,7 +16,7 @@ var (
 	enabled syncx.AtomicBool
 )
 
-//Enabled 返回普罗米修斯是否启用。
+// Enabled 返回普罗米修斯是否启用。
 func Enabled() bool {
 	return enabled.True()
 }

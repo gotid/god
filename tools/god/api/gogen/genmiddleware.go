@@ -5,10 +5,10 @@ import (
 	"strings"
 	"text/template"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
-	"git.zc0901.com/go/god/tools/god/api/util"
-	"git.zc0901.com/go/god/tools/god/config"
-	"git.zc0901.com/go/god/tools/god/util/format"
+	"github.com/gotid/god/tools/god/api/spec"
+	"github.com/gotid/god/tools/god/api/util"
+	"github.com/gotid/god/tools/god/config"
+	"github.com/gotid/god/tools/god/util/format"
 )
 
 var middlewareImplementCode = `
@@ -34,7 +34,7 @@ func (m *{{.name}})Handle(next http.HandlerFunc) http.HandlerFunc {
 `
 
 func genMiddleware(dir string, cfg *config.Config, api *spec.ApiSpec) error {
-	var middlewares = getMiddleware(api)
+	middlewares := getMiddleware(api)
 	for _, item := range middlewares {
 		middlewareFilename := strings.TrimSuffix(strings.ToLower(item), "middleware") + "_middleware"
 		formatName, err := format.FileNamingFormat(cfg.NamingFormat, middlewareFilename)

@@ -3,10 +3,11 @@ package gset
 
 import (
 	"bytes"
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/internal/rwmutex"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/gstr"
+
+	"github.com/gotid/god/internal/json"
+	"github.com/gotid/god/internal/rwmutex"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/gstr"
 )
 
 type Set struct {
@@ -47,7 +48,7 @@ func NewFrom(items interface{}, safe ...bool) *Set {
 func (set *Set) Iterator(f func(v interface{}) bool) {
 	set.mu.RLock()
 	defer set.mu.RUnlock()
-	for k, _ := range set.data {
+	for k := range set.data {
 		if !f(k) {
 			break
 		}
@@ -203,7 +204,7 @@ func (set *Set) Join(glue string) string {
 		i      = 0
 		buffer = bytes.NewBuffer(nil)
 	)
-	for k, _ := range set.data {
+	for k := range set.data {
 		buffer.WriteString(gconv.String(k))
 		if i != l-1 {
 			buffer.WriteString(glue)
@@ -224,7 +225,7 @@ func (set *Set) String() string {
 		buffer = bytes.NewBuffer(nil)
 	)
 	buffer.WriteByte('[')
-	for k, _ := range set.data {
+	for k := range set.data {
 		s = gconv.String(k)
 		if gstr.IsNumeric(s) {
 			buffer.WriteString(s)
@@ -405,7 +406,7 @@ func (set *Set) Merge(others ...*Set) *Set {
 func (set *Set) Sum() (sum int) {
 	set.mu.RLock()
 	defer set.mu.RUnlock()
-	for k, _ := range set.data {
+	for k := range set.data {
 		sum += gconv.Int(k)
 	}
 	return
@@ -415,7 +416,7 @@ func (set *Set) Sum() (sum int) {
 func (set *Set) Pop() interface{} {
 	set.mu.Lock()
 	defer set.mu.Unlock()
-	for k, _ := range set.data {
+	for k := range set.data {
 		delete(set.data, k)
 		return k
 	}
@@ -435,7 +436,7 @@ func (set *Set) Pops(size int) []interface{} {
 	}
 	index := 0
 	array := make([]interface{}, size)
-	for k, _ := range set.data {
+	for k := range set.data {
 		delete(set.data, k)
 		array[index] = k
 		index++

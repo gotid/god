@@ -1,9 +1,10 @@
 package discovery
 
 import (
-	"git.zc0901.com/go/god/lib/discovery/internal"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/gotid/god/lib/discovery/internal"
+	"github.com/stretchr/testify/assert"
 )
 
 const (

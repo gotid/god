@@ -1,14 +1,15 @@
 package gcache
 
 import (
-	"git.zc0901.com/go/god/lib/container/glist"
-	"git.zc0901.com/go/god/lib/container/gset"
-	"git.zc0901.com/go/god/lib/container/gtype"
-	"git.zc0901.com/go/god/lib/os/gtime"
-	"git.zc0901.com/go/god/lib/os/gtimer"
 	"math"
 	"sync"
 	"time"
+
+	"github.com/gotid/god/lib/container/glist"
+	"github.com/gotid/god/lib/container/gset"
+	"github.com/gotid/god/lib/container/gtype"
+	"github.com/gotid/god/lib/os/gtime"
+	"github.com/gotid/god/lib/os/gtimer"
 )
 
 // Internal cache object.

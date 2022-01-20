@@ -3,12 +3,12 @@ package logic
 import (
 	"context"
 
-	"git.zc0901.com/go/god/example/test/cmd/rpc/test"
+	"github.com/gotid/god/example/test/cmd/rpc/test"
 
-	"git.zc0901.com/go/god/example/test/cmd/api/internal/svc"
-	"git.zc0901.com/go/god/example/test/cmd/api/internal/types"
+	"github.com/gotid/god/example/test/cmd/api/internal/svc"
+	"github.com/gotid/god/example/test/cmd/api/internal/types"
 
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/logx"
 )
 
 type PingLogic struct {

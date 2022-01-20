@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"sync"
 
-	"git.zc0901.com/go/god/api/httpx"
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/api/httpx"
+	"github.com/gotid/god/lib/logx"
 )
 
 // LogContext 是一个上下文键。

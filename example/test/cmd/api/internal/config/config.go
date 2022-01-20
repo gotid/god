@@ -1,8 +1,8 @@
 package config
 
 import (
-	"git.zc0901.com/go/god/api"
-	"git.zc0901.com/go/god/rpc"
+	"github.com/gotid/god/api"
+	"github.com/gotid/god/rpc"
 )
 
 type Config struct {

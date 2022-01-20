@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"testing"
 
-	"git.zc0901.com/go/god/lib/mathx"
+	"github.com/gotid/god/lib/mathx"
 
 	"github.com/stretchr/testify/assert"
 )

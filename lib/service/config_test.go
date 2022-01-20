@@ -3,7 +3,7 @@ package service
 import (
 	"testing"
 
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/logx"
 )
 
 func TestConfi(t *testing.T) {

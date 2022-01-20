@@ -8,18 +8,18 @@ var (
 	"strings"
 	{{if .time}}"time"{{end}}
 
-	"git.zc0901.com/go/god/lib/container/garray"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/fx"
-	"git.zc0901.com/go/god/lib/gutil"
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/mathx"
-	"git.zc0901.com/go/god/lib/mr"
-	"git.zc0901.com/go/god/lib/g"
-	"git.zc0901.com/go/god/lib/store/cache"
-	"git.zc0901.com/go/god/lib/store/sqlx"
-	"git.zc0901.com/go/god/lib/stringx"
-	"git.zc0901.com/go/god/tools/god/mysql/builder"
+	"github.com/gotid/god/lib/container/garray"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/fx"
+	"github.com/gotid/god/lib/gutil"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/mathx"
+	"github.com/gotid/god/lib/mr"
+	"github.com/gotid/god/lib/g"
+	"github.com/gotid/god/lib/store/cache"
+	"github.com/gotid/god/lib/store/sqlx"
+	"github.com/gotid/god/lib/stringx"
+	"github.com/gotid/god/tools/god/mysql/builder"
 )
 `
 
@@ -29,14 +29,14 @@ var (
 	"strings"
 	{{if .time}}"time"{{end}}
 
-	"git.zc0901.com/go/god/lib/container/garray"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/gutil"
-	"git.zc0901.com/go/god/lib/mathx"
-	"git.zc0901.com/go/god/lib/mr"
-	"git.zc0901.com/go/god/lib/g"
-	"git.zc0901.com/go/god/lib/store/sqlx"
-	"git.zc0901.com/go/god/lib/stringx"
-	"git.zc0901.com/go/god/tools/god/mysql/builder"
+	"github.com/gotid/god/lib/container/garray"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/gutil"
+	"github.com/gotid/god/lib/mathx"
+	"github.com/gotid/god/lib/mr"
+	"github.com/gotid/god/lib/g"
+	"github.com/gotid/god/lib/store/sqlx"
+	"github.com/gotid/god/lib/stringx"
+	"github.com/gotid/god/tools/god/mysql/builder"
 )`
 )

@@ -1,9 +1,9 @@
 package g
 
 import (
-	"git.zc0901.com/go/god/internal/empty"
-	"git.zc0901.com/go/god/lib/container/gvar"
-	"git.zc0901.com/go/god/lib/gutil"
+	"github.com/gotid/god/internal/empty"
+	"github.com/gotid/god/lib/container/gvar"
+	"github.com/gotid/god/lib/gutil"
 )
 
 // NewVar returns a gvar.Var.

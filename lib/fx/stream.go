@@ -4,10 +4,10 @@ import (
 	"sort"
 	"sync"
 
-	"git.zc0901.com/go/god/lib/collection"
+	"github.com/gotid/god/lib/collection"
 
-	"git.zc0901.com/go/god/lib/lang"
-	"git.zc0901.com/go/god/lib/threading"
+	"github.com/gotid/god/lib/lang"
+	"github.com/gotid/god/lib/threading"
 )
 
 const (

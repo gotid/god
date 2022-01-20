@@ -4,11 +4,11 @@ import (
 	"reflect"
 	"strings"
 
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/lib/gerror"
+	"github.com/gotid/god/internal/json"
+	"github.com/gotid/god/lib/gerror"
 
-	"git.zc0901.com/go/god/internal/empty"
-	"git.zc0901.com/go/god/internal/utils"
+	"github.com/gotid/god/internal/empty"
+	"github.com/gotid/god/internal/utils"
 )
 
 // Map converts any variable <value> to map[string]interface{}. If the parameter <value> is not a

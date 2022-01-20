@@ -8,12 +8,12 @@ import (
 	"strconv"
 	"strings"
 
-	"git.zc0901.com/go/god/lib/g"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/stringx"
+	"github.com/gotid/god/lib/g"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/stringx"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/mapping"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/mapping"
 )
 
 type UpdateArgs struct {

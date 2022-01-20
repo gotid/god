@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"git.zc0901.com/go/god/lib/g"
+	"github.com/gotid/god/lib/g"
 
-	"git.zc0901.com/go/god/lib/assert"
+	"github.com/gotid/god/lib/assert"
 
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )

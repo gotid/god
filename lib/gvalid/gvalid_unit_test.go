@@ -1,10 +1,11 @@
 package gvalid_test
 
 import (
-	"git.zc0901.com/go/god/lib/g"
-	"git.zc0901.com/go/god/lib/gvalid"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/gotid/god/lib/g"
+	"github.com/gotid/god/lib/gvalid"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCheck(t *testing.T) {

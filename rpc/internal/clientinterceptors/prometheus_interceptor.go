@@ -2,13 +2,14 @@ package clientinterceptors
 
 import (
 	"context"
-	"git.zc0901.com/go/god/lib/prometheus"
-	"git.zc0901.com/go/god/lib/prometheus/metric"
-	"git.zc0901.com/go/god/lib/timex"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/status"
 	"strconv"
 	"time"
+
+	"github.com/gotid/god/lib/prometheus"
+	"github.com/gotid/god/lib/prometheus/metric"
+	"github.com/gotid/god/lib/timex"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/status"
 )
 
 const clientNamespace = "rpc_client"

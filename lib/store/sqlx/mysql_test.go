@@ -1,10 +1,11 @@
 package sqlx
 
 import (
-	"git.zc0901.com/go/god/lib/breaker"
-	"github.com/go-sql-driver/mysql"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/go-sql-driver/mysql"
+	"github.com/gotid/god/lib/breaker"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestBreakerOnDuplicateEntry(t *testing.T) {

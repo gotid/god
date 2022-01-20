@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/fx"
+
+	"github.com/gotid/god/lib/fx"
 )
 
 func main() {

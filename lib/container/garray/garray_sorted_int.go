@@ -3,13 +3,13 @@ package garray
 import (
 	"bytes"
 	"fmt"
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/internal/rwmutex"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/grand"
-
 	"math"
 	"sort"
+
+	"github.com/gotid/god/internal/json"
+	"github.com/gotid/god/internal/rwmutex"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/grand"
 )
 
 // SortedIntArray is a golang sorted int array with rich features.

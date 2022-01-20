@@ -4,10 +4,11 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"git.zc0901.com/go/god/example/rpc/pb/unary"
-	"git.zc0901.com/go/god/lib/conf"
-	"git.zc0901.com/go/god/rpc"
 	"time"
+
+	"github.com/gotid/god/example/rpc/pb/unary"
+	"github.com/gotid/god/lib/conf"
+	"github.com/gotid/god/rpc"
 )
 
 var configFile = flag.String("f", "config.yaml", "配置文件")

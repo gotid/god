@@ -7,13 +7,13 @@ import (
 	"flag"
 	"fmt"
 
-	"git.zc0901.com/go/god/example/graceful/dns/rpc/graceful"
-	"git.zc0901.com/go/god/example/graceful/dns/rpc/internal/config"
-	"git.zc0901.com/go/god/example/graceful/dns/rpc/internal/server"
-	"git.zc0901.com/go/god/example/graceful/dns/rpc/internal/svc"
+	"github.com/gotid/god/example/graceful/dns/rpc/graceful"
+	"github.com/gotid/god/example/graceful/dns/rpc/internal/config"
+	"github.com/gotid/god/example/graceful/dns/rpc/internal/server"
+	"github.com/gotid/god/example/graceful/dns/rpc/internal/svc"
 
-	"git.zc0901.com/go/god/lib/conf"
-	"git.zc0901.com/go/god/rpc"
+	"github.com/gotid/god/lib/conf"
+	"github.com/gotid/god/rpc"
 	"google.golang.org/grpc"
 )
 

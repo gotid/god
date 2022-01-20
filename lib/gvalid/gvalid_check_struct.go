@@ -3,8 +3,8 @@ package gvalid
 import (
 	"strings"
 
-	"git.zc0901.com/go/god/internal/structs"
-	"git.zc0901.com/go/god/lib/gconv"
+	"github.com/gotid/god/internal/structs"
+	"github.com/gotid/god/lib/gconv"
 )
 
 var (

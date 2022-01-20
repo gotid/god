@@ -1,11 +1,12 @@
 package gfile
 
 import (
-	"git.zc0901.com/go/god/lib/gerror"
-	"git.zc0901.com/go/god/lib/gstr"
 	"os"
 	"path/filepath"
 	"sort"
+
+	"github.com/gotid/god/lib/gerror"
+	"github.com/gotid/god/lib/gstr"
 )
 
 const (

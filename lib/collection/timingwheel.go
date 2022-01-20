@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"git.zc0901.com/go/god/lib/lang"
-	"git.zc0901.com/go/god/lib/threading"
-	"git.zc0901.com/go/god/lib/timex"
+	"github.com/gotid/god/lib/lang"
+	"github.com/gotid/god/lib/threading"
+	"github.com/gotid/god/lib/timex"
 )
 
 const drainWorkers = 8

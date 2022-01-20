@@ -2,7 +2,7 @@
 package gparser
 
 import (
-	"git.zc0901.com/go/god/lib/encoding/gjson"
+	"github.com/gotid/god/lib/encoding/gjson"
 )
 
 // Parser is actually alias of gjson.Json.

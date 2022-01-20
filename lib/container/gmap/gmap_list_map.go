@@ -1,12 +1,12 @@
 package gmap
 
 import (
-	"git.zc0901.com/go/god/internal/empty"
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/internal/rwmutex"
-	"git.zc0901.com/go/god/lib/container/glist"
-	"git.zc0901.com/go/god/lib/container/gvar"
-	"git.zc0901.com/go/god/lib/gconv"
+	"github.com/gotid/god/internal/empty"
+	"github.com/gotid/god/internal/json"
+	"github.com/gotid/god/internal/rwmutex"
+	"github.com/gotid/god/lib/container/glist"
+	"github.com/gotid/god/lib/container/gvar"
+	"github.com/gotid/god/lib/gconv"
 )
 
 type ListMap struct {

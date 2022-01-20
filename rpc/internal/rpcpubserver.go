@@ -4,8 +4,8 @@ import (
 	"os"
 	"strings"
 
-	"git.zc0901.com/go/god/lib/discovery"
-	"git.zc0901.com/go/god/lib/netx"
+	"github.com/gotid/god/lib/discovery"
+	"github.com/gotid/god/lib/netx"
 )
 
 const (

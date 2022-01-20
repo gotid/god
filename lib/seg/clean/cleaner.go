@@ -6,7 +6,7 @@ import (
 
 	"github.com/forPelevin/gomoji"
 
-	"git.zc0901.com/go/god/lib/stringx"
+	"github.com/gotid/god/lib/stringx"
 
 	emoji "github.com/tmdvs/Go-Emoji-Utils"
 )

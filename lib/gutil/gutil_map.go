@@ -1,7 +1,7 @@
 package gutil
 
 import (
-	"git.zc0901.com/go/god/internal/utils"
+	"github.com/gotid/god/internal/utils"
 )
 
 // MapCopy does a shallow copy from map <data> to <copy> for most commonly used map type

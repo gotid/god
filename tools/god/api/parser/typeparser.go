@@ -9,7 +9,7 @@ import (
 	"sort"
 	"strings"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
+	"github.com/gotid/god/tools/god/api/spec"
 )
 
 var (
@@ -305,6 +305,7 @@ func isBasicType(tp string) bool {
 		return false
 	}
 }
+
 func parseName(names []*ast.Ident) string {
 	if len(names) == 0 {
 		return ""

@@ -3,9 +3,9 @@ package service
 import (
 	"log"
 
-	"git.zc0901.com/go/god/lib/proc"
-	"git.zc0901.com/go/god/lib/syncx"
-	"git.zc0901.com/go/god/lib/threading"
+	"github.com/gotid/god/lib/proc"
+	"github.com/gotid/god/lib/syncx"
+	"github.com/gotid/god/lib/threading"
 )
 
 type (

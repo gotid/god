@@ -1,7 +1,7 @@
 package gmap
 
 import (
-	"git.zc0901.com/go/god/lib/container/gtree"
+	"github.com/gotid/god/lib/container/gtree"
 )
 
 // Map based on red-black tree, alias of RedBlackTree.

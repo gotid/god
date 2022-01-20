@@ -2,10 +2,11 @@ package sqlx
 
 import (
 	"database/sql"
-	"git.zc0901.com/go/god/lib/syncx"
 	"io"
 	"sync"
 	"time"
+
+	"github.com/gotid/god/lib/syncx"
 )
 
 const (

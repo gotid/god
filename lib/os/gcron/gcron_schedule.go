@@ -3,11 +3,12 @@ package gcron
 import (
 	"errors"
 	"fmt"
-	"git.zc0901.com/go/god/lib/gregex"
-	"git.zc0901.com/go/god/lib/os/gtime"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/gotid/god/lib/gregex"
+	"github.com/gotid/god/lib/os/gtime"
 )
 
 // cronSchedule is the schedule for cron job.

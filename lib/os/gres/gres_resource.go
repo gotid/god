@@ -2,13 +2,14 @@ package gres
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/internal/intlog"
-	"git.zc0901.com/go/god/lib/container/gtree"
-	"git.zc0901.com/go/god/lib/os/gfile"
-	"git.zc0901.com/go/god/lib/os/gtime"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/gotid/god/internal/intlog"
+	"github.com/gotid/god/lib/container/gtree"
+	"github.com/gotid/god/lib/os/gfile"
+	"github.com/gotid/god/lib/os/gtime"
 )
 
 type Resource struct {

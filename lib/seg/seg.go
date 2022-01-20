@@ -6,15 +6,15 @@ import (
 	"sort"
 	"strings"
 
-	"git.zc0901.com/go/god/lib/gutil"
+	"github.com/gotid/god/lib/gutil"
 
-	"git.zc0901.com/go/god/lib/container/gset"
+	"github.com/gotid/god/lib/container/gset"
 
-	"git.zc0901.com/go/god/lib/stringx"
+	"github.com/gotid/god/lib/stringx"
 
 	"github.com/yanyiwu/gojieba"
 
-	"git.zc0901.com/go/god/lib/seg/clean"
+	"github.com/gotid/god/lib/seg/clean"
 )
 
 var (

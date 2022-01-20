@@ -8,10 +8,10 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/syncx"
-	"git.zc0901.com/go/god/lib/timex"
-	"git.zc0901.com/go/god/rpc/internal/codes"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/syncx"
+	"github.com/gotid/god/lib/timex"
+	"github.com/gotid/god/rpc/internal/codes"
 	"google.golang.org/grpc/balancer"
 )
 

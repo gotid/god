@@ -1,9 +1,10 @@
 package main
 
 import (
-	"git.zc0901.com/go/god/lib/conf"
-	"git.zc0901.com/go/god/lib/logx"
 	"time"
+
+	"github.com/gotid/god/lib/conf"
+	"github.com/gotid/god/lib/logx"
 )
 
 type TimeHolder struct {

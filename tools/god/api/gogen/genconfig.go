@@ -6,12 +6,12 @@ import (
 	"strings"
 	"text/template"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
-	"git.zc0901.com/go/god/tools/god/api/util"
-	"git.zc0901.com/go/god/tools/god/config"
-	ctlutil "git.zc0901.com/go/god/tools/god/util"
-	"git.zc0901.com/go/god/tools/god/util/format"
-	"git.zc0901.com/go/god/tools/god/vars"
+	"github.com/gotid/god/tools/god/api/spec"
+	"github.com/gotid/god/tools/god/api/util"
+	"github.com/gotid/god/tools/god/config"
+	ctlutil "github.com/gotid/god/tools/god/util"
+	"github.com/gotid/god/tools/god/util/format"
+	"github.com/gotid/god/tools/god/vars"
 )
 
 const (

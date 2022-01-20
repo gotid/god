@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/example/rpc/pb/stream"
-	"git.zc0901.com/go/god/lib/conf"
-	"git.zc0901.com/go/god/rpc"
-	"google.golang.org/grpc"
 	"io"
+
+	"github.com/gotid/god/example/rpc/pb/stream"
+	"github.com/gotid/god/lib/conf"
+	"github.com/gotid/god/rpc"
+	"google.golang.org/grpc"
 )
 
 type StreamGreetServer int

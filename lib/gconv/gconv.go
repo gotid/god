@@ -6,12 +6,13 @@ package gconv
 import (
 	"encoding/json"
 	"fmt"
-	"git.zc0901.com/go/god/lib/encoding/gbinary"
-	"git.zc0901.com/go/god/lib/os/gtime"
 	"reflect"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/gotid/god/lib/encoding/gbinary"
+	"github.com/gotid/god/lib/os/gtime"
 )
 
 var (
@@ -244,7 +245,7 @@ func Convert(i interface{}, t string, params ...interface{}) interface{} {
 	case "[]map[string]interface{}":
 		return Maps(i)
 
-	//case "gvar.Var":
+	// case "gvar.Var":
 	//	// TODO remove reflect usage to create gvar.Var, considering using unsafe pointer
 	//	rv := reflect.New(intstore.ReflectTypeVarImp)
 	//	ri := rv.Interface()

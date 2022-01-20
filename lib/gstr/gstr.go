@@ -4,14 +4,15 @@ package gstr
 import (
 	"bytes"
 	"fmt"
-	"git.zc0901.com/go/god/internal/utils"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/grand"
 	"math"
 	"strconv"
 	"strings"
 	"unicode"
 	"unicode/utf8"
+
+	"github.com/gotid/god/internal/utils"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/grand"
 )
 
 // Replace returns a copy of the string <origin>

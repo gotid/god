@@ -5,10 +5,10 @@ import (
 	"errors"
 	"time"
 
-	"git.zc0901.com/go/god/lib/container/glist"
-	"git.zc0901.com/go/god/lib/container/gtype"
-	"git.zc0901.com/go/god/lib/os/gtime"
-	"git.zc0901.com/go/god/lib/os/gtimer"
+	"github.com/gotid/god/lib/container/glist"
+	"github.com/gotid/god/lib/container/gtype"
+	"github.com/gotid/god/lib/os/gtime"
+	"github.com/gotid/god/lib/os/gtimer"
 )
 
 // Pool is an Object-Reusable Pool.

@@ -1,10 +1,11 @@
 package gcache
 
 import (
-	"git.zc0901.com/go/god/lib/container/gvar"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/os/gtimer"
 	"time"
+
+	"github.com/gotid/god/lib/container/gvar"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/os/gtimer"
 )
 
 // Cache struct.

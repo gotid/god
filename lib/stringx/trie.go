@@ -1,7 +1,7 @@
 package stringx
 
 import (
-	"git.zc0901.com/go/god/lib/lang"
+	"github.com/gotid/god/lib/lang"
 )
 
 const defaultMask = '*'

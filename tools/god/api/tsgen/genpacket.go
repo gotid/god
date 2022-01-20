@@ -3,14 +3,15 @@ package tsgen
 import (
 	"errors"
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
 	"path"
 	"strings"
 	"text/template"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
-	apiutil "git.zc0901.com/go/god/tools/god/api/util"
-	"git.zc0901.com/go/god/tools/god/util"
+	"github.com/gotid/god/lib/fs"
+
+	"github.com/gotid/god/tools/god/api/spec"
+	apiutil "github.com/gotid/god/tools/god/api/util"
+	"github.com/gotid/god/tools/god/util"
 )
 
 const (
@@ -42,7 +43,7 @@ func genHandler(dir, webApi, caller string, api *spec.ApiSpec, unwrapApi bool) e
 		localTypes = append(localTypes, rts...)
 	}
 
-	var prefixForType = func(ty string) string {
+	prefixForType := func(ty string) string {
 		if _, pri := primitiveType(ty); pri {
 			return ""
 		}

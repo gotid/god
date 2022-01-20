@@ -1,13 +1,14 @@
 package ctx
 
 import (
-	"git.zc0901.com/go/god/lib/fs"
 	"go/build"
 	"os"
 	"path/filepath"
 	"testing"
 
-	"git.zc0901.com/go/god/lib/stringx"
+	"github.com/gotid/god/lib/fs"
+
+	"github.com/gotid/god/lib/stringx"
 	"github.com/stretchr/testify/assert"
 )
 

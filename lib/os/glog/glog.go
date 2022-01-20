@@ -2,8 +2,8 @@
 package glog
 
 import (
-	"git.zc0901.com/go/god/internal/cmdenv"
-	"git.zc0901.com/go/god/lib/os/grpool"
+	"github.com/gotid/god/internal/cmdenv"
+	"github.com/gotid/god/lib/os/grpool"
 )
 
 var (

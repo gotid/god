@@ -5,14 +5,14 @@ import (
 	"path/filepath"
 	"strings"
 
-	"git.zc0901.com/go/god/lib/fs"
-	"git.zc0901.com/go/god/lib/stringx"
+	"github.com/gotid/god/lib/fs"
+	"github.com/gotid/god/lib/stringx"
 
-	"git.zc0901.com/go/god/lib/collection"
-	conf "git.zc0901.com/go/god/tools/god/config"
-	"git.zc0901.com/go/god/tools/god/rpc/parser"
-	"git.zc0901.com/go/god/tools/god/util"
-	"git.zc0901.com/go/god/tools/god/util/format"
+	"github.com/gotid/god/lib/collection"
+	conf "github.com/gotid/god/tools/god/config"
+	"github.com/gotid/god/tools/god/rpc/parser"
+	"github.com/gotid/god/tools/god/util"
+	"github.com/gotid/god/tools/god/util/format"
 )
 
 const (
@@ -23,7 +23,7 @@ import (
 
 	{{.imports}}
 
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/logx"
 )
 
 type {{.logicName}} struct {

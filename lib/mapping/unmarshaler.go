@@ -10,9 +10,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"git.zc0901.com/go/god/lib/jsonx"
-	"git.zc0901.com/go/god/lib/lang"
-	"git.zc0901.com/go/god/lib/stringx"
+	"github.com/gotid/god/lib/jsonx"
+	"github.com/gotid/god/lib/lang"
+	"github.com/gotid/god/lib/stringx"
 )
 
 const (

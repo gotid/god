@@ -4,11 +4,11 @@ import (
 	"log"
 	"time"
 
-	"git.zc0901.com/go/god/rpc/internal/clientinterceptors"
+	"github.com/gotid/god/rpc/internal/clientinterceptors"
 
-	"git.zc0901.com/go/god/lib/discovery"
-	"git.zc0901.com/go/god/rpc/internal"
-	"git.zc0901.com/go/god/rpc/internal/auth"
+	"github.com/gotid/god/lib/discovery"
+	"github.com/gotid/god/rpc/internal"
+	"github.com/gotid/god/rpc/internal/auth"
 	"google.golang.org/grpc"
 )
 

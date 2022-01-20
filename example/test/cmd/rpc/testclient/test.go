@@ -8,9 +8,9 @@ package testclient
 import (
 	"context"
 
-	"git.zc0901.com/go/god/example/test/cmd/rpc/test"
+	"github.com/gotid/god/example/test/cmd/rpc/test"
 
-	"git.zc0901.com/go/god/rpc"
+	"github.com/gotid/god/rpc"
 )
 
 type (

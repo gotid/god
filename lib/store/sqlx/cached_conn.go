@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"time"
 
-	"git.zc0901.com/go/god/lib/store/cache"
-	"git.zc0901.com/go/god/lib/store/redis"
-	"git.zc0901.com/go/god/lib/syncx"
+	"github.com/gotid/god/lib/store/cache"
+	"github.com/gotid/god/lib/store/redis"
+	"github.com/gotid/god/lib/syncx"
 )
 
 // 索引建和主键缓存之间的安全时间间隔

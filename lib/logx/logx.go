@@ -17,9 +17,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"git.zc0901.com/go/god/lib/iox"
-	"git.zc0901.com/go/god/lib/sysx"
-	"git.zc0901.com/go/god/lib/timex"
+	"github.com/gotid/god/lib/iox"
+	"github.com/gotid/god/lib/sysx"
+	"github.com/gotid/god/lib/timex"
 )
 
 // 日志级别值

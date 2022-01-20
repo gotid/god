@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
+	"github.com/gotid/god/tools/god/api/spec"
 )
 
 type rootState struct {
@@ -13,7 +13,7 @@ type rootState struct {
 }
 
 func newRootState(r *bufio.Reader, lineNumber *int) state {
-	var state = newBaseState(r, lineNumber)
+	state := newBaseState(r, lineNumber)
 	return rootState{
 		baseState: state,
 	}

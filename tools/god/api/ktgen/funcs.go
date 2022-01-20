@@ -5,7 +5,7 @@ import (
 	"strings"
 	"text/template"
 
-	"git.zc0901.com/go/god/tools/god/api/util"
+	"github.com/gotid/god/tools/god/api/util"
 	"github.com/iancoleman/strcase"
 )
 

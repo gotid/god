@@ -8,8 +8,8 @@ import (
 	"sync"
 	"testing"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/mathx"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/mathx"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/balancer"
 	"google.golang.org/grpc/balancer/base"

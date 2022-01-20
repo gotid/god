@@ -1,16 +1,14 @@
 package glog
 
-import "git.zc0901.com/go/god/lib/container/gmap"
+import "github.com/gotid/god/lib/container/gmap"
 
 const (
 	// Default group name for instance usage.
 	DEFAULT_NAME = "default"
 )
 
-var (
-	// Instances map.
-	instances = gmap.NewStrAnyMap(true)
-)
+// Instances map.
+var instances = gmap.NewStrAnyMap(true)
 
 // Instance returns an instance of Logger with default settings.
 // The parameter <name> is the name for the instance.

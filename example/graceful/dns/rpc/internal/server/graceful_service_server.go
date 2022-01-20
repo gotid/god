@@ -6,9 +6,9 @@ package server
 import (
 	"context"
 
-	"git.zc0901.com/go/god/example/graceful/dns/rpc/graceful"
-	"git.zc0901.com/go/god/example/graceful/dns/rpc/internal/logic"
-	"git.zc0901.com/go/god/example/graceful/dns/rpc/internal/svc"
+	"github.com/gotid/god/example/graceful/dns/rpc/graceful"
+	"github.com/gotid/god/example/graceful/dns/rpc/internal/logic"
+	"github.com/gotid/god/example/graceful/dns/rpc/internal/svc"
 )
 
 type GracefulServiceServer struct {

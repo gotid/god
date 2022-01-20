@@ -3,12 +3,13 @@ package serverinterceptors
 import (
 	"context"
 	"fmt"
-	"git.zc0901.com/go/god/lib/store/redis/redistest"
-	"git.zc0901.com/go/god/rpc/internal/auth"
+	"testing"
+
+	"github.com/gotid/god/lib/store/redis/redistest"
+	"github.com/gotid/god/rpc/internal/auth"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-	"testing"
 )
 
 func TestUnaryAuthorizeInterceptor(t *testing.T) {

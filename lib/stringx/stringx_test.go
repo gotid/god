@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"git.zc0901.com/go/god/tools/god/mysql/builder"
+	"github.com/gotid/god/tools/god/mysql/builder"
 	"github.com/stretchr/testify/assert"
 )
 

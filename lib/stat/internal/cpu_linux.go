@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"git.zc0901.com/go/god/lib/iox"
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/iox"
+	"github.com/gotid/god/lib/logx"
 )
 
 const (

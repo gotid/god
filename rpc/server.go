@@ -4,12 +4,12 @@ import (
 	"log"
 	"time"
 
-	"git.zc0901.com/go/god/lib/load"
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/stat"
-	"git.zc0901.com/go/god/rpc/internal"
-	"git.zc0901.com/go/god/rpc/internal/auth"
-	"git.zc0901.com/go/god/rpc/internal/serverinterceptors"
+	"github.com/gotid/god/lib/load"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/stat"
+	"github.com/gotid/god/rpc/internal"
+	"github.com/gotid/god/rpc/internal/auth"
+	"github.com/gotid/god/rpc/internal/serverinterceptors"
 	"google.golang.org/grpc"
 )
 

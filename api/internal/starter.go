@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/logx"
 
-	"git.zc0901.com/go/god/lib/proc"
+	"github.com/gotid/god/lib/proc"
 )
 
 // StartOption 自定义 http.Server 的方法。

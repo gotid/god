@@ -9,11 +9,11 @@ import (
 	"sync"
 	"time"
 
-	"git.zc0901.com/go/god/lib/contextx"
-	"git.zc0901.com/go/god/lib/lang"
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/syncx"
-	"git.zc0901.com/go/god/lib/threading"
+	"github.com/gotid/god/lib/contextx"
+	"github.com/gotid/god/lib/lang"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/syncx"
+	"github.com/gotid/god/lib/threading"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 

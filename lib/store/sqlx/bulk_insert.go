@@ -6,10 +6,10 @@ import (
 	"strings"
 	"time"
 
-	"git.zc0901.com/go/god/lib/executors"
+	"github.com/gotid/god/lib/executors"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/stringx"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/stringx"
 )
 
 const (

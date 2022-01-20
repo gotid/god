@@ -3,7 +3,7 @@ package load
 import (
 	"io"
 
-	"git.zc0901.com/go/god/lib/syncx"
+	"github.com/gotid/god/lib/syncx"
 )
 
 type

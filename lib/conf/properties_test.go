@@ -2,10 +2,11 @@ package conf
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
-	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
+
+	"github.com/gotid/god/lib/fs"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestLoadProperties(t *testing.T) {

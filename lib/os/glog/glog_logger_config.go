@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"git.zc0901.com/go/god/internal/intlog"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/gutil"
-	"git.zc0901.com/go/god/lib/os/gfile"
+	"github.com/gotid/god/internal/intlog"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/gutil"
+	"github.com/gotid/god/lib/os/gfile"
 )
 
 // Config is the configuration object for logger.

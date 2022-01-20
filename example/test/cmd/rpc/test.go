@@ -7,12 +7,12 @@ import (
 	"flag"
 	"fmt"
 
-	"git.zc0901.com/go/god/example/test/cmd/rpc/internal/config"
-	"git.zc0901.com/go/god/example/test/cmd/rpc/internal/server"
-	"git.zc0901.com/go/god/example/test/cmd/rpc/internal/svc"
-	"git.zc0901.com/go/god/example/test/cmd/rpc/test"
-	"git.zc0901.com/go/god/lib/conf"
-	"git.zc0901.com/go/god/rpc"
+	"github.com/gotid/god/example/test/cmd/rpc/internal/config"
+	"github.com/gotid/god/example/test/cmd/rpc/internal/server"
+	"github.com/gotid/god/example/test/cmd/rpc/internal/svc"
+	"github.com/gotid/god/example/test/cmd/rpc/test"
+	"github.com/gotid/god/lib/conf"
+	"github.com/gotid/god/rpc"
 	"google.golang.org/grpc"
 )
 

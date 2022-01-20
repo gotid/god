@@ -7,8 +7,8 @@ import (
 	"io"
 	"strings"
 
-	"git.zc0901.com/go/god/lib/stringx"
-	"git.zc0901.com/go/god/tools/god/api/spec"
+	"github.com/gotid/god/lib/stringx"
+	"github.com/gotid/god/tools/god/api/spec"
 )
 
 type serviceState struct {
@@ -56,14 +56,14 @@ type serviceEntityParser struct {
 }
 
 func (p *serviceEntityParser) parseLine(line string, api *spec.ApiSpec, annos []spec.Annotation) error {
-	var defaultErr = fmt.Errorf("wrong line %q, %q", line, routeSyntax)
+	defaultErr := fmt.Errorf("wrong line %q, %q", line, routeSyntax)
 
 	line = strings.TrimSpace(line)
-	var buffer = new(bytes.Buffer)
+	buffer := new(bytes.Buffer)
 	buffer.WriteString(line)
 	reader := bufio.NewReader(buffer)
 	var builder strings.Builder
-	var fields = make([]string, 0)
+	fields := make([]string, 0)
 	for {
 		ch, _, err := reader.ReadRune()
 		if err != nil {

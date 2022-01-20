@@ -3,11 +3,12 @@ package breaker
 import (
 	"errors"
 	"fmt"
-	"git.zc0901.com/go/god/lib/stat"
-	"github.com/stretchr/testify/assert"
 	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/gotid/god/lib/stat"
+	"github.com/stretchr/testify/assert"
 )
 
 func init() {
@@ -121,8 +122,7 @@ func BenchmarkGoogleBreaker(b *testing.B) {
 	}
 }
 
-type mockedPromise struct {
-}
+type mockedPromise struct{}
 
 func (m *mockedPromise) Accept() {
 }

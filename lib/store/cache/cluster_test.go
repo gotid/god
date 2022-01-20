@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"git.zc0901.com/go/god/lib/errorx"
-	"git.zc0901.com/go/god/lib/hash"
-	"git.zc0901.com/go/god/lib/store/redis"
-	"git.zc0901.com/go/god/lib/syncx"
+	"github.com/gotid/god/lib/errorx"
+	"github.com/gotid/god/lib/hash"
+	"github.com/gotid/god/lib/store/redis"
+	"github.com/gotid/god/lib/syncx"
 	"github.com/stretchr/testify/assert"
 )
 

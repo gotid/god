@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/syncx"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/syncx"
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )
 

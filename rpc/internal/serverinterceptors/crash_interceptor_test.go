@@ -2,30 +2,29 @@ package serverinterceptors
 
 import (
 	"context"
-	"fmt"
-	"git.zc0901.com/go/god/lib/logx"
+	"testing"
+
+	"github.com/gotid/god/lib/logx"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
-	"testing"
 )
 
 func init() {
 	logx.Disable()
 }
 
-func TestUnaryCrashInterceptor(t *testing.T) {
-	interceptor := UnaryCrashInterceptor()
-	_, err := interceptor(context.Background(), nil, nil, func(ctx context.Context, req interface{}) (interface{}, error) {
+func TestStreamCrashInterceptor(t *testing.T) {
+	err := StreamCrashInterceptor(nil, nil, nil, func(
+		srv interface{}, stream grpc.ServerStream) error {
 		panic("mock panic")
 	})
 	assert.NotNil(t, err)
-	fmt.Print(err)
 }
 
-func TestStreamCrashInterceptor(t *testing.T) {
-	err := StreamCrashInterceptor(nil, nil, nil, func(srv interface{}, stream grpc.ServerStream) error {
-		panic("mock panic")
-	})
+func TestUnaryCrashInterceptor(t *testing.T) {
+	_, err := UnaryCrashInterceptor(context.Background(), nil, nil,
+		func(ctx context.Context, req interface{}) (interface{}, error) {
+			panic("mock panic")
+		})
 	assert.NotNil(t, err)
-	fmt.Print(err)
 }

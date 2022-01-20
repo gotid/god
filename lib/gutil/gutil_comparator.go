@@ -1,8 +1,9 @@
 package gutil
 
 import (
-	"git.zc0901.com/go/god/lib/gconv"
 	"strings"
+
+	"github.com/gotid/god/lib/gconv"
 )
 
 // Comparator is a function that compare a and b, and returns the result as int.

@@ -3,8 +3,9 @@ package gfsnotify
 import (
 	"errors"
 	"fmt"
-	"git.zc0901.com/go/god/internal/intlog"
-	"git.zc0901.com/go/god/lib/container/glist"
+
+	"github.com/gotid/god/internal/intlog"
+	"github.com/gotid/god/lib/container/glist"
 )
 
 // Add monitors <path> with callback function <callbackFunc> to the watcher.
@@ -92,7 +93,7 @@ func (w *Watcher) addWithCallbackFunc(name, path string, callbackFunc func(event
 	// Add the callback to global callback map.
 	callbackIdMap.Set(callback.Id, callback)
 
-	//intlog.Print("addWithCallbackFunc", name, path, callback.recursive)
+	// intlog.Print("addWithCallbackFunc", name, path, callback.recursive)
 	return
 }
 

@@ -11,11 +11,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"git.zc0901.com/go/god/lib/executors"
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/proc"
-	"git.zc0901.com/go/god/lib/sysx"
-	"git.zc0901.com/go/god/lib/timex"
+	"github.com/gotid/god/lib/executors"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/proc"
+	"github.com/gotid/god/lib/sysx"
+	"github.com/gotid/god/lib/timex"
 )
 
 const (

@@ -4,22 +4,22 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"git.zc0901.com/go/god/internal/intlog"
-	"git.zc0901.com/go/god/lib/container/gtype"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/gdebug"
-	"git.zc0901.com/go/god/lib/gregex"
-	"git.zc0901.com/go/god/lib/os/gfile"
-	"git.zc0901.com/go/god/lib/os/gfpool"
-	"git.zc0901.com/go/god/lib/os/gmlock"
-	"git.zc0901.com/go/god/lib/os/gtime"
-	"git.zc0901.com/go/god/lib/os/gtimer"
-
 	"io"
 	"os"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/gotid/god/internal/intlog"
+	"github.com/gotid/god/lib/container/gtype"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/gdebug"
+	"github.com/gotid/god/lib/gregex"
+	"github.com/gotid/god/lib/os/gfile"
+	"github.com/gotid/god/lib/os/gfpool"
+	"github.com/gotid/god/lib/os/gmlock"
+	"github.com/gotid/god/lib/os/gtime"
+	"github.com/gotid/god/lib/os/gtimer"
 )
 
 // Logger is the struct for logging management.
@@ -34,7 +34,7 @@ type Logger struct {
 const (
 	defaultFileFormat = `{Y-m-d}.log`
 	defaultFileFlags  = os.O_CREATE | os.O_WRONLY | os.O_APPEND
-	defaultFilePerm   = os.FileMode(0666)
+	defaultFilePerm   = os.FileMode(0o666)
 	defaultFileExpire = time.Minute
 	pathFilterKey     = "/os/glog/glog"
 )

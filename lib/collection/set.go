@@ -1,8 +1,8 @@
 package collection
 
 import (
-	"git.zc0901.com/go/god/lib/lang"
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/lang"
+	"github.com/gotid/god/lib/logx"
 )
 
 const (

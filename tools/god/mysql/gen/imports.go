@@ -1,8 +1,8 @@
 package gen
 
 import (
-	"git.zc0901.com/go/god/tools/god/mysql/tpl"
-	"git.zc0901.com/go/god/tools/god/util"
+	"github.com/gotid/god/tools/god/mysql/tpl"
+	"github.com/gotid/god/tools/god/util"
 )
 
 func genImports(withCache, timeImport bool) (string, error) {

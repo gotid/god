@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"git.zc0901.com/go/god/tools/god/util"
+	"github.com/gotid/god/tools/god/util"
 	"github.com/stretchr/testify/assert"
 )
 

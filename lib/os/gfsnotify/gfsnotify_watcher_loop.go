@@ -1,8 +1,8 @@
 package gfsnotify
 
 import (
-	"git.zc0901.com/go/god/internal/intlog"
-	"git.zc0901.com/go/god/lib/container/glist"
+	"github.com/gotid/god/internal/intlog"
+	"github.com/gotid/god/lib/container/glist"
 )
 
 // startWatchLoop starts the loop for event listening fro underlying inotify monitor.

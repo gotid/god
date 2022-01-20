@@ -2,12 +2,13 @@ package internal
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/iox"
-	"git.zc0901.com/go/god/lib/lang"
 	"os"
 	"path"
 	"strconv"
 	"strings"
+
+	"github.com/gotid/god/lib/iox"
+	"github.com/gotid/god/lib/lang"
 )
 
 // cgroups 的全称是control groups。

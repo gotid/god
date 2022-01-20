@@ -4,10 +4,10 @@ import (
 	"errors"
 	"log"
 
-	"git.zc0901.com/go/god/lib/errorx"
-	"git.zc0901.com/go/god/lib/hash"
-	"git.zc0901.com/go/god/lib/store/cache"
-	"git.zc0901.com/go/god/lib/store/redis"
+	"github.com/gotid/god/lib/errorx"
+	"github.com/gotid/god/lib/hash"
+	"github.com/gotid/god/lib/store/cache"
+	"github.com/gotid/god/lib/store/redis"
 )
 
 var ErrNoRedisNode = errors.New("无可用 redis 节点")

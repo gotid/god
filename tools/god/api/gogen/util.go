@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"git.zc0901.com/go/god/lib/collection"
-	"git.zc0901.com/go/god/tools/god/api/spec"
-	"git.zc0901.com/go/god/tools/god/api/util"
-	"git.zc0901.com/go/god/tools/god/util/ctx"
+	"github.com/gotid/god/lib/collection"
+	"github.com/gotid/god/tools/god/api/spec"
+	"github.com/gotid/god/tools/god/api/util"
+	"github.com/gotid/god/tools/god/util/ctx"
 )
 
 func getParentPackage(dir string) (string, error) {

@@ -1,11 +1,12 @@
 package gfpool
 
 import (
-	"git.zc0901.com/go/god/lib/container/gpool"
-	"git.zc0901.com/go/god/lib/container/gtype"
-	"git.zc0901.com/go/god/lib/os/gfsnotify"
 	"os"
 	"time"
+
+	"github.com/gotid/god/lib/container/gpool"
+	"github.com/gotid/god/lib/container/gtype"
+	"github.com/gotid/god/lib/os/gfsnotify"
 )
 
 // New creates and returns a file pointer pool with given file path, flag and opening permission.

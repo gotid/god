@@ -6,9 +6,10 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"git.zc0901.com/go/god/internal/json"
 	"io"
 	"strings"
+
+	"github.com/gotid/god/internal/json"
 )
 
 // Decode converts INI format to map.

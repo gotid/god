@@ -4,12 +4,12 @@ import (
 	"flag"
 	"fmt"
 
-	"git.zc0901.com/go/god/example/test/cmd/api/internal/config"
-	"git.zc0901.com/go/god/example/test/cmd/api/internal/handler"
-	"git.zc0901.com/go/god/example/test/cmd/api/internal/svc"
+	"github.com/gotid/god/example/test/cmd/api/internal/config"
+	"github.com/gotid/god/example/test/cmd/api/internal/handler"
+	"github.com/gotid/god/example/test/cmd/api/internal/svc"
 
-	"git.zc0901.com/go/god/api"
-	"git.zc0901.com/go/god/lib/conf"
+	"github.com/gotid/god/api"
+	"github.com/gotid/god/lib/conf"
 )
 
 var configFile = flag.String("f", "etc/test.yaml", "the config file")

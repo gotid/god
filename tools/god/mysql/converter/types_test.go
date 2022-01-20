@@ -1,9 +1,10 @@
 package converter_test
 
 import (
-	"git.zc0901.com/go/god/tools/god/mysql/converter"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/gotid/god/tools/god/mysql/converter"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestConvertDataType(t *testing.T) {

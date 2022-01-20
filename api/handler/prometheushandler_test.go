@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"git.zc0901.com/go/god/lib/prometheus"
+	"github.com/gotid/god/lib/prometheus"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"git.zc0901.com/go/god/api/internal"
+	"github.com/gotid/god/api/internal"
 )
 
 // MaxBytesHandler 返回一个限制请求体长度的中间件。

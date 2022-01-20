@@ -2,16 +2,16 @@ package glog
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/internal/intlog"
-	"git.zc0901.com/go/god/lib/container/garray"
-	"git.zc0901.com/go/god/lib/encoding/gcompress"
-	"git.zc0901.com/go/god/lib/gregex"
-	"git.zc0901.com/go/god/lib/os/gfile"
-	"git.zc0901.com/go/god/lib/os/gmlock"
-	"git.zc0901.com/go/god/lib/os/gtime"
-	"git.zc0901.com/go/god/lib/os/gtimer"
-
 	"time"
+
+	"github.com/gotid/god/internal/intlog"
+	"github.com/gotid/god/lib/container/garray"
+	"github.com/gotid/god/lib/encoding/gcompress"
+	"github.com/gotid/god/lib/gregex"
+	"github.com/gotid/god/lib/os/gfile"
+	"github.com/gotid/god/lib/os/gmlock"
+	"github.com/gotid/god/lib/os/gtime"
+	"github.com/gotid/god/lib/os/gtimer"
 )
 
 // rotateFileBySize rotates the current logging file according to the

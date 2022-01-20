@@ -7,13 +7,13 @@ import (
 	"path"
 	"time"
 
-	"git.zc0901.com/go/god/api/httpx"
+	"github.com/gotid/god/api/httpx"
 
-	"git.zc0901.com/go/god/api/internal/cors"
+	"github.com/gotid/god/api/internal/cors"
 
-	"git.zc0901.com/go/god/api/handler"
-	"git.zc0901.com/go/god/api/router"
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/api/handler"
+	"github.com/gotid/god/api/router"
+	"github.com/gotid/god/lib/logx"
 )
 
 type (

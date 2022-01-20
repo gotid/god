@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"git.zc0901.com/go/god/tools/god/api/parser"
-	"git.zc0901.com/go/god/tools/god/rpc/execx"
+	"github.com/gotid/god/tools/god/api/parser"
+	"github.com/gotid/god/tools/god/rpc/execx"
 	"github.com/stretchr/testify/assert"
 )
 

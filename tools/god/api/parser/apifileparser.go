@@ -8,8 +8,8 @@ import (
 	"io"
 	"strings"
 
-	"git.zc0901.com/go/god/lib/stringx"
-	"git.zc0901.com/go/god/tools/god/api/util"
+	"github.com/gotid/god/lib/stringx"
+	"github.com/gotid/god/tools/god/api/util"
 )
 
 const (
@@ -56,10 +56,10 @@ type (
 )
 
 func ParseApi(src string) (*ApiStruct, error) {
-	var buffer = new(bytes.Buffer)
+	buffer := new(bytes.Buffer)
 	buffer.WriteString(src)
 	api := new(ApiStruct)
-	var lineNumber = api.serviceBeginLine
+	lineNumber := api.serviceBeginLine
 	apiFile := baseState{r: bufio.NewReader(buffer), lineNumber: &lineNumber}
 	st := apiRootState{&apiFile}
 	for {
@@ -153,8 +153,8 @@ func (s *apiImportState) process(api *ApiStruct, token string) (apiFileState, er
 }
 
 func (s *apiTypeState) process(api *ApiStruct, token string) (apiFileState, error) {
-	var blockCount = 0
-	var braceCount = 0
+	blockCount := 0
+	braceCount := 0
 	for {
 		line, err := s.readLine()
 		if err != nil {
@@ -204,7 +204,7 @@ func (s *apiTypeState) process(api *ApiStruct, token string) (apiFileState, erro
 }
 
 func (s *apiServiceState) process(api *ApiStruct, token string) (apiFileState, error) {
-	var blockCount = 0
+	blockCount := 0
 	for {
 		line, err := s.readLineSkipComment()
 		if err != nil {

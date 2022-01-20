@@ -1,13 +1,14 @@
 package gcron
 
 import (
-	"git.zc0901.com/go/god/lib/container/gtype"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/os/glog"
-	"git.zc0901.com/go/god/lib/os/gtimer"
 	"reflect"
 	"runtime"
 	"time"
+
+	"github.com/gotid/god/lib/container/gtype"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/os/glog"
+	"github.com/gotid/god/lib/os/gtimer"
 )
 
 // Timed task entry.

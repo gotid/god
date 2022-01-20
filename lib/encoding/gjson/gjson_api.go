@@ -2,11 +2,12 @@ package gjson
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/container/gvar"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/gutil"
-	"git.zc0901.com/go/god/lib/os/gtime"
 	"time"
+
+	"github.com/gotid/god/lib/container/gvar"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/gutil"
+	"github.com/gotid/god/lib/os/gtime"
 )
 
 // Value returns the json value.

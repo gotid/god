@@ -1,6 +1,6 @@
 package fx
 
-import "git.zc0901.com/go/god/lib/errorx"
+import "github.com/gotid/god/lib/errorx"
 
 const defaultRetryTimes = 3
 

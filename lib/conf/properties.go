@@ -2,10 +2,11 @@ package conf
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/iox"
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/gotid/god/lib/iox"
 )
 
 type PropertyError struct {

@@ -7,11 +7,11 @@ import (
 	"sync"
 	"time"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/mathx"
-	"git.zc0901.com/go/god/lib/stat"
-	"git.zc0901.com/go/god/lib/store/redis"
-	"git.zc0901.com/go/god/lib/syncx"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/mathx"
+	"github.com/gotid/god/lib/stat"
+	"github.com/gotid/god/lib/store/redis"
+	"github.com/gotid/god/lib/syncx"
 	jsoniter "github.com/json-iterator/go"
 )
 

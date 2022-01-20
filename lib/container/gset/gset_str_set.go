@@ -2,11 +2,12 @@ package gset
 
 import (
 	"bytes"
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/internal/rwmutex"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/gstr"
 	"strings"
+
+	"github.com/gotid/god/internal/json"
+	"github.com/gotid/god/internal/rwmutex"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/gstr"
 )
 
 type StrSet struct {
@@ -41,7 +42,7 @@ func NewStrSetFrom(items []string, safe ...bool) *StrSet {
 func (set *StrSet) Iterator(f func(v string) bool) {
 	set.mu.RLock()
 	defer set.mu.RUnlock()
-	for k, _ := range set.data {
+	for k := range set.data {
 		if !f(k) {
 			break
 		}
@@ -138,7 +139,7 @@ func (set *StrSet) Contains(item string) bool {
 func (set *StrSet) ContainsI(item string) bool {
 	set.mu.RLock()
 	defer set.mu.RUnlock()
-	for k, _ := range set.data {
+	for k := range set.data {
 		if strings.EqualFold(k, item) {
 			return true
 		}
@@ -198,7 +199,7 @@ func (set *StrSet) Join(glue string) string {
 		i      = 0
 		buffer = bytes.NewBuffer(nil)
 	)
-	for k, _ := range set.data {
+	for k := range set.data {
 		buffer.WriteString(k)
 		if i != l-1 {
 			buffer.WriteString(glue)
@@ -217,7 +218,7 @@ func (set *StrSet) String() string {
 		i      = 0
 		buffer = bytes.NewBuffer(nil)
 	)
-	for k, _ := range set.data {
+	for k := range set.data {
 		buffer.WriteString(`"` + gstr.QuoteMeta(k, `"\`) + `"`)
 		if i != l-1 {
 			buffer.WriteByte(',')
@@ -392,7 +393,7 @@ func (set *StrSet) Merge(others ...*StrSet) *StrSet {
 func (set *StrSet) Sum() (sum int) {
 	set.mu.RLock()
 	defer set.mu.RUnlock()
-	for k, _ := range set.data {
+	for k := range set.data {
 		sum += gconv.Int(k)
 	}
 	return
@@ -402,7 +403,7 @@ func (set *StrSet) Sum() (sum int) {
 func (set *StrSet) Pop() string {
 	set.mu.Lock()
 	defer set.mu.Unlock()
-	for k, _ := range set.data {
+	for k := range set.data {
 		delete(set.data, k)
 		return k
 	}
@@ -422,7 +423,7 @@ func (set *StrSet) Pops(size int) []string {
 	}
 	index := 0
 	array := make([]string, size)
-	for k, _ := range set.data {
+	for k := range set.data {
 		delete(set.data, k)
 		array[index] = k
 		index++

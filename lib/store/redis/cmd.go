@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/mapping"
 	red "github.com/go-redis/redis"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/mapping"
 )
 
 const (
