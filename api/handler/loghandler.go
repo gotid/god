@@ -14,6 +14,8 @@ import (
 	"strings"
 	"time"
 
+	"git.zc0901.com/go/god/lib/syncx"
+
 	"git.zc0901.com/go/god/api/httpx"
 	"git.zc0901.com/go/god/api/internal"
 	"git.zc0901.com/go/god/lib/iox"
@@ -23,9 +25,11 @@ import (
 )
 
 const (
-	limitBodyBytes = 1024
-	slowThreshold  = 500 * time.Millisecond // 慢日志阈值
+	limitBodyBytes       = 1024
+	defaultSlowThreshold = 500 * time.Millisecond // 慢日志阈值
 )
+
+var slowThreshold = syncx.ForAtomicDuration(defaultSlowThreshold)
 
 // LogHandler 返回一个简要记录请求和响应的日志中间件。
 func LogHandler(next http.Handler) http.Handler {
@@ -101,6 +105,11 @@ func (w *detailLoggedResponseWriter) WriteHeader(code int) {
 	w.writer.WriteHeader(code)
 }
 
+// SetSlowThreshold 设置慢调用阈值。
+func SetSlowThreshold(duration time.Duration) {
+	slowThreshold.Set(duration)
+}
+
 func dumpRequest(r *http.Request) string {
 	reqContent, err := httputil.DumpRequest(r, true)
 	if err != nil {
@@ -116,10 +125,10 @@ func logBrief(r *http.Request, code int, timer *utils.ElapsedTimer, logs *intern
 	duration := timer.Duration()
 	logger := logx.WithContext(r.Context())
 	buf.WriteString(fmt.Sprintf("[HTTP] %s - %d - %s - %s - %s - %s",
-		r.Method, code, r.RequestURI, httpx.GetRemoteAddr(r), r.UserAgent(), timex.MillisecondDuration(duration)))
-	if duration > slowThreshold {
+		r.Method, code, r.RequestURI, httpx.GetRemoteAddr(r), r.UserAgent(), timex.MsOfDuration(duration)))
+	if duration > slowThreshold.Load() {
 		logger.Slowf("[HTTP] %s - %d - %s - %s - %s - 慢调用(%s)",
-			r.Method, code, r.RequestURI, httpx.GetRemoteAddr(r), r.UserAgent(), timex.MillisecondDuration(duration))
+			r.Method, code, r.RequestURI, httpx.GetRemoteAddr(r), r.UserAgent(), timex.MsOfDuration(duration))
 	}
 
 	ok := isOkResponse(code)
@@ -152,11 +161,12 @@ func logDetails(r *http.Request, response *detailLoggedResponseWriter, timer *ut
 	var buf bytes.Buffer
 	duration := timer.Duration()
 	logger := logx.WithContext(r.Context())
+	code := response.writer.code
 	buf.WriteString(fmt.Sprintf("[HTTP] %s - %d - %s - %s\n=> %s\n",
-		r.Method, response.writer.code, r.RemoteAddr, timex.MillisecondDuration(duration), dumpRequest(r)))
-	if duration > slowThreshold {
+		r.Method, code, r.RemoteAddr, timex.MsOfDuration(duration), dumpRequest(r)))
+	if duration > defaultSlowThreshold {
 		logger.Slowf("[HTTP] %s - %d - %s - 慢调用(%s)\n=> %s\n",
-			r.Method, response.writer.code, r.RemoteAddr, timex.MillisecondDuration(duration), dumpRequest(r))
+			r.Method, code, r.RemoteAddr, timex.MsOfDuration(duration), dumpRequest(r))
 	}
 
 	body := logs.Flush()
@@ -169,7 +179,11 @@ func logDetails(r *http.Request, response *detailLoggedResponseWriter, timer *ut
 		buf.WriteString(fmt.Sprintf("<= %s", respBuf))
 	}
 
-	logger.Info(buf.String())
+	if isOkResponse(code) {
+		logger.Info(buf.String())
+	} else {
+		logger.Error(buf.String())
+	}
 }
 
 func isOkResponse(code int) bool {

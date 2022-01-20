@@ -18,13 +18,13 @@ func Vars(r *http.Request) map[string]string {
 	return nil
 }
 
-// WithPathVars 将路径变量写入指定请求并返回新请求
-func WithPathVars(r *http.Request, params map[string]string) *http.Request {
+// WithVars 将路径变量写入指定请求并返回新请求
+func WithVars(r *http.Request, params map[string]string) *http.Request {
 	return r.WithContext(context.WithValue(r.Context(), pathVars, params))
 }
 
 type contextKey string
 
 func (c contextKey) String() string {
-	return "api/internal/pathvar key: " + string(c)
+	return "api/pathvar key: " + string(c)
 }

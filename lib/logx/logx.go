@@ -26,6 +26,8 @@ import (
 const (
 	// InfoLevel 记录所有日志。
 	InfoLevel = iota
+	// DebugLevel 调试级别
+	DebugLevel
 	// ErrorLevel 包括错误日志、慢日志和堆栈日志。
 	ErrorLevel
 	// SevereLevel 仅记录严重错误。
@@ -42,13 +44,14 @@ const (
 	consoleMode = "console" // 命令行模式
 	volumeMode  = "volume"  // k8s 模式
 
-	levelAlert  = "alert"  // 警告级
-	levelInfo   = "info"   // 信息级
-	levelError  = "error"  // 错误级
-	levelSevere = "severe" // 严重级
-	levelFatal  = "fatal"  // 致命级
-	levelSlow   = "slow"   // 慢级别
-	levelStat   = "stat"   // 统计级
+	alertLevel  = "alert"  // 警告级
+	infoLevel   = "info"   // 信息级
+	debugLevel  = "debug"  // 调试级
+	errorLevel  = "error"  // 错误级
+	serverLevel = "severe" // 严重级
+	fatalLevel  = "fatal"  // 致命级
+	slowLevel   = "slow"   // 慢级别
+	statLevel   = "stat"   // 统计级
 
 	callerInnerDepth    = 5 // 堆栈调用深度
 	flags               = 0x0
@@ -57,6 +60,7 @@ const (
 
 var (
 	infoLog   io.WriteCloser // 信息日志
+	debugLog  io.WriteCloser // 调试日志
 	errorLog  io.WriteCloser // 错误日志
 	severeLog io.WriteCloser // 严重日志
 	slowLog   io.WriteCloser // 慢日志
@@ -103,6 +107,9 @@ type (
 		Info(...interface{})
 		Infof(string, ...interface{})
 		Infov(interface{})
+		Debug(...interface{})
+		Debugf(string, ...interface{})
+		Debugv(interface{})
 		Error(...interface{})
 		Errorf(string, ...interface{})
 		Errorv(interface{})
@@ -123,7 +130,7 @@ func Must(err error) {
 	if err != nil {
 		msg := formatWithCaller(err.Error(), 3)
 		log.Print(msg)
-		outputText(severeLog, levelFatal, msg)
+		outputText(severeLog, fatalLevel, msg)
 		os.Exit(1)
 	}
 }
@@ -176,6 +183,7 @@ func Disable() {
 		atomic.StoreUint32(&initialized, 1)
 
 		infoLog = iox.NopCloser(ioutil.Discard)
+		debugLog = iox.NopCloser(ioutil.Discard)
 		errorLog = iox.NopCloser(ioutil.Discard)
 		severeLog = iox.NopCloser(ioutil.Discard)
 		slowLog = iox.NopCloser(ioutil.Discard)
@@ -214,7 +222,7 @@ func WithCooldownMillis(millis int) LogOption {
 
 // Alert 输出警报并写入错误日志。
 func Alert(v string) {
-	outputText(errorLog, levelAlert, v)
+	outputText(errorLog, alertLevel, v)
 }
 
 // Info 将值写入访问日志。
@@ -230,6 +238,21 @@ func Infof(format string, args ...interface{}) {
 // Infov 将值以JSON格式写入访问日志。
 func Infov(v interface{}) {
 	syncInfoAny(v)
+}
+
+// Debug 将值写入调试日志。
+func Debug(v ...interface{}) {
+	syncDebugText(fmt.Sprint(v...))
+}
+
+// Debugf 将格式化的值写入调试日志。
+func Debugf(format string, args ...interface{}) {
+	syncDebugText(fmt.Sprintf(format, args...))
+}
+
+// Debugv 将值以JSON格式写入调试日志。
+func Debugv(v interface{}) {
+	syncDebugAny(v)
 }
 
 // Slow 将值写入慢日志。
@@ -303,11 +326,11 @@ func Statf(format string, v ...interface{}) {
 
 func setupLogLevel(c LogConf) {
 	switch c.Level {
-	case levelInfo:
+	case infoLevel:
 		SetLevel(InfoLevel)
-	case levelError:
+	case errorLevel:
 		SetLevel(ErrorLevel)
-	case levelSevere:
+	case serverLevel:
 		SetLevel(SevereLevel)
 	}
 }
@@ -413,33 +436,45 @@ func createOutput(filename string) (io.WriteCloser, error) {
 		options.gzipEnabled)
 }
 
-func syncInfoAny(v interface{}) {
+func syncInfoText(msg string) {
 	if shouldLog(InfoLevel) {
-		outputAny(infoLog, levelInfo, v)
+		outputText(infoLog, infoLevel, msg)
 	}
 }
 
-func syncInfoText(msg string) {
+func syncInfoAny(v interface{}) {
 	if shouldLog(InfoLevel) {
-		outputText(infoLog, levelInfo, msg)
+		outputAny(infoLog, infoLevel, v)
+	}
+}
+
+func syncDebugText(msg string) {
+	if shouldLog(DebugLevel) {
+		outputText(infoLog, debugLevel, msg)
+	}
+}
+
+func syncDebugAny(v interface{}) {
+	if shouldLog(DebugLevel) {
+		outputAny(infoLog, debugLevel, v)
 	}
 }
 
 func syncSlowAny(v interface{}) {
 	if shouldLog(ErrorLevel) {
-		outputAny(slowLog, levelSlow, v)
+		outputAny(slowLog, slowLevel, v)
 	}
 }
 
 func syncSlowText(msg string) {
 	if shouldLog(ErrorLevel) {
-		outputText(slowLog, levelSlow, msg)
+		outputText(slowLog, slowLevel, msg)
 	}
 }
 
 func syncErrorAny(v interface{}) {
 	if shouldLog(ErrorLevel) {
-		outputAny(errorLog, levelError, v)
+		outputAny(errorLog, errorLevel, v)
 	}
 }
 
@@ -451,25 +486,25 @@ func syncErrorText(msg string, callDepth int) {
 
 func syncSevere(msg string) {
 	if shouldLog(SevereLevel) {
-		outputText(severeLog, levelSevere, fmt.Sprintf("%s\n%s", msg, string(debug.Stack())))
+		outputText(severeLog, serverLevel, fmt.Sprintf("%s\n%s", msg, string(debug.Stack())))
 	}
 }
 
 func syncStack(msg string) {
 	if shouldLog(ErrorLevel) {
-		outputText(stackLog, levelError, fmt.Sprintf("%s\n%s", msg, string(debug.Stack())))
+		outputText(stackLog, errorLevel, fmt.Sprintf("%s\n%s", msg, string(debug.Stack())))
 	}
 }
 
 func syncStat(msg string) {
 	if shouldLogStat() && shouldLog(InfoLevel) {
-		outputText(statLog, levelStat, msg)
+		outputText(statLog, statLevel, msg)
 	}
 }
 
 func outputError(writer io.WriteCloser, msg string, callDepth int) {
 	content := formatWithCaller(msg, callDepth)
-	outputText(writer, levelError, content)
+	outputText(writer, errorLevel, content)
 }
 
 func outputAny(writer io.Writer, level string, val interface{}) {

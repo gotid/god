@@ -96,7 +96,7 @@ func TestFileLineConsoleMode(t *testing.T) {
 }
 
 func TestStructedLogAlert(t *testing.T) {
-	doTestStructedLog(t, levelAlert, func(writer io.WriteCloser) {
+	doTestStructedLog(t, alertLevel, func(writer io.WriteCloser) {
 		errorLog = writer
 	}, func(v ...interface{}) {
 		Alert(fmt.Sprint(v...))
@@ -104,7 +104,7 @@ func TestStructedLogAlert(t *testing.T) {
 }
 
 func TestStructedLogError(t *testing.T) {
-	doTestStructedLog(t, levelError, func(writer io.WriteCloser) {
+	doTestStructedLog(t, errorLevel, func(writer io.WriteCloser) {
 		errorLog = writer
 	}, func(v ...interface{}) {
 		Error(v...)
@@ -112,7 +112,7 @@ func TestStructedLogError(t *testing.T) {
 }
 
 func TestStructedLogErrorf(t *testing.T) {
-	doTestStructedLog(t, levelError, func(writer io.WriteCloser) {
+	doTestStructedLog(t, errorLevel, func(writer io.WriteCloser) {
 		errorLog = writer
 	}, func(v ...interface{}) {
 		Errorf("%s", fmt.Sprint(v...))
@@ -120,7 +120,7 @@ func TestStructedLogErrorf(t *testing.T) {
 }
 
 func TestStructedLogErrorv(t *testing.T) {
-	doTestStructedLog(t, levelError, func(writer io.WriteCloser) {
+	doTestStructedLog(t, errorLevel, func(writer io.WriteCloser) {
 		errorLog = writer
 	}, func(v ...interface{}) {
 		Errorv(fmt.Sprint(v...))
@@ -128,7 +128,7 @@ func TestStructedLogErrorv(t *testing.T) {
 }
 
 func TestStructedLogInfo(t *testing.T) {
-	doTestStructedLog(t, levelInfo, func(writer io.WriteCloser) {
+	doTestStructedLog(t, infoLevel, func(writer io.WriteCloser) {
 		infoLog = writer
 	}, func(v ...interface{}) {
 		Info(v...)
@@ -136,7 +136,7 @@ func TestStructedLogInfo(t *testing.T) {
 }
 
 func TestStructedLogInfof(t *testing.T) {
-	doTestStructedLog(t, levelInfo, func(writer io.WriteCloser) {
+	doTestStructedLog(t, infoLevel, func(writer io.WriteCloser) {
 		infoLog = writer
 	}, func(v ...interface{}) {
 		Infof("%s", fmt.Sprint(v...))
@@ -144,7 +144,7 @@ func TestStructedLogInfof(t *testing.T) {
 }
 
 func TestStructedLogInfov(t *testing.T) {
-	doTestStructedLog(t, levelInfo, func(writer io.WriteCloser) {
+	doTestStructedLog(t, infoLevel, func(writer io.WriteCloser) {
 		infoLog = writer
 	}, func(v ...interface{}) {
 		Infov(fmt.Sprint(v...))
@@ -152,7 +152,7 @@ func TestStructedLogInfov(t *testing.T) {
 }
 
 func TestStructedLogSlow(t *testing.T) {
-	doTestStructedLog(t, levelSlow, func(writer io.WriteCloser) {
+	doTestStructedLog(t, slowLevel, func(writer io.WriteCloser) {
 		slowLog = writer
 	}, func(v ...interface{}) {
 		Slow(v...)
@@ -160,7 +160,7 @@ func TestStructedLogSlow(t *testing.T) {
 }
 
 func TestStructedLogSlowf(t *testing.T) {
-	doTestStructedLog(t, levelSlow, func(writer io.WriteCloser) {
+	doTestStructedLog(t, slowLevel, func(writer io.WriteCloser) {
 		slowLog = writer
 	}, func(v ...interface{}) {
 		Slowf(fmt.Sprint(v...))
@@ -168,7 +168,7 @@ func TestStructedLogSlowf(t *testing.T) {
 }
 
 func TestStructedLogSlowv(t *testing.T) {
-	doTestStructedLog(t, levelSlow, func(writer io.WriteCloser) {
+	doTestStructedLog(t, slowLevel, func(writer io.WriteCloser) {
 		slowLog = writer
 	}, func(v ...interface{}) {
 		Slowv(fmt.Sprint(v...))
@@ -176,7 +176,7 @@ func TestStructedLogSlowv(t *testing.T) {
 }
 
 func TestStructedLogStat(t *testing.T) {
-	doTestStructedLog(t, levelStat, func(writer io.WriteCloser) {
+	doTestStructedLog(t, statLevel, func(writer io.WriteCloser) {
 		statLog = writer
 	}, func(v ...interface{}) {
 		Stat(v...)
@@ -184,7 +184,7 @@ func TestStructedLogStat(t *testing.T) {
 }
 
 func TestStructedLogStatf(t *testing.T) {
-	doTestStructedLog(t, levelStat, func(writer io.WriteCloser) {
+	doTestStructedLog(t, statLevel, func(writer io.WriteCloser) {
 		statLog = writer
 	}, func(v ...interface{}) {
 		Statf(fmt.Sprint(v...))
@@ -192,7 +192,7 @@ func TestStructedLogStatf(t *testing.T) {
 }
 
 func TestStructedLogSevere(t *testing.T) {
-	doTestStructedLog(t, levelSevere, func(writer io.WriteCloser) {
+	doTestStructedLog(t, serverLevel, func(writer io.WriteCloser) {
 		severeLog = writer
 	}, func(v ...interface{}) {
 		Severe(v...)
@@ -200,7 +200,7 @@ func TestStructedLogSevere(t *testing.T) {
 }
 
 func TestStructedLogSeveref(t *testing.T) {
-	doTestStructedLog(t, levelSevere, func(writer io.WriteCloser) {
+	doTestStructedLog(t, serverLevel, func(writer io.WriteCloser) {
 		severeLog = writer
 	}, func(v ...interface{}) {
 		Severef(fmt.Sprint(v...))
@@ -217,7 +217,7 @@ func TestStructedLogWithDuration(t *testing.T) {
 	if err := json.Unmarshal([]byte(writer.builder.String()), &entry); err != nil {
 		t.Error(err)
 	}
-	assert.Equal(t, levelInfo, entry.Level)
+	assert.Equal(t, infoLevel, entry.Level)
 	assert.Equal(t, message, entry.Content)
 	assert.Equal(t, "1000.0ms", entry.Duration)
 }
@@ -281,13 +281,13 @@ func TestSetup(t *testing.T) {
 		KeepDays:    1,
 	}))
 	setupLogLevel(LogConf{
-		Level: levelInfo,
+		Level: infoLevel,
 	})
 	setupLogLevel(LogConf{
-		Level: levelError,
+		Level: errorLevel,
 	})
 	setupLogLevel(LogConf{
-		Level: levelSevere,
+		Level: serverLevel,
 	})
 	_, err := createOutput("")
 	assert.NotNil(t, err)

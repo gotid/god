@@ -14,6 +14,29 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestSortFilterForEach(t *testing.T) {
+	Just(1, 3, 2, 5, 4, 6, 8, 0).Filter(func(item interface{}) bool {
+		return item.(int)%2 == 0
+	}).Sort(func(a interface{}, b interface{}) bool {
+		return a.(int) < b.(int)
+	}).ForEach(func(item interface{}) {
+		fmt.Println("item", item)
+	})
+}
+
+func TestFilter(t *testing.T) {
+	var result int
+	Just(1, 2, 3, 4).Filter(func(item interface{}) bool {
+		return item.(int)%2 == 0
+	}).Reduce(func(pipe <-chan interface{}) (interface{}, error) {
+		for item := range pipe {
+			result += item.(int)
+		}
+		return result, nil
+	})
+	assert.Equal(t, 6, result)
+}
+
 func TestBuffer(t *testing.T) {
 	const N = 5
 	var count int32

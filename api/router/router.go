@@ -45,7 +45,7 @@ func (rt *router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if tree, ok := rt.trees[r.Method]; ok {
 		if result, ok := tree.Search(reqPath); ok {
 			if len(result.Params) > 0 {
-				r = pathvar.WithPathVars(r, result.Params)
+				r = pathvar.WithVars(r, result.Params)
 			}
 			result.Item.(http.Handler).ServeHTTP(w, r)
 			return

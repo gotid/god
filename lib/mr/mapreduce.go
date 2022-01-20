@@ -39,7 +39,7 @@ type (
 	}
 )
 
-// Finish 并行执行，有错返错。
+// Finish 并行执行，有错停止。
 func Finish(fns ...func() error) error {
 	if len(fns) == 0 {
 		return nil
@@ -59,7 +59,7 @@ func Finish(fns ...func() error) error {
 	}, WithWorkers(len(fns)))
 }
 
-// FinishVoid 并行执行，不返错误。
+// FinishVoid 并发执行，有错继续。
 func FinishVoid(fns ...func()) {
 	if len(fns) == 0 {
 		return
@@ -76,6 +76,7 @@ func FinishVoid(fns ...func()) {
 }
 
 // Map 并行映射所有元素，返回结果通道。
+// opts 可选参数，目前可指定协程数量。
 func Map(generate GenerateFunc, mapper MapFunc, opts ...Option) chan interface{} {
 	options := buildOptions(opts...)
 	source := buildSource(generate)
@@ -87,13 +88,13 @@ func Map(generate GenerateFunc, mapper MapFunc, opts ...Option) chan interface{}
 	return collector
 }
 
-// MapReduce 并行映射并减少元素，返回结果及错误。
+// MapReduce 并行映射且聚合元素。返回结果及错误。
 func MapReduce(generate GenerateFunc, mapper MapperFunc, reducer ReducerFunc, opts ...Option) (interface{}, error) {
 	source := buildSource(generate)
 	return MapReduceWithSource(source, mapper, reducer, opts...)
 }
 
-// MapReduceWithSource 映射源中的所有元素，并使用指定的reducer归纳输出的元素。
+// MapReduceWithSource 支持传入数据源，返回聚合后的元素。
 func MapReduceWithSource(source <-chan interface{}, mapper MapperFunc, reducer ReducerFunc,
 	opts ...Option) (interface{}, error) {
 	options := buildOptions(opts...)
@@ -147,6 +148,7 @@ func MapReduceWithSource(source <-chan interface{}, mapper MapperFunc, reducer R
 	}
 }
 
+// MapReduceVoid 并行且聚合元素。无返回值，不关心错误。
 func MapReduceVoid(generator GenerateFunc, mapper MapperFunc, reducer VoidReducerFunc, opts ...Option) error {
 	_, err := MapReduce(generator, mapper, func(input <-chan interface{}, writer Writer, cancel func(error)) {
 		reducer(input, cancel)
@@ -158,6 +160,7 @@ func MapReduceVoid(generator GenerateFunc, mapper MapperFunc, reducer VoidReduce
 	return err
 }
 
+// MapVoid 并行映射。无返回值，不关心错误。
 func MapVoid(generate GenerateFunc, mapper VoidMapFunc, opts ...Option) {
 	drain(Map(generate, func(item interface{}, writer Writer) {
 		mapper(item)

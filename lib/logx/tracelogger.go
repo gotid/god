@@ -19,60 +19,78 @@ type traceLogger struct {
 
 func (l *traceLogger) Info(v ...interface{}) {
 	if shouldLog(InfoLevel) {
-		l.write(infoLog, levelInfo, fmt.Sprint(v...))
+		l.write(infoLog, infoLevel, fmt.Sprint(v...))
 	}
 }
 
 func (l *traceLogger) Infof(format string, v ...interface{}) {
 	if shouldLog(InfoLevel) {
-		l.write(infoLog, levelInfo, fmt.Sprintf(format, v...))
+		l.write(infoLog, infoLevel, fmt.Sprintf(format, v...))
 	}
 }
 
 func (l *traceLogger) Infov(v interface{}) {
 	if shouldLog(InfoLevel) {
-		l.write(infoLog, levelInfo, v)
+		l.write(infoLog, infoLevel, v)
+	}
+}
+
+func (l *traceLogger) Debug(v ...interface{}) {
+	if shouldLog(DebugLevel) {
+		l.write(infoLog, debugLevel, fmt.Sprint(v...))
+	}
+}
+
+func (l *traceLogger) Debugf(format string, v ...interface{}) {
+	if shouldLog(DebugLevel) {
+		l.write(infoLog, debugLevel, fmt.Sprintf(format, v...))
+	}
+}
+
+func (l *traceLogger) Debugv(v interface{}) {
+	if shouldLog(InfoLevel) {
+		l.write(infoLog, infoLevel, v)
 	}
 }
 
 func (l *traceLogger) Error(v ...interface{}) {
 	if shouldLog(ErrorLevel) {
-		l.write(errorLog, levelError, formatWithCaller(fmt.Sprint(v...), durationCallerDepth))
+		l.write(errorLog, errorLevel, formatWithCaller(fmt.Sprint(v...), durationCallerDepth))
 	}
 }
 
 func (l *traceLogger) Errorf(format string, v ...interface{}) {
 	if shouldLog(ErrorLevel) {
-		l.write(errorLog, levelError, formatWithCaller(fmt.Sprintf(format, v...), durationCallerDepth))
+		l.write(errorLog, errorLevel, formatWithCaller(fmt.Sprintf(format, v...), durationCallerDepth))
 	}
 }
 
 func (l *traceLogger) Errorv(v interface{}) {
 	if shouldLog(ErrorLevel) {
-		l.write(errorLog, levelError, v)
+		l.write(errorLog, errorLevel, v)
 	}
 }
 
 func (l *traceLogger) Slow(v ...interface{}) {
 	if shouldLog(ErrorLevel) {
-		l.write(slowLog, levelSlow, fmt.Sprint(v...))
+		l.write(slowLog, slowLevel, fmt.Sprint(v...))
 	}
 }
 
 func (l *traceLogger) Slowf(format string, v ...interface{}) {
 	if shouldLog(ErrorLevel) {
-		l.write(slowLog, levelSlow, fmt.Sprintf(format, v...))
+		l.write(slowLog, slowLevel, fmt.Sprintf(format, v...))
 	}
 }
 
 func (l *traceLogger) Slowv(v interface{}) {
 	if shouldLog(ErrorLevel) {
-		l.write(slowLog, levelSlow, v)
+		l.write(slowLog, slowLevel, v)
 	}
 }
 
 func (l *traceLogger) WithDuration(duration time.Duration) Logger {
-	l.Duration = timex.MillisecondDuration(duration)
+	l.Duration = timex.MsOfDuration(duration)
 	return l
 }
 

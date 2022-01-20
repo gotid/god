@@ -1,4 +1,4 @@
-Name: tuji-api
+Name: test-api
 Host: 127.0.0.1
 Port: 8000
 Timeout: 3000
