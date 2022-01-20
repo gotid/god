@@ -3,8 +3,8 @@ package breaker
 import (
 	"fmt"
 
-	"git.zc0901.com/go/god/lib/proc"
-	"git.zc0901.com/go/god/lib/stat"
+	"github.com/gotid/god/lib/proc"
+	"github.com/gotid/god/lib/stat"
 )
 
 type (

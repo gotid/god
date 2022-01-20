@@ -8,10 +8,10 @@ import (
 	"path"
 	"strings"
 
-	"git.zc0901.com/go/god/lib/fs"
+	"github.com/gotid/god/lib/fs"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/tools/god/api/spec"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/tools/god/api/spec"
 )
 
 func MaybeCreateFile(dir, subdir, file string) (fp *os.File, created bool, err error) {

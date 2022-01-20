@@ -5,10 +5,10 @@ import (
 	"path"
 	"time"
 
-	"git.zc0901.com/go/god/lib/syncx"
+	"github.com/gotid/god/lib/syncx"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/timex"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/timex"
 	"google.golang.org/grpc"
 )
 

@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/fx"
 	"testing"
+
+	"github.com/gotid/god/lib/fx"
 )
 
 func TestFxSplit(t *testing.T) {

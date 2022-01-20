@@ -4,15 +4,16 @@ package gfsnotify
 import (
 	"errors"
 	"fmt"
-	"git.zc0901.com/go/god/internal/intlog"
-	"git.zc0901.com/go/god/lib/container/glist"
-	"git.zc0901.com/go/god/lib/container/gmap"
-	"git.zc0901.com/go/god/lib/container/gqueue"
-	"git.zc0901.com/go/god/lib/container/gset"
-	"git.zc0901.com/go/god/lib/container/gtype"
-	"git.zc0901.com/go/god/lib/os/gcache"
 	"sync"
 	"time"
+
+	"github.com/gotid/god/internal/intlog"
+	"github.com/gotid/god/lib/container/glist"
+	"github.com/gotid/god/lib/container/gmap"
+	"github.com/gotid/god/lib/container/gqueue"
+	"github.com/gotid/god/lib/container/gset"
+	"github.com/gotid/god/lib/container/gtype"
+	"github.com/gotid/god/lib/os/gcache"
 
 	"github.com/fsnotify/fsnotify"
 )

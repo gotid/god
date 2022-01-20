@@ -6,10 +6,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/stringx"
-	conf "git.zc0901.com/go/god/tools/god/config"
-	"git.zc0901.com/go/god/tools/god/rpc/execx"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/stringx"
+	conf "github.com/gotid/god/tools/god/config"
+	"github.com/gotid/god/tools/god/rpc/execx"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -2,11 +2,12 @@
 package gfpool
 
 import (
-	"git.zc0901.com/go/god/lib/container/gmap"
-	"git.zc0901.com/go/god/lib/container/gpool"
-	"git.zc0901.com/go/god/lib/container/gtype"
 	"os"
 	"time"
+
+	"github.com/gotid/god/lib/container/gmap"
+	"github.com/gotid/god/lib/container/gpool"
+	"github.com/gotid/god/lib/container/gtype"
 )
 
 // File pointer pool.
@@ -28,7 +29,5 @@ type File struct {
 	path     string      // Absolute path of the file.
 }
 
-var (
-	// Global file pointer pool.
-	pools = gmap.NewStrAnyMap(true)
-)
+// Global file pointer pool.
+var pools = gmap.NewStrAnyMap(true)

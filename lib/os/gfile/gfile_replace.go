@@ -1,7 +1,7 @@
 package gfile
 
 import (
-	"git.zc0901.com/go/god/lib/gstr"
+	"github.com/gotid/god/lib/gstr"
 )
 
 // ReplaceFile replaces content for file <path>.

@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"git.zc0901.com/go/god/lib/stringx"
+	"github.com/gotid/god/lib/stringx"
 )
 
 func TestAccount(t *testing.T) {

@@ -3,8 +3,8 @@ package mapping
 import (
 	"io"
 
-	"git.zc0901.com/go/god/lib/container/gmap"
-	"git.zc0901.com/go/god/lib/jsonx"
+	"github.com/gotid/god/lib/container/gmap"
+	"github.com/gotid/god/lib/jsonx"
 )
 
 const jsonTagKey = "json"

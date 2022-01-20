@@ -12,10 +12,10 @@ import (
 	"strings"
 	"time"
 
-	"git.zc0901.com/go/god/api/httpx"
-	"git.zc0901.com/go/god/lib/codec"
-	"git.zc0901.com/go/god/lib/iox"
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/api/httpx"
+	"github.com/gotid/god/lib/codec"
+	"github.com/gotid/god/lib/iox"
+	"github.com/gotid/god/lib/logx"
 )
 
 const (

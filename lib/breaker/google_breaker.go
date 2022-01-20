@@ -1,10 +1,11 @@
 package breaker
 
 import (
-	"git.zc0901.com/go/god/lib/collection"
-	"git.zc0901.com/go/god/lib/mathx"
 	"math"
 	"time"
+
+	"github.com/gotid/god/lib/collection"
+	"github.com/gotid/god/lib/mathx"
 )
 
 const (

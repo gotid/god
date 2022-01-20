@@ -8,9 +8,9 @@ import (
 	"sync"
 	"time"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/stringx"
-	"git.zc0901.com/go/god/lib/translate/translator"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/stringx"
+	"github.com/gotid/god/lib/translate/translator"
 	"github.com/imroc/req"
 	v8 "rogchap.com/v8go"
 )

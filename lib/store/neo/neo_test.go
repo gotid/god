@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	"git.zc0901.com/go/god/lib/g"
+	"github.com/gotid/god/lib/g"
 
-	"git.zc0901.com/go/god/lib/stringx"
+	"github.com/gotid/god/lib/stringx"
 
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/logx"
 
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 

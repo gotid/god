@@ -4,8 +4,8 @@ import (
 	"errors"
 	"strings"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/tools/god/api/parser"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/tools/god/api/parser"
 	"github.com/urfave/cli"
 )
 

@@ -3,12 +3,13 @@ package gvalid_test
 import (
 	"errors"
 	"fmt"
-	"git.zc0901.com/go/god/lib/g"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/gvalid"
 	"math"
 	"reflect"
 	"testing"
+
+	"github.com/gotid/god/lib/g"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/gvalid"
 )
 
 func TestCheckMap(t *testing.T) {

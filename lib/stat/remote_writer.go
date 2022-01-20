@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/logx"
 )
 
 const httpTimeout = 5 * time.Second

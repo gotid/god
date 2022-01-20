@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"time"
 
-	"git.zc0901.com/go/god/lib/syncx"
+	"github.com/gotid/god/lib/syncx"
 	"google.golang.org/grpc/balancer"
 	"google.golang.org/grpc/balancer/base"
 )

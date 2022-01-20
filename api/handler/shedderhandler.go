@@ -4,11 +4,11 @@ import (
 	"net/http"
 	"sync"
 
-	"git.zc0901.com/go/god/api/httpx"
-	"git.zc0901.com/go/god/api/internal/security"
-	"git.zc0901.com/go/god/lib/load"
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/stat"
+	"github.com/gotid/god/api/httpx"
+	"github.com/gotid/god/api/internal/security"
+	"github.com/gotid/god/lib/load"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/stat"
 )
 
 const serviceType = "API"

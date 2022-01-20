@@ -1,9 +1,9 @@
 package rpc
 
 import (
-	"git.zc0901.com/go/god/lib/discovery"
-	"git.zc0901.com/go/god/lib/service"
-	"git.zc0901.com/go/god/lib/store/redis"
+	"github.com/gotid/god/lib/discovery"
+	"github.com/gotid/god/lib/service"
+	"github.com/gotid/god/lib/store/redis"
 )
 
 type (

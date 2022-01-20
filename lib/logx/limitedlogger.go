@@ -4,8 +4,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"git.zc0901.com/go/god/lib/syncx"
-	"git.zc0901.com/go/god/lib/timex"
+	"github.com/gotid/god/lib/syncx"
+	"github.com/gotid/god/lib/timex"
 )
 
 // 指定时间内仅写一次的日志写入器

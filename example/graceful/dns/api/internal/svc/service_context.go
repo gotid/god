@@ -1,7 +1,7 @@
 package svc
 
 import (
-	"git.zc0901.com/go/god/example/graceful/dns/api/internal/config"
+	"github.com/gotid/god/example/graceful/dns/api/internal/config"
 )
 
 type ServiceContext struct {

@@ -2,14 +2,15 @@ package command
 
 import (
 	"errors"
-	"git.zc0901.com/go/god/lib/collection"
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/store/sqlx"
-	"git.zc0901.com/go/god/tools/god/mysql/gen"
-	"git.zc0901.com/go/god/tools/god/mysql/model"
-	"git.zc0901.com/go/god/tools/god/util"
-	"github.com/urfave/cli"
 	"strings"
+
+	"github.com/gotid/god/lib/collection"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/store/sqlx"
+	"github.com/gotid/god/tools/god/mysql/gen"
+	"github.com/gotid/god/tools/god/mysql/model"
+	"github.com/gotid/god/tools/god/util"
+	"github.com/urfave/cli"
 )
 
 const (
@@ -63,7 +64,7 @@ func GenCodeFromDSN(ctx *cli.Context) error {
 		return nil
 	}
 
-	//fmt.Println(strings.Join(ddlList, "\n"), dir, cache)
+	// fmt.Println(strings.Join(ddlList, "\n"), dir, cache)
 	generator := gen.NewModelGenerator(ddlList, dir, gen.WithConsoleOption(log), gen.WithDatabaseOption(database))
 	err = generator.Start(cache)
 	if err != nil {

@@ -4,11 +4,11 @@ import (
 	"database/sql"
 	"time"
 
-	"git.zc0901.com/go/god/lib/syncx"
+	"github.com/gotid/god/lib/syncx"
 
-	"git.zc0901.com/go/god/lib/timex"
+	"github.com/gotid/god/lib/timex"
 
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/logx"
 )
 
 type (

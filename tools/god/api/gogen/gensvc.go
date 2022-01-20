@@ -6,12 +6,12 @@ import (
 	"strings"
 	"text/template"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
-	"git.zc0901.com/go/god/tools/god/api/util"
-	"git.zc0901.com/go/god/tools/god/config"
-	ctlutil "git.zc0901.com/go/god/tools/god/util"
-	"git.zc0901.com/go/god/tools/god/util/format"
-	"git.zc0901.com/go/god/tools/god/vars"
+	"github.com/gotid/god/tools/god/api/spec"
+	"github.com/gotid/god/tools/god/api/util"
+	"github.com/gotid/god/tools/god/config"
+	ctlutil "github.com/gotid/god/tools/god/util"
+	"github.com/gotid/god/tools/god/util/format"
+	"github.com/gotid/god/tools/god/vars"
 )
 
 const (
@@ -52,7 +52,7 @@ func genServiceContext(dir string, cfg *config.Config, api *spec.ApiSpec) error 
 	}
 	defer fp.Close()
 
-	var authNames = getAuths(api)
+	authNames := getAuths(api)
 	var auths []string
 	for _, item := range authNames {
 		auths = append(auths, fmt.Sprintf("%s config.AuthConfig", item))
@@ -70,7 +70,7 @@ func genServiceContext(dir string, cfg *config.Config, api *spec.ApiSpec) error 
 
 	var middlewareStr string
 	var middlewareAssignment string
-	var middlewares = getMiddleware(api)
+	middlewares := getMiddleware(api)
 
 	for _, item := range middlewares {
 		middlewareStr += fmt.Sprintf("%s api.Middleware\n", item)
@@ -78,7 +78,7 @@ func genServiceContext(dir string, cfg *config.Config, api *spec.ApiSpec) error 
 		middlewareAssignment += fmt.Sprintf("%s: %s,\n", item, fmt.Sprintf("middleware.New%s().%s", strings.Title(name), "Handle"))
 	}
 
-	var configImport = "\"" + ctlutil.JoinPackages(parentPkg, configDir) + "\""
+	configImport := "\"" + ctlutil.JoinPackages(parentPkg, configDir) + "\""
 	if len(middlewareStr) > 0 {
 		configImport += "\n\t\"" + ctlutil.JoinPackages(parentPkg, middlewareDir) + "\""
 		configImport += fmt.Sprintf("\n\t\"%s/api\"", vars.ProjectOpenSourceUrl)

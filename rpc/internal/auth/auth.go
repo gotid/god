@@ -3,12 +3,13 @@ package auth
 import (
 	"context"
 	"fmt"
-	"git.zc0901.com/go/god/lib/collection"
-	"git.zc0901.com/go/god/lib/store/redis"
+	"time"
+
+	"github.com/gotid/god/lib/collection"
+	"github.com/gotid/god/lib/store/redis"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	"time"
 )
 
 const defaultExpiration = time.Minute * 5

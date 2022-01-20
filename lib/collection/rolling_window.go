@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"git.zc0901.com/go/god/lib/timex"
+	"github.com/gotid/god/lib/timex"
 )
 
 type (

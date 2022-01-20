@@ -2,7 +2,8 @@ package gvalid
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/gi18n"
+
+	"github.com/gotid/god/lib/gi18n"
 )
 
 // defaultMessages is the default error messages.

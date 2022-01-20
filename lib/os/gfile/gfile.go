@@ -2,14 +2,15 @@
 package gfile
 
 import (
-	"git.zc0901.com/go/god/lib/container/gtype"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/gstr"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/gotid/god/lib/container/gtype"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/gstr"
 )
 
 var (
@@ -19,10 +20,10 @@ var (
 	Separator = string(filepath.Separator)
 
 	// DefaultPerm is the default perm for file opening.
-	DefaultPermOpen = os.FileMode(0666)
+	DefaultPermOpen = os.FileMode(0o666)
 
 	// DefaultPermCopy is the default perm for file/folder copy.
-	DefaultPermCopy = os.FileMode(0777)
+	DefaultPermCopy = os.FileMode(0o777)
 
 	// The absolute file path for main package.
 	// It can be only checked and set once.

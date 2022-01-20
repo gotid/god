@@ -4,7 +4,7 @@ import (
 	"context"
 	"runtime/debug"
 
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/logx"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

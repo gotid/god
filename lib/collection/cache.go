@@ -6,9 +6,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/mathx"
-	"git.zc0901.com/go/god/lib/syncx"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/mathx"
+	"github.com/gotid/god/lib/syncx"
 )
 
 const (

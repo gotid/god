@@ -1,8 +1,9 @@
 package sysx
 
 import (
-	"git.zc0901.com/go/god/lib/stringx"
 	"os"
+
+	"github.com/gotid/god/lib/stringx"
 )
 
 var hostname string

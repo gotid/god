@@ -1,13 +1,14 @@
 package generator
 
 import (
-	"git.zc0901.com/go/god/lib/fs"
 	"path/filepath"
 
-	conf "git.zc0901.com/go/god/tools/god/config"
-	"git.zc0901.com/go/god/tools/god/rpc/parser"
-	"git.zc0901.com/go/god/tools/god/util/console"
-	"git.zc0901.com/go/god/tools/god/util/ctx"
+	"github.com/gotid/god/lib/fs"
+
+	conf "github.com/gotid/god/tools/god/config"
+	"github.com/gotid/god/tools/god/rpc/parser"
+	"github.com/gotid/god/tools/god/util/console"
+	"github.com/gotid/god/tools/god/util/ctx"
 )
 
 type RpcGenerator struct {

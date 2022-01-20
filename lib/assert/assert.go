@@ -3,9 +3,9 @@ package assert
 import (
 	"strings"
 
-	"git.zc0901.com/go/god/internal/empty"
+	"github.com/gotid/god/internal/empty"
 
-	"git.zc0901.com/go/god/lib/g"
+	"github.com/gotid/god/lib/g"
 )
 
 func IsTrue(exp bool, msg ...string) {

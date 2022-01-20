@@ -1,11 +1,11 @@
 package gfile
 
 import (
-	"git.zc0901.com/go/god/internal/cmdenv"
-	"git.zc0901.com/go/god/lib/os/gcache"
-	"git.zc0901.com/go/god/lib/os/gfsnotify"
-
 	"time"
+
+	"github.com/gotid/god/internal/cmdenv"
+	"github.com/gotid/god/lib/os/gcache"
+	"github.com/gotid/god/lib/os/gfsnotify"
 )
 
 const (

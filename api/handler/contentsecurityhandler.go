@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"time"
 
-	"git.zc0901.com/go/god/api/httpx"
-	"git.zc0901.com/go/god/api/internal/security"
-	"git.zc0901.com/go/god/lib/codec"
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/api/httpx"
+	"github.com/gotid/god/api/internal/security"
+	"github.com/gotid/god/lib/codec"
+	"github.com/gotid/god/lib/logx"
 )
 
 type UnsignedCallback func(w http.ResponseWriter, r *http.Request, next http.Handler, strict bool, code int) // 未签名回调函数

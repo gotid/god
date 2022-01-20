@@ -3,7 +3,7 @@ package gvalid
 import (
 	"strings"
 
-	"git.zc0901.com/go/god/lib/gconv"
+	"github.com/gotid/god/lib/gconv"
 )
 
 // CheckMap validates map and returns the error result. It returns nil if with successful validation.

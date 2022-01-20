@@ -2,9 +2,10 @@
 package gmutex
 
 import (
-	"git.zc0901.com/go/god/lib/container/gtype"
 	"math"
 	"runtime"
+
+	"github.com/gotid/god/lib/container/gtype"
 )
 
 // The high level Mutex, which implements more rich features for mutex.

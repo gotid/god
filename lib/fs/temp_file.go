@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"git.zc0901.com/go/god/lib/hash"
+	"github.com/gotid/god/lib/hash"
 )
 
 // TempFileWithText 创建带有给定内容的临时文件，

@@ -4,9 +4,9 @@ import (
 	"reflect"
 	"strings"
 
-	"git.zc0901.com/go/god/lib/breaker"
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/mapping"
+	"github.com/gotid/god/lib/breaker"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/mapping"
 	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )
 

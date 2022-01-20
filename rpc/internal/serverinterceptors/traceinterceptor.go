@@ -12,7 +12,7 @@ import (
 	"go.opentelemetry.io/otel/baggage"
 	"go.opentelemetry.io/otel/trace"
 
-	godtrace "git.zc0901.com/go/god/lib/trace"
+	godtrace "github.com/gotid/god/lib/trace"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )

@@ -3,8 +3,8 @@ package executors
 import (
 	"time"
 
-	"git.zc0901.com/go/god/lib/syncx"
-	"git.zc0901.com/go/god/lib/timex"
+	"github.com/gotid/god/lib/syncx"
+	"github.com/gotid/god/lib/timex"
 )
 
 // ShortTimeExecutor 短时执行器，仅在指定时间段内执行分发任务

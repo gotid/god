@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/queue/dq"
 	"os"
 	"time"
+
+	"github.com/gotid/god/lib/queue/dq"
 )
 
 func main() {
@@ -20,7 +21,7 @@ func main() {
 	})
 
 	for i := 0; i < 1; i++ {
-		//time.Sleep(time.Duration(1))
+		// time.Sleep(time.Duration(1))
 		id, err := producer.Delay([]byte("18301365447,1234"), time.Second*0)
 		if err != nil {
 			fmt.Println(err)

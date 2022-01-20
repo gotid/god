@@ -4,10 +4,10 @@ import (
 	"testing"
 	"time"
 
-	"git.zc0901.com/go/god/lib/discovery"
+	"github.com/gotid/god/lib/discovery"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/service"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/service"
 	"google.golang.org/grpc"
 )
 

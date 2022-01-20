@@ -6,15 +6,15 @@ import (
 	"fmt"
 	"reflect"
 
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/internal/rwmutex"
-	"git.zc0901.com/go/god/lib/encoding/gini"
-	"git.zc0901.com/go/god/lib/encoding/gtoml"
-	"git.zc0901.com/go/god/lib/encoding/gxml"
-	"git.zc0901.com/go/god/lib/encoding/gyaml"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/gregex"
-	"git.zc0901.com/go/god/lib/os/gfile"
+	"github.com/gotid/god/internal/json"
+	"github.com/gotid/god/internal/rwmutex"
+	"github.com/gotid/god/lib/encoding/gini"
+	"github.com/gotid/god/lib/encoding/gtoml"
+	"github.com/gotid/god/lib/encoding/gxml"
+	"github.com/gotid/god/lib/encoding/gyaml"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/gregex"
+	"github.com/gotid/god/lib/os/gfile"
 )
 
 // New creates a Json object with any variable type of <data>, but <data> should be a map

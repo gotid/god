@@ -3,9 +3,10 @@ package glist_test
 import (
 	"container/list"
 	"fmt"
-	"git.zc0901.com/go/god/lib/container/garray"
-	"git.zc0901.com/go/god/lib/container/glist"
 	"testing"
+
+	"github.com/gotid/god/lib/container/garray"
+	"github.com/gotid/god/lib/container/glist"
 )
 
 func TestNew(t *testing.T) {

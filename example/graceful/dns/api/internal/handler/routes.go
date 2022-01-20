@@ -4,9 +4,9 @@ package handler
 import (
 	"net/http"
 
-	"git.zc0901.com/go/god/example/graceful/dns/api/internal/svc"
+	"github.com/gotid/god/example/graceful/dns/api/internal/svc"
 
-	"git.zc0901.com/go/god/api"
+	"github.com/gotid/god/api"
 )
 
 func RegisterHandlers(engine *api.Server, serverCtx *svc.ServiceContext) {

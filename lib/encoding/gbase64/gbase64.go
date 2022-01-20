@@ -3,9 +3,9 @@ package gbase64
 
 import (
 	"encoding/base64"
-	"git.zc0901.com/go/god/lib/gconv"
-
 	"io/ioutil"
+
+	"github.com/gotid/god/lib/gconv"
 )
 
 // Encode encodes bytes with BASE64 algorithm.

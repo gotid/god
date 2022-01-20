@@ -2,10 +2,11 @@ package gtree
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/internal/rwmutex"
-	"git.zc0901.com/go/god/lib/container/gvar"
-	"git.zc0901.com/go/god/lib/gconv"
+
+	"github.com/gotid/god/internal/json"
+	"github.com/gotid/god/internal/rwmutex"
+	"github.com/gotid/god/lib/container/gvar"
+	"github.com/gotid/god/lib/gconv"
 )
 
 // AVLTree 保存高度平衡树的元素，时间复杂度 O(log N)，支持排序，有序遍历，查找性能比较好。

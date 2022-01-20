@@ -3,7 +3,7 @@ package generator
 import (
 	"os/exec"
 
-	"git.zc0901.com/go/god/tools/god/util/console"
+	"github.com/gotid/god/tools/god/util/console"
 )
 
 type defaultGenerator struct {

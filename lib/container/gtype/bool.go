@@ -2,8 +2,9 @@ package gtype
 
 import (
 	"bytes"
-	"git.zc0901.com/go/god/lib/gconv"
 	"sync/atomic"
+
+	"github.com/gotid/god/lib/gconv"
 )
 
 // Bool is a struct for concurrent-safe operation for type bool.

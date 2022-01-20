@@ -7,11 +7,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"git.zc0901.com/go/god/lib/fs"
-	"git.zc0901.com/go/god/lib/stringx"
-	"git.zc0901.com/go/god/tools/god/mysql/parser"
-	"git.zc0901.com/go/god/tools/god/mysql/tpl"
-	"git.zc0901.com/go/god/tools/god/util"
+	"github.com/gotid/god/lib/fs"
+	"github.com/gotid/god/lib/stringx"
+	"github.com/gotid/god/tools/god/mysql/parser"
+	"github.com/gotid/god/tools/god/mysql/tpl"
+	"github.com/gotid/god/tools/god/util"
 )
 
 const (

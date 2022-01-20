@@ -10,11 +10,11 @@ import (
 	"strings"
 	"text/template"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
-	apiutil "git.zc0901.com/go/god/tools/god/api/util"
-	"git.zc0901.com/go/god/tools/god/config"
-	"git.zc0901.com/go/god/tools/god/util"
-	"git.zc0901.com/go/god/tools/god/util/format"
+	"github.com/gotid/god/tools/god/api/spec"
+	apiutil "github.com/gotid/god/tools/god/api/util"
+	"github.com/gotid/god/tools/god/config"
+	"github.com/gotid/god/tools/god/util"
+	"github.com/gotid/god/tools/god/util/format"
 )
 
 const (
@@ -110,7 +110,7 @@ func writeType(writer io.Writer, tp spec.Type, types []spec.Type) error {
 	fmt.Fprintf(writer, "type %s struct {\n", util.Title(tp.Name))
 	for _, member := range tp.Members {
 		if member.IsInline {
-			var found = false
+			found := false
 			for _, ty := range types {
 				if strings.ToLower(ty.Name) == strings.ToLower(member.Name) {
 					found = true

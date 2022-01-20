@@ -2,9 +2,10 @@ package gtime
 
 import (
 	"bytes"
-	"git.zc0901.com/go/god/lib/gregex"
 	"strconv"
 	"strings"
+
+	"github.com/gotid/god/lib/gregex"
 )
 
 var (

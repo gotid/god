@@ -5,13 +5,14 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
 	"io"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
+	"github.com/gotid/god/lib/fs"
+
+	"github.com/gotid/god/tools/god/api/spec"
 )
 
 type Parser struct {
@@ -42,7 +43,7 @@ func NewParser(filename string) (*Parser, error) {
 			item = strings.TrimSpace(item)
 			item = strings.TrimPrefix(item, `"`)
 			item = strings.TrimSuffix(item, `"`)
-			var path = item
+			path := item
 			if !fs.FileExist(item) {
 				path = filepath.Join(filepath.Dir(apiAbsPath), item)
 			}
@@ -69,7 +70,7 @@ func NewParser(filename string) (*Parser, error) {
 		return nil, errors.New("api has no service defined")
 	}
 
-	var buffer = new(bytes.Buffer)
+	buffer := new(bytes.Buffer)
 	buffer.WriteString(apiStruct.Service)
 	return &Parser{
 		r:   bufio.NewReader(buffer),
@@ -79,14 +80,14 @@ func NewParser(filename string) (*Parser, error) {
 
 func (p *Parser) Parse() (api *spec.ApiSpec, err error) {
 	api = new(spec.ApiSpec)
-	var sp = StructParser{Src: p.api.Type}
+	sp := StructParser{Src: p.api.Type}
 	types, err := sp.Parse()
 	if err != nil {
 		return nil, err
 	}
 
 	api.Types = types
-	var lineNumber = p.api.serviceBeginLine
+	lineNumber := p.api.serviceBeginLine
 	st := newRootState(p.r, &lineNumber)
 	for {
 		st, err = st.process(api)

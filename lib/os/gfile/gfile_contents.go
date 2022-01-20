@@ -2,16 +2,15 @@ package gfile
 
 import (
 	"bufio"
-	"git.zc0901.com/go/god/lib/gconv"
 	"io"
 	"io/ioutil"
 	"os"
+
+	"github.com/gotid/god/lib/gconv"
 )
 
-var (
-	// Buffer size for reading file content.
-	DefaultReadBuffer = 1024
-)
+// Buffer size for reading file content.
+var DefaultReadBuffer = 1024
 
 // GetContents returns the file content of <path> as string.
 // It returns en empty string if it fails reading.

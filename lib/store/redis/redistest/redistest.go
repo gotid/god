@@ -1,10 +1,11 @@
 package redistest
 
 import (
-	"git.zc0901.com/go/god/lib/lang"
-	"git.zc0901.com/go/god/lib/store/redis"
-	"github.com/alicebob/miniredis/v2"
 	"time"
+
+	"github.com/alicebob/miniredis/v2"
+	"github.com/gotid/god/lib/lang"
+	"github.com/gotid/god/lib/store/redis"
 )
 
 func CreateRedis() (r *redis.Redis, clean func(), err error) {

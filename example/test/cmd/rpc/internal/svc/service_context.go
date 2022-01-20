@@ -1,6 +1,6 @@
 package svc
 
-import "git.zc0901.com/go/god/example/test/cmd/rpc/internal/config"
+import "github.com/gotid/god/example/test/cmd/rpc/internal/config"
 
 type ServiceContext struct {
 	c config.Config

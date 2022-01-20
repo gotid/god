@@ -1,7 +1,7 @@
 package gconv
 
 import (
-	"git.zc0901.com/go/god/internal/json"
+	"github.com/gotid/god/internal/json"
 )
 
 // SliceMap is alias of Maps.

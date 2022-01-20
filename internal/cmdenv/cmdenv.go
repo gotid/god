@@ -2,16 +2,15 @@
 package cmdenv
 
 import (
-	"git.zc0901.com/go/god/lib/container/gvar"
 	"os"
 	"regexp"
 	"strings"
+
+	"github.com/gotid/god/lib/container/gvar"
 )
 
-var (
-	// Console options.
-	cmdOptions = make(map[string]string)
-)
+// Console options.
+var cmdOptions = make(map[string]string)
 
 func init() {
 	doInit()

@@ -4,9 +4,9 @@ import (
 	"context"
 	"sync"
 
-	"git.zc0901.com/go/god/lib/syncx"
-	"git.zc0901.com/go/god/rpc/internal"
-	"git.zc0901.com/go/god/rpc/internal/auth"
+	"github.com/gotid/god/lib/syncx"
+	"github.com/gotid/god/rpc/internal"
+	"github.com/gotid/god/rpc/internal/auth"
 	"google.golang.org/grpc"
 )
 

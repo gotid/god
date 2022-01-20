@@ -1,9 +1,10 @@
 package gtype
 
 import (
-	"git.zc0901.com/go/god/lib/gconv"
 	"strconv"
 	"sync/atomic"
+
+	"github.com/gotid/god/lib/gconv"
 )
 
 // Uint is a struct for concurrent-safe operation for type uint.

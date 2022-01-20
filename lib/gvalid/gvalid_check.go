@@ -2,15 +2,16 @@ package gvalid
 
 import (
 	"errors"
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/gregex"
-	"git.zc0901.com/go/god/lib/netx/gipv4"
-	"git.zc0901.com/go/god/lib/netx/gipv6"
-	"git.zc0901.com/go/god/lib/os/gtime"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/gotid/god/internal/json"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/gregex"
+	"github.com/gotid/god/lib/netx/gipv4"
+	"github.com/gotid/god/lib/netx/gipv6"
+	"github.com/gotid/god/lib/os/gtime"
 )
 
 const (

@@ -3,9 +3,10 @@ package gutil
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/internal/empty"
-	"git.zc0901.com/go/god/lib/gconv"
 	"reflect"
+
+	"github.com/gotid/god/internal/empty"
+	"github.com/gotid/god/lib/gconv"
 )
 
 // Throw throws out an exception, which can be caught be TryCatch or recover.
@@ -47,7 +48,7 @@ func IsEmpty(value interface{}) bool {
 func Keys(mapOrStruct interface{}) (keysOrAttrs []string) {
 	keysOrAttrs = make([]string, 0)
 	if m, ok := mapOrStruct.(map[string]interface{}); ok {
-		for k, _ := range m {
+		for k := range m {
 			keysOrAttrs = append(keysOrAttrs, k)
 		}
 		return

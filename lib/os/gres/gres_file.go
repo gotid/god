@@ -3,9 +3,10 @@ package gres
 import (
 	"archive/zip"
 	"bytes"
-	"git.zc0901.com/go/god/internal/json"
 	"io"
 	"os"
+
+	"github.com/gotid/god/internal/json"
 )
 
 type File struct {

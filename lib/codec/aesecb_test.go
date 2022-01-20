@@ -4,7 +4,7 @@ import (
 	"encoding/base64"
 	"testing"
 
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/logx"
 
 	"github.com/stretchr/testify/assert"
 )

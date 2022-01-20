@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"strings"
 
-	"git.zc0901.com/go/god/api/pathvar"
+	"github.com/gotid/god/api/pathvar"
 
-	"git.zc0901.com/go/god/lib/container/gmap"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/gvalid"
-	"git.zc0901.com/go/god/lib/mapping"
+	"github.com/gotid/god/lib/container/gmap"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/gvalid"
+	"github.com/gotid/god/lib/mapping"
 )
 
 const (

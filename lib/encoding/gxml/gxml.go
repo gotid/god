@@ -2,9 +2,10 @@
 package gxml
 
 import (
-	"git.zc0901.com/go/god/lib/encoding/gcharset"
-	"git.zc0901.com/go/god/lib/gregex"
 	"strings"
+
+	"github.com/gotid/god/lib/encoding/gcharset"
+	"github.com/gotid/god/lib/gregex"
 
 	"github.com/clbanning/mxj"
 )

@@ -4,10 +4,10 @@ import (
 	"context"
 	"flag"
 
-	"git.zc0901.com/go/god/example/rpc/pb/unary"
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/service"
-	"git.zc0901.com/go/god/rpc"
+	"github.com/gotid/god/example/rpc/pb/unary"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/service"
+	"github.com/gotid/god/rpc"
 	"google.golang.org/grpc"
 )
 

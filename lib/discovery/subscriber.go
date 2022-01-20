@@ -1,10 +1,11 @@
 package discovery
 
 import (
-	"git.zc0901.com/go/god/lib/discovery/internal"
-	"git.zc0901.com/go/god/lib/syncx"
 	"sync"
 	"sync/atomic"
+
+	"github.com/gotid/god/lib/discovery/internal"
+	"github.com/gotid/god/lib/syncx"
 )
 
 type (

@@ -3,10 +3,11 @@ package clientinterceptors
 import (
 	"context"
 	"errors"
-	"git.zc0901.com/go/god/lib/prometheus"
+	"testing"
+
+	"github.com/gotid/god/lib/prometheus"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
-	"testing"
 )
 
 func TestPromMetricInterceptor(t *testing.T) {

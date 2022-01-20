@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
+	"github.com/gotid/god/tools/god/api/spec"
 )
 
 const (

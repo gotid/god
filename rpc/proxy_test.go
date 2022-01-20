@@ -3,15 +3,16 @@ package rpc
 import (
 	"context"
 	"fmt"
-	"git.zc0901.com/go/god/rpc/internal/mock"
+	"log"
+	"net"
+	"testing"
+
+	"github.com/gotid/god/rpc/internal/mock"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/grpc/test/bufconn"
-	"log"
-	"net"
-	"testing"
 )
 
 func dialer() func(context.Context, string) (net.Conn, error) {

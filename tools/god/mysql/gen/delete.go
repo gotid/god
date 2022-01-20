@@ -3,12 +3,12 @@ package gen
 import (
 	"strings"
 
-	"git.zc0901.com/go/god/lib/container/garray"
+	"github.com/gotid/god/lib/container/garray"
 
-	"git.zc0901.com/go/god/lib/collection"
-	"git.zc0901.com/go/god/lib/stringx"
-	"git.zc0901.com/go/god/tools/god/mysql/tpl"
-	"git.zc0901.com/go/god/tools/god/util"
+	"github.com/gotid/god/lib/collection"
+	"github.com/gotid/god/lib/stringx"
+	"github.com/gotid/god/tools/god/mysql/tpl"
+	"github.com/gotid/god/tools/god/util"
 )
 
 func genDelete(table Table, withCache bool) (string, error) {

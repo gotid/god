@@ -2,13 +2,14 @@ package util
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
 
-	"git.zc0901.com/go/god/tools/god/vars"
+	"github.com/gotid/god/lib/fs"
+
+	"github.com/gotid/god/tools/god/vars"
 )
 
 const (
@@ -57,8 +58,8 @@ func FindGoModPath(dir string) (string, bool) {
 
 	absDir = strings.ReplaceAll(absDir, `\`, `/`)
 	var rootPath string
-	var tempPath = absDir
-	var hasGoMod = false
+	tempPath := absDir
+	hasGoMod := false
 	for {
 		if fs.FileExist(filepath.Join(tempPath, goModeIdentifier)) {
 			tempPath = filepath.Dir(tempPath)

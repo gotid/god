@@ -1,8 +1,9 @@
 package gfile
 
 import (
-	"git.zc0901.com/go/god/lib/container/garray"
 	"strings"
+
+	"github.com/gotid/god/lib/container/garray"
 )
 
 // fileSortFunc is the comparison function for files.

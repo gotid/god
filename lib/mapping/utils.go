@@ -10,7 +10,7 @@ import (
 	"strings"
 	"sync"
 
-	"git.zc0901.com/go/god/lib/stringx"
+	"github.com/gotid/god/lib/stringx"
 )
 
 const (

@@ -2,8 +2,9 @@ package gvalid
 
 import (
 	"errors"
-	"git.zc0901.com/go/god/lib/gregex"
 	"strings"
+
+	"github.com/gotid/god/lib/gregex"
 )
 
 // Error is the validation error for validation result.

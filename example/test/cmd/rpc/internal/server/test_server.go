@@ -6,9 +6,9 @@ package server
 import (
 	"context"
 
-	"git.zc0901.com/go/god/example/test/cmd/rpc/internal/logic"
-	"git.zc0901.com/go/god/example/test/cmd/rpc/internal/svc"
-	"git.zc0901.com/go/god/example/test/cmd/rpc/test"
+	"github.com/gotid/god/example/test/cmd/rpc/internal/logic"
+	"github.com/gotid/god/example/test/cmd/rpc/internal/svc"
+	"github.com/gotid/god/example/test/cmd/rpc/test"
 )
 
 type TestServer struct {

@@ -3,20 +3,19 @@ package intlog
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/internal/cmdenv"
-	"git.zc0901.com/go/god/lib/gdebug"
 	"path/filepath"
 	"time"
+
+	"github.com/gotid/god/internal/cmdenv"
+	"github.com/gotid/god/lib/gdebug"
 )
 
 const (
 	gFilterKey = "/internal/intlog"
 )
 
-var (
-	// isGFDebug marks whether printing GoFrame debug information.
-	isGFDebug = false
-)
+// isGFDebug marks whether printing GoFrame debug information.
+var isGFDebug = false
 
 func init() {
 	// Debugging configured.

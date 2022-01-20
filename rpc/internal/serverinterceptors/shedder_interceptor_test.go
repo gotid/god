@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"git.zc0901.com/go/god/lib/load"
-	"git.zc0901.com/go/god/lib/stat"
+	"github.com/gotid/god/lib/load"
+	"github.com/gotid/god/lib/stat"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 )
@@ -67,8 +67,7 @@ func (m mockedShedder) Allow() (load.Promise, error) {
 	}
 }
 
-type mockedPromise struct {
-}
+type mockedPromise struct{}
 
 func (m mockedPromise) Pass() {
 }

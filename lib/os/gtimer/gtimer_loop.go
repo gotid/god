@@ -1,8 +1,9 @@
 package gtimer
 
 import (
-	"git.zc0901.com/go/god/lib/container/glist"
 	"time"
+
+	"github.com/gotid/god/lib/container/glist"
 )
 
 // start starts the ticker using a standalone goroutine.
@@ -21,7 +22,6 @@ func (w *wheel) start() {
 					ticker.Stop()
 					return
 				}
-
 			}
 		}
 	}()
@@ -67,7 +67,7 @@ func (w *wheel) proceed() {
 				}
 				// If rolls on the job.
 				if addable {
-					//If STATUS_RESET , reset to runnable state.
+					// If STATUS_RESET , reset to runnable state.
 					if entry.Status() == StatusReset {
 						entry.SetStatus(StatusReady)
 					}

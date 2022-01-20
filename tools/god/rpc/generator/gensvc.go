@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"path/filepath"
 
-	conf "git.zc0901.com/go/god/tools/god/config"
-	"git.zc0901.com/go/god/tools/god/rpc/parser"
-	"git.zc0901.com/go/god/tools/god/util"
-	"git.zc0901.com/go/god/tools/god/util/format"
+	conf "github.com/gotid/god/tools/god/config"
+	"github.com/gotid/god/tools/god/rpc/parser"
+	"github.com/gotid/god/tools/god/util"
+	"github.com/gotid/god/tools/god/util/format"
 )
 
 const svcTemplate = `package svc

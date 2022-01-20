@@ -7,13 +7,13 @@ import (
 	"runtime"
 	"time"
 
-	"git.zc0901.com/go/god/lib/g"
+	"github.com/gotid/god/lib/g"
 
-	"git.zc0901.com/go/god/lib/syncx"
+	"github.com/gotid/god/lib/syncx"
 
-	"git.zc0901.com/go/god/api"
-	"git.zc0901.com/go/god/api/httpx"
-	"git.zc0901.com/go/god/lib/conf"
+	"github.com/gotid/god/api"
+	"github.com/gotid/god/api/httpx"
+	"github.com/gotid/god/lib/conf"
 )
 
 var configFile = flag.String("f", "config.yaml", "API 配置文件")

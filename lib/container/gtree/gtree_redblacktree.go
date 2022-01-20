@@ -2,11 +2,12 @@ package gtree
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/internal/rwmutex"
-	"git.zc0901.com/go/god/lib/container/gvar"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/gutil"
+
+	"github.com/gotid/god/internal/json"
+	"github.com/gotid/god/internal/rwmutex"
+	"github.com/gotid/god/lib/container/gvar"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/gutil"
 )
 
 type color bool
@@ -112,7 +113,7 @@ func (tree *RedBlackTree) doSet(key interface{}, value interface{}) {
 			compare := tree.getComparator()(key, node.Key)
 			switch {
 			case compare == 0:
-				//node.Key   = key
+				// node.Key   = key
 				node.Value = value
 				return
 			case compare < 0:

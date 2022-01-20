@@ -1,6 +1,6 @@
 package g
 
-import "git.zc0901.com/go/god/internal/intlog"
+import "github.com/gotid/god/internal/intlog"
 
 // SetEnabled enables/disables the GoFrame internal logging manually.
 // Note that this function is not concurrent safe, be aware of the DATA RACE,

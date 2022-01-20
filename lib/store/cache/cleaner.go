@@ -2,13 +2,14 @@ package cache
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/collection"
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/proc"
-	"git.zc0901.com/go/god/lib/stat"
-	"git.zc0901.com/go/god/lib/stringx"
-	"git.zc0901.com/go/god/lib/threading"
 	"time"
+
+	"github.com/gotid/god/lib/collection"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/proc"
+	"github.com/gotid/god/lib/stat"
+	"github.com/gotid/god/lib/stringx"
+	"github.com/gotid/god/lib/threading"
 )
 
 const (

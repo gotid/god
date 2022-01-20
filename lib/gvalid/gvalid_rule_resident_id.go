@@ -1,9 +1,10 @@
 package gvalid
 
 import (
-	"git.zc0901.com/go/god/lib/gregex"
 	"strconv"
 	"strings"
+
+	"github.com/gotid/god/lib/gregex"
 )
 
 // checkResidentId checks whether given id a china resident id number.

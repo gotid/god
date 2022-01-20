@@ -4,8 +4,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/stat"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/stat"
 )
 
 type (

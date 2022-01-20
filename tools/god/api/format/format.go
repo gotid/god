@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"git.zc0901.com/go/god/lib/errorx"
-	"git.zc0901.com/go/god/tools/god/api/parser"
-	"git.zc0901.com/go/god/tools/god/api/util"
+	"github.com/gotid/god/lib/errorx"
+	"github.com/gotid/god/tools/god/api/parser"
+	"github.com/gotid/god/tools/god/api/util"
 	"github.com/urfave/cli"
 )
 
@@ -102,7 +102,7 @@ func apiFormat(data string) (string, error) {
 
 	var builder strings.Builder
 	s := bufio.NewScanner(strings.NewReader(data))
-	var tapCount = 0
+	tapCount := 0
 	for s.Scan() {
 		line := strings.TrimSpace(s.Text())
 		noCommentLine := util.RemoveComment(line)

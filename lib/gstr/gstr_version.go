@@ -1,8 +1,9 @@
 package gstr
 
 import (
-	"git.zc0901.com/go/god/lib/gconv"
 	"strings"
+
+	"github.com/gotid/god/lib/gconv"
 )
 
 // CompareVersion compares <a> and <b> as standard GNU version.

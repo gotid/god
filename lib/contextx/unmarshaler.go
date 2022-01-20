@@ -2,7 +2,8 @@ package contextx
 
 import (
 	"context"
-	"git.zc0901.com/go/god/lib/mapping"
+
+	"github.com/gotid/god/lib/mapping"
 )
 
 const contextTagKey = "ctx"

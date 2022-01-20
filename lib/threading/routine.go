@@ -2,9 +2,10 @@ package threading
 
 import (
 	"bytes"
-	"git.zc0901.com/go/god/lib/rescue"
 	"runtime"
 	"strconv"
+
+	"github.com/gotid/god/lib/rescue"
 )
 
 // GoSafe 并发安全执行函数：panic 则输出错误堆栈

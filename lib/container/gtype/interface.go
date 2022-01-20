@@ -1,9 +1,10 @@
 package gtype
 
 import (
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/lib/gconv"
 	"sync/atomic"
+
+	"github.com/gotid/god/internal/json"
+	"github.com/gotid/god/lib/gconv"
 )
 
 // Interface is a struct for concurrent-safe operation for type interface{}.

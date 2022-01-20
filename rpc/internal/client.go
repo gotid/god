@@ -9,9 +9,9 @@ import (
 
 	"google.golang.org/grpc/credentials"
 
-	"git.zc0901.com/go/god/rpc/internal/balancer/p2c"
-	"git.zc0901.com/go/god/rpc/internal/clientinterceptors"
-	"git.zc0901.com/go/god/rpc/internal/resolver"
+	"github.com/gotid/god/rpc/internal/balancer/p2c"
+	"github.com/gotid/god/rpc/internal/clientinterceptors"
+	"github.com/gotid/god/rpc/internal/resolver"
 	"google.golang.org/grpc"
 )
 

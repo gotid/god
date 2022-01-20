@@ -5,11 +5,12 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
-	"git.zc0901.com/go/god/lib/encoding/gbase64"
-	"git.zc0901.com/go/god/lib/encoding/gcompress"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/gstr"
-	"git.zc0901.com/go/god/lib/os/gfile"
+
+	"github.com/gotid/god/lib/encoding/gbase64"
+	"github.com/gotid/god/lib/encoding/gcompress"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/gstr"
+	"github.com/gotid/god/lib/os/gfile"
 )
 
 const (

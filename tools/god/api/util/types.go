@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
+	"github.com/gotid/god/tools/god/api/spec"
 )
 
 func DecomposeType(t string) (result []string, err error) {
@@ -67,7 +67,7 @@ func GetLocalTypes(api *spec.ApiSpec, route spec.Route) []spec.Type {
 		return false
 	}
 
-	var rts = GetAllTypes(api, route)
+	rts := GetAllTypes(api, route)
 
 	var result []spec.Type
 	for _, item := range rts {
@@ -109,7 +109,6 @@ func getTypeRecursive(ty spec.Type, allTypes []spec.Type, result *[]spec.Type) {
 					hasAppend = true
 					break
 				}
-
 			}
 			if !hasAppend {
 				getTypeRecursive(ty, allTypes, result)
@@ -145,7 +144,6 @@ func GetSharedTypes(api *spec.ApiSpec) []spec.Type {
 						hasAppend = true
 						break
 					}
-
 				}
 				if !hasAppend {
 					result = append(result, item)

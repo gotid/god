@@ -3,8 +3,9 @@ package gcompress
 import (
 	"bytes"
 	"compress/gzip"
-	"git.zc0901.com/go/god/lib/os/gfile"
 	"io"
+
+	"github.com/gotid/god/lib/os/gfile"
 )
 
 // Gzip compresses <data> using gzip algorithm.

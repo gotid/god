@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"text/template"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
+	"github.com/gotid/god/tools/god/api/spec"
 	"github.com/iancoleman/strcase"
 )
 
@@ -98,7 +98,7 @@ object {{with .Info}}{{.Title}}{{end}}{
 )
 
 func genBase(dir, pkg string, api *spec.ApiSpec) error {
-	e := os.MkdirAll(dir, 0755)
+	e := os.MkdirAll(dir, 0o755)
 	if e != nil {
 		return e
 	}
@@ -108,7 +108,7 @@ func genBase(dir, pkg string, api *spec.ApiSpec) error {
 		return nil
 	}
 
-	file, e := os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
+	file, e := os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0o644)
 	if e != nil {
 		return e
 	}
@@ -131,12 +131,12 @@ func genApi(dir, pkg string, api *spec.ApiSpec) error {
 	api.Info.Title = name
 	api.Info.Desc = pkg
 
-	e := os.MkdirAll(dir, 0755)
+	e := os.MkdirAll(dir, 0o755)
 	if e != nil {
 		return e
 	}
 
-	file, e := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0644)
+	file, e := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0o644)
 	if e != nil {
 		return e
 	}

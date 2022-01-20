@@ -3,7 +3,7 @@ package breaker
 import (
 	"errors"
 
-	"git.zc0901.com/go/god/lib/stringx"
+	"github.com/gotid/god/lib/stringx"
 )
 
 // ErrServiceUnavailable 当 Breaker 打开时返回的错误信息

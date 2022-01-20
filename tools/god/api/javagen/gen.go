@@ -3,11 +3,12 @@ package javagen
 import (
 	"errors"
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
 	"strings"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/tools/god/api/parser"
+	"github.com/gotid/god/lib/fs"
+
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/tools/god/api/parser"
 	"github.com/logrusorgru/aurora"
 	"github.com/urfave/cli"
 )

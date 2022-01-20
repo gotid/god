@@ -4,8 +4,9 @@ package grpool
 import (
 	"errors"
 	"fmt"
-	"git.zc0901.com/go/god/lib/container/glist"
-	"git.zc0901.com/go/god/lib/container/gtype"
+
+	"github.com/gotid/god/lib/container/glist"
+	"github.com/gotid/god/lib/container/gtype"
 )
 
 // Goroutine Pool

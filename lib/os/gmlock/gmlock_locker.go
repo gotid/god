@@ -1,8 +1,8 @@
 package gmlock
 
 import (
-	"git.zc0901.com/go/god/lib/container/gmap"
-	"git.zc0901.com/go/god/lib/os/gmutex"
+	"github.com/gotid/god/lib/container/gmap"
+	"github.com/gotid/god/lib/os/gmutex"
 )
 
 // Memory locker.

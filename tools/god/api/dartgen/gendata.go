@@ -4,8 +4,8 @@ import (
 	"os"
 	"text/template"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/tools/god/api/spec"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/tools/god/api/spec"
 )
 
 const dataTemplate = `// --{{with .Info}}{{.Title}}{{end}}--

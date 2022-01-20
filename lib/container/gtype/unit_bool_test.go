@@ -2,10 +2,11 @@ package gtype_test
 
 import (
 	"encoding/json"
-	"git.zc0901.com/go/god/lib/container/gtype"
-	"git.zc0901.com/go/god/lib/gconv"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/gotid/god/lib/container/gtype"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestBool_Cas(t *testing.T) {

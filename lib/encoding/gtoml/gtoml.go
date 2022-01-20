@@ -3,7 +3,8 @@ package gtoml
 
 import (
 	"bytes"
-	"git.zc0901.com/go/god/internal/json"
+
+	"github.com/gotid/god/internal/json"
 
 	"github.com/BurntSushi/toml"
 )

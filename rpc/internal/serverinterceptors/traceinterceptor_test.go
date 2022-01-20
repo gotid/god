@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	"git.zc0901.com/go/god/lib/trace"
+	"github.com/gotid/god/lib/trace"
 
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"

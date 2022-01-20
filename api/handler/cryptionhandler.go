@@ -10,8 +10,8 @@ import (
 	"net"
 	"net/http"
 
-	"git.zc0901.com/go/god/lib/codec"
-	"git.zc0901.com/go/god/lib/logx"
+	"github.com/gotid/god/lib/codec"
+	"github.com/gotid/god/lib/logx"
 )
 
 const maxBytes = 1 << 20 // 1MB

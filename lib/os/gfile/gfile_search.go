@@ -4,7 +4,8 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"git.zc0901.com/go/god/lib/container/garray"
+
+	"github.com/gotid/god/lib/container/garray"
 )
 
 // Search searches file by name <name> in following paths with priority:

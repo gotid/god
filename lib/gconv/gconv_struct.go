@@ -2,13 +2,14 @@ package gconv
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/internal/empty"
-	"git.zc0901.com/go/god/internal/json"
-	"git.zc0901.com/go/god/internal/structs"
-	"git.zc0901.com/go/god/internal/utils"
-	"git.zc0901.com/go/god/lib/gerror"
 	"reflect"
 	"strings"
+
+	"github.com/gotid/god/internal/empty"
+	"github.com/gotid/god/internal/json"
+	"github.com/gotid/god/internal/structs"
+	"github.com/gotid/god/internal/utils"
+	"github.com/gotid/god/lib/gerror"
 )
 
 // Struct maps the params key-value pairs to the corresponding struct object's attributes.

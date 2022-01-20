@@ -9,7 +9,7 @@ import (
 	"go.opentelemetry.io/otel/codes"
 	"google.golang.org/grpc/status"
 
-	godtrace "git.zc0901.com/go/god/lib/trace"
+	godtrace "github.com/gotid/god/lib/trace"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/trace"
 

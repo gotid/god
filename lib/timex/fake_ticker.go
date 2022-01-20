@@ -2,8 +2,9 @@ package timex
 
 import (
 	"errors"
-	"git.zc0901.com/go/god/lib/lang"
 	"time"
+
+	"github.com/gotid/god/lib/lang"
 )
 
 type FakeTicker interface {

@@ -4,10 +4,11 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"git.zc0901.com/go/god/lib/os/gtime"
-	"github.com/go-sql-driver/mysql"
 	"reflect"
 	"time"
+
+	"github.com/go-sql-driver/mysql"
+	"github.com/gotid/god/lib/os/gtime"
 )
 
 // CUSTOM NULL Handling structures

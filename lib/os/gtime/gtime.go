@@ -6,13 +6,14 @@ package gtime
 import (
 	"errors"
 	"fmt"
-	"git.zc0901.com/go/god/internal/utils"
-	"git.zc0901.com/go/god/lib/gerror"
-	"git.zc0901.com/go/god/lib/gregex"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/gotid/god/internal/utils"
+	"github.com/gotid/god/lib/gerror"
+	"github.com/gotid/god/lib/gregex"
 )
 
 const (

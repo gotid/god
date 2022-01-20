@@ -6,9 +6,9 @@ import (
 	"path"
 	"strings"
 
-	"git.zc0901.com/go/god/api/pathvar"
+	"github.com/gotid/god/api/pathvar"
 
-	"git.zc0901.com/go/god/lib/search"
+	"github.com/gotid/god/lib/search"
 )
 
 const (

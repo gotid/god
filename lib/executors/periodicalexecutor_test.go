@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"git.zc0901.com/go/god/lib/timex"
+	"github.com/gotid/god/lib/timex"
 	"github.com/stretchr/testify/assert"
 )
 

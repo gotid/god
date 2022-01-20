@@ -2,14 +2,14 @@ package gres
 
 import (
 	"archive/zip"
-	"git.zc0901.com/go/god/internal/fileinfo"
-	"git.zc0901.com/go/god/internal/intlog"
-	"git.zc0901.com/go/god/lib/os/gfile"
-
 	"io"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/gotid/god/internal/fileinfo"
+	"github.com/gotid/god/internal/intlog"
+	"github.com/gotid/god/lib/os/gfile"
 )
 
 // ZipPathWriter compresses <paths> to <writer> using zip compressing algorithm.

@@ -1,11 +1,12 @@
 package conf
 
 import (
-	"git.zc0901.com/go/god/lib/hash"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"os"
 	"testing"
+
+	"github.com/gotid/god/lib/hash"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestLoadJsonConfig(t *testing.T) {

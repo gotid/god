@@ -11,9 +11,9 @@ import (
 	"sync"
 	"time"
 
-	"git.zc0901.com/go/god/lib/fs"
-	"git.zc0901.com/go/god/lib/lang"
-	"git.zc0901.com/go/god/lib/timex"
+	"github.com/gotid/god/lib/fs"
+	"github.com/gotid/god/lib/lang"
+	"github.com/gotid/god/lib/timex"
 )
 
 const (

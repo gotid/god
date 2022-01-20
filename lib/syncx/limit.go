@@ -3,7 +3,7 @@ package syncx
 import (
 	"errors"
 
-	"git.zc0901.com/go/god/lib/lang"
+	"github.com/gotid/god/lib/lang"
 )
 
 var ErrLimitReturn = errors.New("请求限制")

@@ -9,12 +9,12 @@ import (
 	"text/template"
 	"unicode"
 
-	"git.zc0901.com/go/god/tools/god/api/spec"
-	apiutil "git.zc0901.com/go/god/tools/god/api/util"
-	"git.zc0901.com/go/god/tools/god/config"
-	"git.zc0901.com/go/god/tools/god/util"
-	"git.zc0901.com/go/god/tools/god/util/format"
-	"git.zc0901.com/go/god/tools/god/vars"
+	"github.com/gotid/god/tools/god/api/spec"
+	apiutil "github.com/gotid/god/tools/god/api/util"
+	"github.com/gotid/god/tools/god/config"
+	"github.com/gotid/god/tools/god/util"
+	"github.com/gotid/god/tools/god/util/format"
+	"github.com/gotid/god/tools/god/vars"
 )
 
 const handlerTemplate = `package handler

@@ -3,10 +3,11 @@ package apigen
 import (
 	"errors"
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	"github.com/gotid/god/lib/fs"
 
 	"github.com/logrusorgru/aurora"
 	"github.com/urfave/cli"

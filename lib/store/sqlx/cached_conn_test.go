@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/store/cache"
-	"git.zc0901.com/go/god/lib/store/redis"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/store/cache"
+	"github.com/gotid/god/lib/store/redis"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -5,11 +5,11 @@ import (
 	"runtime"
 	"time"
 
-	"git.zc0901.com/go/god/api"
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/service"
-	"git.zc0901.com/go/god/lib/stat"
-	"git.zc0901.com/go/god/lib/syncx"
+	"github.com/gotid/god/api"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/service"
+	"github.com/gotid/god/lib/stat"
+	"github.com/gotid/god/lib/syncx"
 )
 
 func main() {

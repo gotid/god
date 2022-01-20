@@ -1,6 +1,6 @@
 package g
 
-import "git.zc0901.com/go/god/lib/container/gvar"
+import "github.com/gotid/god/lib/container/gvar"
 
 // Var 是通用变量接口，与泛型类似。
 type Var = gvar.Var

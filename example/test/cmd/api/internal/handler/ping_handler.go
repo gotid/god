@@ -3,11 +3,11 @@ package handler
 import (
 	"net/http"
 
-	"git.zc0901.com/go/god/example/test/cmd/api/internal/logic"
-	"git.zc0901.com/go/god/example/test/cmd/api/internal/svc"
-	"git.zc0901.com/go/god/example/test/cmd/api/internal/types"
+	"github.com/gotid/god/example/test/cmd/api/internal/logic"
+	"github.com/gotid/god/example/test/cmd/api/internal/svc"
+	"github.com/gotid/god/example/test/cmd/api/internal/types"
 
-	"git.zc0901.com/go/god/api/httpx"
+	"github.com/gotid/god/api/httpx"
 )
 
 func PingHandler(ctx *svc.ServiceContext) http.HandlerFunc {

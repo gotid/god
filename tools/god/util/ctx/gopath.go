@@ -2,11 +2,12 @@ package ctx
 
 import (
 	"errors"
-	"git.zc0901.com/go/god/lib/fs"
 	"go/build"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/gotid/god/lib/fs"
 )
 
 // projectFromGoPath is used to find the main module and project file path

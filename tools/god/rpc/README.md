@@ -248,7 +248,7 @@ want Pick(balancer.PickInfo) (balancer.PickResult, error)
 *rrBalanced does not implement Picker (wrong type for Pick method)
 have Pick(context.Context, balancer.PickInfo) (balancer.SubConn, func(balancer.DoneInfo), error)
 want Pick(balancer.PickInfo) (balancer.PickResult, error)
-#git.zc0901.com/go/god/rpc/internal/balancer/p2c
+#github.com/gotid/god/rpc/internal/balancer/p2c
 ../../../go/pkg/mod/github.com/tal-tech/go-zero@v1.0.12/zrpc/internal/balancer/p2c/p2c.go:41:32: not enough arguments in call to base.NewBalancerBuilder
 have (string, *p2cPickerBuilder)
 want (string, base.PickerBuilder, base.Config)

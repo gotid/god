@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"git.zc0901.com/go/god/lib/stat"
+	"github.com/gotid/god/lib/stat"
 	"google.golang.org/grpc"
 )
 

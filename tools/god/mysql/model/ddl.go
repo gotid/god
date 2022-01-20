@@ -1,7 +1,7 @@
 package model
 
 import (
-	"git.zc0901.com/go/god/lib/store/sqlx"
+	"github.com/gotid/god/lib/store/sqlx"
 )
 
 type (

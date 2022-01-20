@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"git.zc0901.com/go/god/lib/timex"
+	"github.com/gotid/god/lib/timex"
 )
 
 // ElapsedTimer 是一个跟踪耗时的计时器。

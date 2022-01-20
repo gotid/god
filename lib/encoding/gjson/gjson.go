@@ -2,12 +2,13 @@
 package gjson
 
 import (
-	"git.zc0901.com/go/god/internal/rwmutex"
-	"git.zc0901.com/go/god/lib/gconv"
-	"git.zc0901.com/go/god/lib/gstr"
 	"reflect"
 	"strconv"
 	"strings"
+
+	"github.com/gotid/god/internal/rwmutex"
+	"github.com/gotid/god/lib/gconv"
+	"github.com/gotid/god/lib/gstr"
 )
 
 const (

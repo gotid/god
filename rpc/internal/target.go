@@ -2,8 +2,9 @@ package internal
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/rpc/internal/resolver"
 	"strings"
+
+	"github.com/gotid/god/rpc/internal/resolver"
 )
 
 func BuildDirectTarget(endpoints []string) string {

@@ -4,9 +4,10 @@ package gmd5
 import (
 	"crypto/md5"
 	"fmt"
-	"git.zc0901.com/go/god/lib/gconv"
 	"io"
 	"os"
+
+	"github.com/gotid/god/lib/gconv"
 )
 
 // Encrypt encrypts any type of variable using MD5 algorithms.

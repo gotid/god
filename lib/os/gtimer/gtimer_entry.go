@@ -1,8 +1,9 @@
 package gtimer
 
 import (
-	"git.zc0901.com/go/god/lib/container/gtype"
 	"time"
+
+	"github.com/gotid/god/lib/container/gtype"
 )
 
 // Entry is the timing job entry to wheel.
@@ -99,7 +100,7 @@ func (entry *Entry) Stop() {
 	entry.status.Set(StatusStopped)
 }
 
-//Reset reset the job.
+// Reset reset the job.
 func (entry *Entry) Reset() {
 	entry.status.Set(StatusReset)
 }

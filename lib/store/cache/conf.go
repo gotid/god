@@ -1,6 +1,6 @@
 package cache
 
-import "git.zc0901.com/go/god/lib/store/redis"
+import "github.com/gotid/god/lib/store/redis"
 
 type (
 	// ClusterConf 集群配置

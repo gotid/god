@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"git.zc0901.com/go/god/lib/jsonx"
-	"git.zc0901.com/go/god/tools/god/rpc/execx"
+	"github.com/gotid/god/lib/jsonx"
+	"github.com/gotid/god/tools/god/rpc/execx"
 )
 
 type Module struct {

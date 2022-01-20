@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"testing"
 
-	"git.zc0901.com/go/god/lib/conf"
+	"github.com/gotid/god/lib/conf"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	"git.zc0901.com/go/god/api/internal"
+	"github.com/gotid/god/api/internal"
 )
 
 const (

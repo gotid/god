@@ -15,12 +15,12 @@ import (
 	"testing"
 	"time"
 
-	"git.zc0901.com/go/god/lib/codec"
+	"github.com/gotid/god/lib/codec"
 
-	"git.zc0901.com/go/god/lib/fs"
+	"github.com/gotid/god/lib/fs"
 	"github.com/stretchr/testify/assert"
 
-	"git.zc0901.com/go/god/api/httpx"
+	"github.com/gotid/god/api/httpx"
 )
 
 const (

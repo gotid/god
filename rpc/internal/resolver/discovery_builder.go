@@ -1,9 +1,10 @@
 package resolver
 
 import (
-	"git.zc0901.com/go/god/lib/discovery"
-	"google.golang.org/grpc/resolver"
 	"strings"
+
+	"github.com/gotid/god/lib/discovery"
+	"google.golang.org/grpc/resolver"
 )
 
 // discoveryBuilder 服务直连构建器

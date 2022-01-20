@@ -1,8 +1,8 @@
 package internal
 
 import (
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/syncx"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/syncx"
 	"google.golang.org/grpc/grpclog"
 )
 

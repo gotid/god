@@ -5,16 +5,16 @@ import (
 	"sync"
 	"testing"
 
-	"git.zc0901.com/go/god/lib/contextx"
+	"github.com/gotid/god/lib/contextx"
 
-	"git.zc0901.com/go/god/lib/lang"
-	"git.zc0901.com/go/god/lib/stringx"
+	"github.com/gotid/god/lib/lang"
+	"github.com/gotid/god/lib/stringx"
 
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 
-	"git.zc0901.com/go/god/lib/logx"
 	"github.com/golang/mock/gomock"
+	"github.com/gotid/god/lib/logx"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"git.zc0901.com/go/god/lib/errorx"
-	"git.zc0901.com/go/god/lib/hash"
-	"git.zc0901.com/go/god/lib/logx"
-	"git.zc0901.com/go/god/lib/syncx"
+	"github.com/gotid/god/lib/errorx"
+	"github.com/gotid/god/lib/hash"
+	"github.com/gotid/god/lib/logx"
+	"github.com/gotid/god/lib/syncx"
 )
 
 type (

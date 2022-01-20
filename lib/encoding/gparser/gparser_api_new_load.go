@@ -1,7 +1,7 @@
 package gparser
 
 import (
-	"git.zc0901.com/go/god/lib/encoding/gjson"
+	"github.com/gotid/god/lib/encoding/gjson"
 )
 
 // New creates a Parser object with any variable type of <data>, but <data> should be a map, struct or

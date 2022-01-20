@@ -1,7 +1,7 @@
 package gvar
 
 import (
-	"git.zc0901.com/go/god/lib/gutil"
+	"github.com/gotid/god/lib/gutil"
 )
 
 // ListItemValues retrieves and returns the elements of all item struct/map with key <key>.

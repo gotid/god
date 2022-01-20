@@ -7,10 +7,10 @@ import (
 	"strconv"
 	"strings"
 
-	"git.zc0901.com/go/god/lib/stringx"
-	"git.zc0901.com/go/god/tools/god/api/gogen"
-	"git.zc0901.com/go/god/tools/god/api/spec"
-	"git.zc0901.com/go/god/tools/god/api/util"
+	"github.com/gotid/god/lib/stringx"
+	"github.com/gotid/god/tools/god/api/gogen"
+	"github.com/gotid/god/tools/god/api/spec"
+	"github.com/gotid/god/tools/god/api/util"
 )
 
 const (

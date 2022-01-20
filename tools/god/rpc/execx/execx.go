@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
 	"os/exec"
 	"runtime"
 	"strings"
 
-	"git.zc0901.com/go/god/tools/god/vars"
+	"github.com/gotid/god/lib/fs"
+
+	"github.com/gotid/god/tools/god/vars"
 )
 
 func Run(arg string, dir string) (string, error) {
