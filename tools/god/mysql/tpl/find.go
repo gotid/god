@@ -1,6 +1,6 @@
 package tpl
 
-// 通过id查询
+// FindOne 通过id查询
 var FindOne = `
 func (m *{{.upperTable}}Model) FindOne({{.primaryKey}} {{.dataType}}) (*{{.upperTable}}, error) {
 	{{if .withCache}}{{.cacheKeyExpression}}
@@ -28,7 +28,7 @@ func (m *{{.upperTable}}Model) FindOne({{.primaryKey}} {{.dataType}}) (*{{.upper
 }
 `
 
-// 通过ids查询
+// FindMany 通过ids查询
 var FindMany = `
 func (m *{{.upperTable}}Model) FindMany(ids []{{.dataType}}, workers ...int) (list []*{{.upperTable}}) {
 	ids = gconv.Int64s(garray.NewArrayFrom(gconv.Interfaces(ids), true).Unique())
@@ -45,7 +45,7 @@ func (m *{{.upperTable}}Model) FindMany(ids []{{.dataType}}, workers ...int) (li
 			source <- id
 		}
 	}, func(item interface{}, writer mr.Writer) {
-		id := item.(int64)
+		id := item.({{.dataType}})
 		one, err := m.FindOne(id)
 		if err == nil {
 			writer.Write(one)
@@ -66,7 +66,7 @@ func (m *{{.upperTable}}Model) FindMany(ids []{{.dataType}}, workers ...int) (li
 }
 `
 
-// 通过指定字段查询
+// FindOneByField 通过指定字段查询
 var FindOneByField = `
 func (m *{{.upperTable}}Model) FindOneBy{{.upperField}}({{.in}}) (*{{.upperTable}}, error) {
 	{{if .withCache}}{{.cacheKeyExpression}}
@@ -104,4 +104,42 @@ func (m *{{.upperTable}}Model) FindOneBy{{.upperField}}({{.in}}) (*{{.upperTable
 		return nil, err
 	}
 }{{end}}
+`
+
+// FindManyByFields 通过唯一键切片查询
+var FindManyByFields = `
+func (m *{{.upperTable}}Model) FindManyBy{{.upperField}}s(keys []{{.dataType}}, workers ...int) (list []*{{.upperTable}}) {
+	keys = gconv.Strings(garray.NewArrayFrom(gconv.Interfaces(keys), true).Unique())
+
+	var nWorkers int
+	if len(workers) > 0 {
+		nWorkers = workers[0]
+	} else {
+		nWorkers = mathx.MinInt(10, len(keys))
+	}
+
+	channel := mr.Map(func(source chan<- interface{}) {
+		for _, key := range keys {
+			source <- key
+		}
+	}, func(item interface{}, writer mr.Writer) {
+		key := item.({{.dataType}})
+		one, err := m.FindOneBy{{.upperField}}(key)
+		if err == nil {
+			writer.Write(one)
+		} else {
+			logx.Error(err)
+		}
+	}, mr.WithWorkers(nWorkers))
+
+	for one := range channel {
+		list = append(list, one.(*{{.upperTable}}))
+	}
+
+	sort.Slice(list, func(i, j int) bool {
+		return gutil.IndexOf(list[i].{{.upperField}}, keys) < gutil.IndexOf(list[j].{{.upperField}}, keys)
+	})
+
+	return
+}
 `

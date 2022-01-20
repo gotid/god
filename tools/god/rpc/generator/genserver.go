@@ -2,9 +2,10 @@ package generator
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
 	"path/filepath"
 	"strings"
+
+	"git.zc0901.com/go/god/lib/fs"
 
 	"git.zc0901.com/go/god/lib/collection"
 	"git.zc0901.com/go/god/lib/stringx"

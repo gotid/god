@@ -9,7 +9,7 @@ import (
 
 // Refer to Laravel validation: https://laravel.com/docs/5.5/validation#available-validation-rules
 //
-// All supported rules:
+// Clean supported rules:
 // required             format: required                              brief: Required.
 // required-strict      format: required-strict                       brief: Required with strict mode.
 // required-if          format: required-if:field,value,...           brief: Required unless all given field and its value are equal.

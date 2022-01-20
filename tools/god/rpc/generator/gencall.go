@@ -2,9 +2,10 @@ package generator
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
 	"path/filepath"
 	"strings"
+
+	"git.zc0901.com/go/god/lib/fs"
 
 	"git.zc0901.com/go/god/lib/collection"
 	"git.zc0901.com/go/god/lib/stringx"
@@ -88,7 +89,7 @@ func (g *defaultGenerator) GenCall(ctx DirContext, proto parser.Proto, cfg *conf
 		return err
 	}
 
-	var alias = collection.NewSet()
+	alias := collection.NewSet()
 	for _, item := range proto.Message {
 		alias.AddStr(fmt.Sprintf("%s = %s", parser.CamelCase(item.Name), fmt.Sprintf("%s.%s", proto.PbPackage, parser.CamelCase(item.Name))))
 	}

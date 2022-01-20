@@ -101,7 +101,7 @@ func TestCluster_SetDel(t *testing.T) {
 		},
 	}
 
-	c := NewCacheCluster(confs, syncx.NewSingleFlight(), NewCacheStat("mock"), errPlaceholder)
+	c := New(confs, syncx.NewSingleFlight(), NewCacheStat("mock"), errPlaceholder)
 
 	// 写
 	for i := 0; i < total; i++ {

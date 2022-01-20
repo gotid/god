@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os/exec"
+	"reflect"
+	"sort"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -11,6 +13,29 @@ import (
 
 	"github.com/stretchr/testify/assert"
 )
+
+func TestSortFilterForEach(t *testing.T) {
+	Just(1, 3, 2, 5, 4, 6, 8, 0).Filter(func(item interface{}) bool {
+		return item.(int)%2 == 0
+	}).Sort(func(a interface{}, b interface{}) bool {
+		return a.(int) < b.(int)
+	}).ForEach(func(item interface{}) {
+		fmt.Println("item", item)
+	})
+}
+
+func TestFilter(t *testing.T) {
+	var result int
+	Just(1, 2, 3, 4).Filter(func(item interface{}) bool {
+		return item.(int)%2 == 0
+	}).Reduce(func(pipe <-chan interface{}) (interface{}, error) {
+		for item := range pipe {
+			result += item.(int)
+		}
+		return result, nil
+	})
+	assert.Equal(t, 6, result)
+}
 
 func TestBuffer(t *testing.T) {
 	const N = 5
@@ -72,6 +97,31 @@ func TestParallelJust(t *testing.T) {
 	assert.Equal(t, int32(6), count)
 }
 
+func TestStream_Skip(t *testing.T) {
+	assertEqual(t, 3, Just(1, 2, 3, 4).Skip(1).Count())
+	assertEqual(t, 1, Just(1, 2, 3, 4).Skip(3).Count())
+	assertEqual(t, 4, Just(1, 2, 3, 4).Skip(0).Count())
+	equal(t, Just(1, 2, 3, 4).Skip(3), []interface{}{4})
+	assert.Panics(t, func() {
+		Just(1, 2, 3, 4).Skip(-1)
+	})
+}
+
+func TestConcat(t *testing.T) {
+	stream := Just(1).Concat(Just(2), Just(3))
+	var items []interface{}
+	for item := range stream.source {
+		items = append(items, item)
+	}
+	sort.Slice(items, func(i, j int) bool {
+		return items[i].(int) < items[j].(int)
+	})
+	assertEqual(t, []interface{}{1, 2, 3}, items)
+
+	just := Just(1)
+	equal(t, just.Concat(just), []interface{}{1})
+}
+
 func TestConvertVideo(t *testing.T) {
 	cmd := exec.Command("ffmpeg", "-i", "/Users/zs/Desktop/video/guandian/75-如何改造我们的住宅.flv", "/Users/zs/Desktop/video/guandian/75-如何改造我们的住宅.mp4")
 
@@ -98,5 +148,21 @@ func TestConvertVideo(t *testing.T) {
 		if err := cmd.Wait(); err != nil {
 			fmt.Print("等待：", err.Error())
 		}
+	}
+}
+
+func assertEqual(t *testing.T, except, data interface{}) {
+	if !reflect.DeepEqual(except, data) {
+		t.Errorf("%v, want %v", data, except)
+	}
+}
+
+func equal(t *testing.T, stream Stream, data []interface{}) {
+	items := make([]interface{}, 0)
+	for item := range stream.source {
+		items = append(items, item)
+	}
+	if !reflect.DeepEqual(items, data) {
+		t.Errorf("%v, want %v", items, data)
 	}
 }

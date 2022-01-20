@@ -11,39 +11,26 @@ import (
 )
 
 type (
-	Cache interface {
-		Del(keys ...string) error
-		Get(key string, dest interface{}) error
-		MGet(keys []string, dest []interface{}) error
-		Set(key string, val interface{}) error
-		SetEx(key string, val interface{}, expires time.Duration) error
-		SetBit(key string, offset int64, value int) error
-		SetBits(key string, offset []int64) error
-		GetBit(key string, offset int64) (int, error)
-		GetBits(key string, offset []int64) (map[int64]bool, error)
-		Take(dest interface{}, key string, queryFn func(interface{}) error) error
-		TakeEx(dest interface{}, key string, queryFn func(interface{}, time.Duration) error) error
-	}
-
 	cluster struct {
 		dispatcher  *hash.ConsistentHash
 		errNotFound error
 	}
 )
 
-func NewCacheCluster(clusterConf ClusterConf, barrier syncx.SingleFlight, stat *Stat, errNotFound error, opts ...Option) Cache {
-	if len(clusterConf) == 0 || TotalWeights(clusterConf) <= 0 {
-		logx.Fatal("未配置缓存节点")
+func New(conf ClusterConf, barrier syncx.SingleFlight, stat *Stat,
+	errNotFound error, opts ...Option) Cache {
+	if len(conf) == 0 || TotalWeights(conf) <= 0 {
+		logx.Error("未配置缓存节点")
 	}
 
-	if len(clusterConf) == 1 {
-		return NewCacheNode(clusterConf[0].NewRedis(), barrier, stat, errNotFound, opts...)
+	if len(conf) == 1 {
+		return NewNode(conf[0].NewRedis(), barrier, stat, errNotFound, opts...)
 	}
 
 	// 添加一批 redis 缓存节点
 	dispatcher := hash.NewConsistentHash()
-	for _, conf := range clusterConf {
-		node := NewCacheNode(conf.NewRedis(), barrier, stat, errNotFound, opts...)
+	for _, conf := range conf {
+		node := NewNode(conf.NewRedis(), barrier, stat, errNotFound, opts...)
 		dispatcher.AddWithWeight(node, conf.Weight)
 	}
 
@@ -164,6 +151,15 @@ func (c cluster) SetBits(key string, offset []int64) error {
 	}
 
 	return node.(Cache).SetBits(key, offset)
+}
+
+func (c cluster) UnsetBits(key string, offset []int64) error {
+	node, ok := c.dispatcher.Get(key)
+	if !ok {
+		return c.errNotFound
+	}
+
+	return node.(Cache).UnsetBits(key, offset)
 }
 
 func (c cluster) GetBits(key string, offset []int64) (map[int64]bool, error) {

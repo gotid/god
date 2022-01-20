@@ -2,9 +2,10 @@ package generator
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
 	"path/filepath"
 	"strings"
+
+	"git.zc0901.com/go/god/lib/fs"
 
 	"git.zc0901.com/go/god/lib/stringx"
 	conf "git.zc0901.com/go/god/tools/god/config"
@@ -24,11 +25,13 @@ import (
 	{{.imports}}
 
 	"git.zc0901.com/go/god/lib/conf"
+	"git.zc0901.com/go/god/lib/service"
 	"git.zc0901.com/go/god/rpc"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
-var configFile = flag.String("f", "etc/{{.serviceName}}.yaml", "the config file")
+var configFile = flag.String("f", "etc/{{.serviceName}}.yaml", "配置文件")
 
 func main() {
 	flag.Parse()
@@ -40,6 +43,11 @@ func main() {
 
 	s := rpc.MustNewServer(c.ServerConf, func(grpcServer *grpc.Server) {
 		{{.pkg}}.Register{{.service}}Server(grpcServer, srv)
+
+		// 在开发和测试模式下进行服务器反射，可为grpcurl/grpc_cli等提供grpc服务或方法查询。
+		if c.Mode == service.DevMode || c.Mode == service.TestMode {
+			reflection.Register(grpcServer)
+		}
 	})
 	defer s.Stop()
 

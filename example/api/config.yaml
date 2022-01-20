@@ -1,6 +1,6 @@
-Name: examplep-api
-Host: 192.168.0.33
-Port: 8888
+Name: test-api
+Host: 127.0.0.1
+Port: 8000
 Timeout: 3000
 MaxConns: 500
 
@@ -8,8 +8,8 @@ Log:
   Mode: console
   Path: logs
 
-MetricsUrl: http://192.168.0.17:9090/metrics
-Prometheus:
-  Host: 192.168.0.33
-  Port: 9091
-  Path: /metrics
+#MetricsUrl: http://192.168.0.17:9090/metrics
+#Prometheus:
+#  Host: 192.168.0.33
+#  Port: 9091
+#  Path: /metrics

@@ -73,10 +73,10 @@ func genRoutes(dir string, cfg *config.Config, api *spec.ApiSpec) error {
 
 	gt := template.Must(template.New("groupTemplate").Parse(routesAdditionTemplate))
 	for _, g := range groups {
-		var gbuilder strings.Builder
-		gbuilder.WriteString("[]api.Route{")
+		var sb strings.Builder
+		sb.WriteString("[]api.Route{")
 		for _, r := range g.routes {
-			fmt.Fprintf(&gbuilder, `
+			fmt.Fprintf(&sb, `
 		{
 			Method:  %s,
 			Path:    "%s",
@@ -96,17 +96,17 @@ func genRoutes(dir string, cfg *config.Config, api *spec.ApiSpec) error {
 
 		var routes string
 		if len(g.middlewares) > 0 {
-			gbuilder.WriteString("\n}...,")
-			var params = g.middlewares
+			sb.WriteString("\n}...,")
+			params := g.middlewares
 			for i := range params {
 				params[i] = "serverCtx." + params[i]
 			}
-			var middlewareStr = strings.Join(params, ", ")
+			middlewareStr := strings.Join(params, ", ")
 			routes = fmt.Sprintf("api.WithMiddlewares(\n[]api.Middleware{ %s }, \n %s \n),",
-				middlewareStr, strings.TrimSpace(gbuilder.String()))
+				middlewareStr, strings.TrimSpace(sb.String()))
 		} else {
-			gbuilder.WriteString("\n},")
-			routes = strings.TrimSpace(gbuilder.String())
+			sb.WriteString("\n},")
+			routes = strings.TrimSpace(sb.String())
 		}
 
 		if err := gt.Execute(&builder, map[string]string{
@@ -157,7 +157,7 @@ func genRoutes(dir string, cfg *config.Config, api *spec.ApiSpec) error {
 }
 
 func genRouteImports(parentPkg string, api *spec.ApiSpec) string {
-	var importSet = collection.NewSet()
+	importSet := collection.NewSet()
 	importSet.AddStr(fmt.Sprintf("\"%s\"", util.JoinPackages(parentPkg, contextDir)))
 	for _, group := range api.Service.Groups {
 		for _, route := range group.Routes {
@@ -182,6 +182,8 @@ func getRoutes(api *spec.ApiSpec) ([]group, error) {
 	var routes []group
 
 	for _, g := range api.Service.Groups {
+		prefix, _ := apiutil.GetAnnotationValue(g.Annotations, "server", prefixProperty)
+
 		var groupedRoutes group
 		for _, r := range g.Routes {
 			handler := getHandlerName(r)
@@ -195,9 +197,16 @@ func getRoutes(api *spec.ApiSpec) ([]group, error) {
 					handler = toPrefix(folder) + "." + strings.ToUpper(handler[:1]) + handler[1:]
 				}
 			}
+			routePath := r.Path
+			if prefix != "" {
+				routePath = strings.ReplaceAll(prefix+routePath, "//", "/")
+			}
+			if !strings.HasPrefix(routePath, "/") {
+				routePath = "/" + routePath
+			}
 			groupedRoutes.routes = append(groupedRoutes.routes, route{
 				method:  mapping[r.Method],
-				path:    r.Path,
+				path:    routePath,
 				handler: handler,
 			})
 		}

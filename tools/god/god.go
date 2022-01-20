@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"time"
 
 	"git.zc0901.com/go/god/lib/stat"
 
@@ -21,7 +22,7 @@ import (
 )
 
 var (
-	BuildTime = "20211007"
+	BuildTime = time.Now().Format("20060102")
 	commands  = []cli.Command{
 		{
 			Name:   "mysql",

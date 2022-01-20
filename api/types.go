@@ -1,22 +1,25 @@
 package api
 
-import "net/http"
+import (
+	"net/http"
+	"time"
+)
 
 type (
-	// 路由
+	// Route 是一个 HTTP 路由。
 	Route struct {
 		Method  string           // 路由方法
 		Path    string           // 路由路径
 		Handler http.HandlerFunc // 路由处理器
 	}
 
-	// 路由可选项函数
+	// RouteOption 是一个路由自定义函数。
 	RouteOption func(r *featuredRoutes)
 
-	// 中间件函数（接收一个处理函数，并返回另一个处理函数）
+	// Middleware 中间件是一个接收处理函数并返回新处理函数的函数。
 	Middleware func(next http.HandlerFunc) http.HandlerFunc
 
-	// jsonWebToken 设置
+	// 是一个 Json Web Token 设置结构体。
 	jwtSetting struct {
 		enabled    bool   // 是否启用jwt验证
 		secret     string // jwt秘钥
@@ -31,6 +34,7 @@ type (
 
 	// 特色路由，支持高优先级、jwt令牌校验、签名校验
 	featuredRoutes struct {
+		timeout   time.Duration
 		priority  bool             // 带有高优先级的路由
 		jwt       jwtSetting       // JWT 鉴权
 		signature signatureSetting // 签名校验

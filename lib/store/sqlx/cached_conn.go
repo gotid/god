@@ -34,14 +34,14 @@ type (
 func NewCachedConn(conn Conn, rds *redis.Redis, opts ...cache.Option) CachedConn {
 	return CachedConn{
 		conn:  conn,
-		cache: cache.NewCacheNode(rds, exclusiveCalls, cacheStat, ErrNotFound, opts...),
+		cache: cache.NewNode(rds, exclusiveCalls, cacheStat, ErrNotFound, opts...),
 	}
 }
 
 func NewCachedConnWithCluster(conn Conn, c cache.ClusterConf, opts ...cache.Option) CachedConn {
 	return CachedConn{
 		conn:  conn,
-		cache: cache.NewCacheCluster(c, exclusiveCalls, cacheStat, sql.ErrNoRows, opts...),
+		cache: cache.New(c, exclusiveCalls, cacheStat, sql.ErrNoRows, opts...),
 	}
 }
 
@@ -67,6 +67,10 @@ func (cc CachedConn) SetBit(key string, offset int64, value int) error {
 
 func (cc CachedConn) SetBits(key string, offset []int64) error {
 	return cc.cache.SetBits(key, offset)
+}
+
+func (cc CachedConn) UnsetBits(key string, offset []int64) error {
+	return cc.cache.UnsetBits(key, offset)
 }
 
 func (cc CachedConn) GetBit(key string, offset int64) (int, error) {

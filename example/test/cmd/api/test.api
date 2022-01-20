@@ -1,15 +1,15 @@
 type (
-	PingReq struct {
-		Name string `json:"name"`
-	}
-	
-	PingReply struct {
-		Pong string `json:"pong"`
-	}
+    PingReq struct {
+        Name string `json:"name"`
+    }
+
+    PingReply struct {
+        Pong string `json:"pong"`
+    }
 )
 
 
 service test {
-	@handler Ping
-	get /ping/:name (PingReq) returns (PingReply)
+    @handler Ping
+    get /ping/:name (PingReq) returns (PingReply)
 }

@@ -4,7 +4,7 @@ keywords: 滚动窗口、滑动窗口、断路器、容错、限速、fault tole
 受 Netflix的 Hystrix 启发
 ![rolling window](https://miro.medium.com/max/576/1*jfOsUOv0uwTc4z-SbTMvuQ.png)
 
-## 二、滑窗算法(sliding window) [滑窗算法](https://konghq.com/blog/how-to-design-a-scalable-rate-limiting-algorithm/) 
+## 二、滑窗算法(sliding window) [滑窗算法](https://konghq.com/blog/how-to-design-a-scalable-rate-limiting-algorithm/)
 假设我们有一个限速器，60秒允许100个事件，现在时间到了 `75秒` 这个点，则滑动窗口如下所示：
 
 ![sliding window](https://github.com/RussellLuo/slidingwindow/raw/master/docs/slidingwindow.png)
@@ -14,9 +14,9 @@ keywords: 滚动窗口、滑动窗口、断路器、容错、限速、fault tole
 
 ```
 count = 86 * ((60-15)/60) + 12
-      = 86 * 0.75 + 12
-      = 64.5 + 12
-      = 76.5   
+= 86 * 0.75 + 12
+= 64.5 + 12
+= 76.5
 ```
 
 ---

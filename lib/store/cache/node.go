@@ -16,10 +16,14 @@ import (
 )
 
 const (
-	expiresDeviation    = 0.05 // 过期偏差
-	notFoundPlaceholder = "*"  // 空记录占位符，防止缓存穿透
+	// 让缓存建过期时间稍有不同以避免同时过期导致缓存雪崩。
+	// 偏差设为 [0.95, 1.05] 秒。
+	expiresDeviation = 0.05
+	// 空记录占位符，防止缓存穿透
+	notFoundPlaceholder = "*"
 )
 
+// 表示该键无值的错误。
 var errPlaceholder = errors.New("placeholder")
 
 type node struct {
@@ -34,7 +38,13 @@ type node struct {
 	errNotFound     error
 }
 
-func NewCacheNode(r *redis.Redis, barrier syncx.SingleFlight, stat *Stat, errNotFound error, opts ...Option) Cache {
+// NewNode 返回一个缓存节点。
+// r 是底层 redis 节点或集群。
+// barrier 是用与其他集群节点共享数据的屏障。
+// stat 用与统计缓存命中情况。
+// errNotFound
+func NewNode(r *redis.Redis, barrier syncx.SingleFlight, stat *Stat,
+	errNotFound error, opts ...Option) Cache {
 	o := newOptions(opts...)
 	return node{
 		redis:           r,
@@ -52,6 +62,9 @@ func NewCacheNode(r *redis.Redis, barrier syncx.SingleFlight, stat *Stat, errNot
 func (n node) Del(keys ...string) error {
 	if len(keys) == 0 {
 		return nil
+	}
+
+	if len(keys) > 1 && n.redis.Mode == redis.ClusterMode {
 	}
 
 	if _, err := n.redis.Del(keys...); err != nil {
@@ -101,6 +114,10 @@ func (n node) SetBit(key string, offset int64, value int) error {
 
 func (n node) SetBits(key string, offset []int64) error {
 	return n.redis.SetBits(key, offset)
+}
+
+func (n node) UnsetBits(key string, offset []int64) error {
+	return n.redis.UnsetBits(key, offset)
 }
 
 func (n node) GetBit(key string, offset int64) (int, error) {

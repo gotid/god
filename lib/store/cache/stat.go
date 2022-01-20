@@ -40,7 +40,7 @@ func (s *Stat) Loop() {
 			percent := 100 * float32(hit) / float32(total)
 			miss := atomic.SwapUint64(&s.Miss, 0)
 			dbf := atomic.SwapUint64(&s.DbFails, 0)
-			logx.Statf("数据库缓存(%s) - 一分钟请求数: %d, 命中率: %.1f%%, 命中: %d, 未命中: %d, 查库失败: %d",
+			logx.Statf("缓存化数据库(%s) - 一分钟请求数: %d, 命中率: %.1f%%, 命中: %d, 未命中: %d, 查库失败: %d",
 				s.name, total, percent, hit, miss, dbf)
 		}
 	}

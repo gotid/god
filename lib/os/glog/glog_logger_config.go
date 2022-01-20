@@ -3,13 +3,14 @@ package glog
 import (
 	"errors"
 	"fmt"
+	"io"
+	"strings"
+	"time"
+
 	"git.zc0901.com/go/god/internal/intlog"
 	"git.zc0901.com/go/god/lib/gconv"
 	"git.zc0901.com/go/god/lib/gutil"
 	"git.zc0901.com/go/god/lib/os/gfile"
-	"io"
-	"strings"
-	"time"
 )
 
 // Config is the configuration object for logger.
@@ -23,7 +24,7 @@ type Config struct {
 	StSkip               int            // Skip count for stack.
 	StStatus             int            // Stack status(1: enabled - default; 0: disabled)
 	StFilter             string         // Stack string filter.
-	CtxKeys              []interface{}  // Context keys for logging, which is used for value retrieving from context.
+	CtxKeys              []interface{}  // Context keys for logging, which is used for value retrieving from pathvar.
 	HeaderPrint          bool           `c:"header"` // Print header or not(true in default).
 	StdoutPrint          bool           `c:"stdout"` // Output to stdout or not(true in default).
 	LevelPrefixes        map[int]string // Logging level to its prefix string mapping.
@@ -150,15 +151,15 @@ func (l *Logger) SetStackFilter(filter string) {
 	l.config.StFilter = filter
 }
 
-// SetCtxKeys sets the context keys for logger. The keys is used for retrieving values
-// from context and printing them to logging content.
+// SetCtxKeys sets the pathvar keys for logger. The keys is used for retrieving values
+// from pathvar and printing them to logging content.
 //
-// Note that multiple calls of this function will overwrite the previous set context keys.
+// Note that multiple calls of this function will overwrite the previous set pathvar keys.
 func (l *Logger) SetCtxKeys(keys ...interface{}) {
 	l.config.CtxKeys = keys
 }
 
-// GetCtxKeys retrieves and returns the context keys for logging.
+// GetCtxKeys retrieves and returns the pathvar keys for logging.
 func (l *Logger) GetCtxKeys() []interface{} {
 	return l.config.CtxKeys
 }
@@ -184,7 +185,7 @@ func (l *Logger) SetPath(path string) error {
 	}
 	if !gfile.Exists(path) {
 		if err := gfile.Mkdir(path); err != nil {
-			//fmt.Fprintln(os.Stderr, fmt.Sprintf(`[glog] mkdir "%s" failed: %s`, path, err.Error()))
+			// fmt.Fprintln(os.Stderr, fmt.Sprintf(`[glog] mkdir "%s" failed: %s`, path, err.Error()))
 			return err
 		}
 	}

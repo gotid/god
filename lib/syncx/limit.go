@@ -2,6 +2,7 @@ package syncx
 
 import (
 	"errors"
+
 	"git.zc0901.com/go/god/lib/lang"
 )
 
@@ -12,19 +13,19 @@ type Limit struct {
 	pool chan lang.PlaceholderType
 }
 
-// NewLimit 新建并发控制
+// NewLimit 新建指定并发数的限制资源池。
 func NewLimit(n int) Limit {
 	return Limit{
 		pool: make(chan lang.PlaceholderType, n),
 	}
 }
 
-// Borrow 在阻塞模式下从 Limit 借用一个元素。
+// Borrow 在阻塞模式下借用一个资源。
 func (l Limit) Borrow() {
 	l.pool <- lang.Placeholder
 }
 
-// Return 返回借用资源，当返回的比借用的多则返回错误。
+// Return 归还一个可借资源；否则返回错误。
 func (l Limit) Return() error {
 	select {
 	case <-l.pool:
@@ -34,8 +35,7 @@ func (l Limit) Return() error {
 	}
 }
 
-// TryBorrow 尝试从 Limit 借用一个元素（非阻塞模式下）。
-// 如果成功则返回 true，否则返回 false。
+// TryBorrow 在非阻塞模式下借用一个资源并返回真，反之返回假。
 func (l Limit) TryBorrow() bool {
 	select {
 	case l.pool <- lang.Placeholder:

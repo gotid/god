@@ -21,7 +21,7 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 
 	ctx := svc.NewServiceContext(c)
-	server := api.MustNewServer(c.Conf)
+	server := api.MustNewServer(c.ServerConf)
 	defer server.Stop()
 
 	// 使用上下文转metadata中间件

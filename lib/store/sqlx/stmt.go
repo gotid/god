@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"time"
 
+	"git.zc0901.com/go/god/lib/syncx"
+
 	"git.zc0901.com/go/god/lib/timex"
 
 	"git.zc0901.com/go/god/lib/logx"
@@ -29,6 +31,13 @@ type (
 	}
 )
 
+var slowThreshold = syncx.ForAtomicDuration(defaultSlowThreshold)
+
+// SetSlowThreshold 设置慢查询时间阈值。
+func SetSlowThreshold(threshold time.Duration) {
+	slowThreshold.Set(threshold)
+}
+
 func (s statement) Close() error {
 	return s.stmt.Close()
 }
@@ -53,7 +62,7 @@ func doQueryStmt(conn stmtConn, scanner func(rows *sql.Rows) error, query string
 	startTime := timex.Now()
 	rows, err := conn.Query(args...)
 	duration := timex.Since(startTime)
-	if duration > slowThreshold {
+	if duration > slowThreshold.Load() {
 		logx.WithDuration(duration).Slowf("[SQL] doExecStmt: 慢查询 —— %s", stmt)
 	} else {
 		logx.WithDuration(duration).Infof("[SQL] doExecStmt: %s", stmt)
@@ -76,7 +85,7 @@ func doExecStmt(conn stmtConn, query string, args ...interface{}) (sql.Result, e
 	startTime := timex.Now()
 	result, err := conn.Exec(args...)
 	duration := timex.Since(startTime)
-	if duration > slowThreshold {
+	if duration > defaultSlowThreshold {
 		logx.WithDuration(duration).Slowf("[SQL] doExecStmt: 慢查询 —— %s", stmt)
 	} else {
 		logx.WithDuration(duration).Infof("[SQL] doExecStmt: %s", stmt)
@@ -101,10 +110,10 @@ func doQuery(db session, scanner func(*sql.Rows) error, query string, args ...in
 	rows, err := db.Query(query, args...)
 	duration := time.Since(startTime)
 
-	if duration > slowThreshold {
-		logx.WithDuration(duration).Slowf("[SQL] 慢查询 - %s", stmt)
+	if duration > slowThreshold.Load() {
+		logx.WithDuration(duration).Slowf("[SQL] doQuery - %s", stmt)
 	} else {
-		logx.WithDuration(duration).Infof("[SQL] 查询: %s", stmt)
+		logx.WithDuration(duration).Infof("[SQL] doQuery: %s", stmt)
 	}
 
 	if err != nil {
@@ -113,9 +122,7 @@ func doQuery(db session, scanner func(*sql.Rows) error, query string, args ...in
 	}
 
 	// 关闭数据库连接，释放资源
-	defer func() {
-		_ = rows.Close()
-	}()
+	defer rows.Close()
 
 	return scanner(rows)
 }
@@ -152,7 +159,7 @@ func doExec(db session, query string, args ...interface{}) (sql.Result, error) {
 	result, err := db.Exec(query, nvArgs...)
 	duration := time.Since(startTime)
 
-	if duration > slowThreshold {
+	if duration > slowThreshold.Load() {
 		logx.WithDuration(duration).Slowf("[SQL] 慢执行(%v) - %+v", duration, stmt)
 	} else {
 		logx.WithDuration(duration).Infof("[SQL] 执行: %+v", stmt)

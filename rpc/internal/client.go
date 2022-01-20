@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"google.golang.org/grpc/credentials"
+
 	"git.zc0901.com/go/god/rpc/internal/balancer/p2c"
 	"git.zc0901.com/go/god/rpc/internal/clientinterceptors"
 	"git.zc0901.com/go/god/rpc/internal/resolver"
@@ -26,6 +28,8 @@ type (
 
 	// ClientOptions 是RPC客户端选择项
 	ClientOptions struct {
+		NonBlock    bool
+		Secure      bool
 		Timeout     time.Duration
 		DialOptions []grpc.DialOption
 	}
@@ -44,7 +48,7 @@ func init() {
 }
 
 // NewClient 返回RPC客户端
-func NewClient(target string, opts ...ClientOption) (*client, error) {
+func NewClient(target string, opts ...ClientOption) (Client, error) {
 	var cli client
 	opts = append([]ClientOption{WithDialOption(grpc.WithBalancerName(p2c.Name))}, opts...)
 	if err := cli.dial(target, opts...); err != nil {
@@ -64,9 +68,16 @@ func (c *client) buildDialOptions(opts ...ClientOption) []grpc.DialOption {
 		opt(&cliOpts)
 	}
 
-	options := []grpc.DialOption{
-		grpc.WithInsecure(),
-		grpc.WithBlock(),
+	var options []grpc.DialOption
+	if !cliOpts.Secure {
+		options = append([]grpc.DialOption(nil), grpc.WithInsecure())
+	}
+
+	if !cliOpts.NonBlock {
+		options = append(options, grpc.WithBlock())
+	}
+
+	options = append(options,
 		WithUnaryClientInterceptors(
 			clientinterceptors.UnaryTraceInterceptor,               // 线路跟踪
 			clientinterceptors.DurationInterceptor,                 // 慢查询日志
@@ -74,9 +85,10 @@ func (c *client) buildDialOptions(opts ...ClientOption) []grpc.DialOption {
 			clientinterceptors.BreakerInterceptor,                  // 自动熔断
 			clientinterceptors.TimeoutInterceptor(cliOpts.Timeout), // 超时控制
 		),
-		// WithStreamClientInterceptors(
-		//	clientinterceptors.st),
-	}
+		WithStreamClientInterceptors(
+			clientinterceptors.StreamTraceInterceptor,
+		),
+	)
 
 	return append(options, cliOpts.DialOptions...)
 }
@@ -103,20 +115,38 @@ func (c *client) dial(server string, opts ...ClientOption) error {
 	return nil
 }
 
+// WithDialOption 自定义 grpc.DialOption。
 func WithDialOption(opt grpc.DialOption) ClientOption {
 	return func(options *ClientOptions) {
 		options.DialOptions = append(options.DialOptions, opt)
 	}
 }
 
+// WithNonBlock 设为非阻塞模式。
+func WithNonBlock() ClientOption {
+	return func(options *ClientOptions) {
+		options.NonBlock = true
+	}
+}
+
+// WithTimeout 设置超时时间。
 func WithTimeout(timeout time.Duration) ClientOption {
 	return func(options *ClientOptions) {
 		options.Timeout = timeout
 	}
 }
 
+// WithUnaryClientInterceptor 自定义一元客户端拦截器。
 func WithUnaryClientInterceptor(interceptor grpc.UnaryClientInterceptor) ClientOption {
 	return func(options *ClientOptions) {
 		options.DialOptions = append(options.DialOptions, WithUnaryClientInterceptors(interceptor))
+	}
+}
+
+// WithTransportCredentials 自定义安全拨号证书。
+func WithTransportCredentials(creds credentials.TransportCredentials) ClientOption {
+	return func(options *ClientOptions) {
+		options.Secure = true
+		options.DialOptions = append(options.DialOptions, grpc.WithTransportCredentials(creds))
 	}
 }

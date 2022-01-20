@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"reflect"
+
 	"git.zc0901.com/go/god/internal/json"
 	"git.zc0901.com/go/god/internal/rwmutex"
 	"git.zc0901.com/go/god/lib/encoding/gini"
@@ -13,13 +15,12 @@ import (
 	"git.zc0901.com/go/god/lib/gconv"
 	"git.zc0901.com/go/god/lib/gregex"
 	"git.zc0901.com/go/god/lib/os/gfile"
-	"reflect"
 )
 
 // New creates a Json object with any variable type of <data>, but <data> should be a map
 // or slice for data access reason, or it will make no sense.
 //
-// The parameter <safe> specifies whether using this Json object in concurrent-safe context,
+// The parameter <safe> specifies whether using this Json object in concurrent-safe pathvar,
 // which is false in default.
 func New(data interface{}, safe ...bool) *Json {
 	return NewWithTag(data, "json", safe...)
@@ -31,7 +32,7 @@ func New(data interface{}, safe ...bool) *Json {
 // The parameter <tags> specifies priority tags for struct conversion to map, multiple tags joined
 // with char ','.
 //
-// The parameter <safe> specifies whether using this Json object in concurrent-safe context, which
+// The parameter <safe> specifies whether using this Json object in concurrent-safe pathvar, which
 // is false in default.
 func NewWithTag(data interface{}, tags string, safe ...bool) *Json {
 	j := (*Json)(nil)
@@ -162,7 +163,7 @@ func doLoadContent(dataType string, data []byte, safe ...bool) (*Json, error) {
 	// Do not use number, it converts float64 to json.Number type,
 	// which actually a string type. It causes converting issue for other data formats,
 	// for example: yaml.
-	//decoder.UseNumber()
+	// decoder.UseNumber()
 	if err := decoder.Decode(&result); err != nil {
 		return nil, err
 	}
@@ -192,7 +193,7 @@ func LoadContentType(dataType string, data interface{}, safe ...bool) (*Json, er
 	if len(content) == 0 {
 		return New(nil, safe...), nil
 	}
-	//ignore UTF8-BOM
+	// ignore UTF8-BOM
 	if content[0] == 0xEF && content[1] == 0xBB && content[2] == 0xBF {
 		content = content[3:]
 	}

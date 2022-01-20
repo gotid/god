@@ -97,6 +97,7 @@ Future _apiRequest(String method, String path, dynamic data,
   if (eventually != null) eventually();
 }
 `
+
 const tokensFileContent = `class Tokens {
   /// 用于访问的token, 每次请求都必须带在Header里面
   final String accessToken;

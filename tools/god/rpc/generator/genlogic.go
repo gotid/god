@@ -2,10 +2,11 @@ package generator
 
 import (
 	"fmt"
-	"git.zc0901.com/go/god/lib/fs"
-	"git.zc0901.com/go/god/lib/stringx"
 	"path/filepath"
 	"strings"
+
+	"git.zc0901.com/go/god/lib/fs"
+	"git.zc0901.com/go/god/lib/stringx"
 
 	"git.zc0901.com/go/god/lib/collection"
 	conf "git.zc0901.com/go/god/tools/god/config"
@@ -42,7 +43,7 @@ func New{{.logicName}}(ctx context.Context,svcCtx *svc.ServiceContext) *{{.logic
 `
 	logicFunctionTemplate = `{{if .hasComment}}{{.comment}}{{end}}
 func (l *{{.logicName}}) {{.method}} (req {{.request}}) ({{.response}}, error) {
-	// todo: add your logic here and delete this line
+	// todo: 此处添加你的业务逻辑并删除改行
 	
 	return &{{.responseType}}{}, nil
 }
@@ -84,7 +85,7 @@ func (g *defaultGenerator) GenLogic(ctx DirContext, proto parser.Proto, cfg *con
 }
 
 func (g *defaultGenerator) genLogicFunction(goPackage string, rpc *parser.RPC) (string, error) {
-	var functions = make([]string, 0)
+	functions := make([]string, 0)
 	text, err := util.LoadTemplate(category, logicFuncTemplateFileFile, logicFunctionTemplate)
 	if err != nil {
 		return "", err

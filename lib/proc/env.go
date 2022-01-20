@@ -11,6 +11,7 @@ var (
 	envLock sync.Mutex
 )
 
+// Env 返回指定环境变量的值。
 func Env(key string) string {
 	envLock.Lock()
 	val, ok := envs[key]
@@ -28,6 +29,7 @@ func Env(key string) string {
 	return val
 }
 
+// EnvInt 返回指定环境变量的整型数值。
 func EnvInt(key string) (int, bool) {
 	val := Env(key)
 	if len(val) == 0 {

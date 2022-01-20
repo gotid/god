@@ -16,8 +16,8 @@ func main() {
 	logx.Disable()
 	stat.SetReporter(nil)
 
-	server := api.MustNewServer(api.Conf{
-		ServiceConf: service.Conf{
+	server := api.MustNewServer(api.ServerConf{
+		ServiceConf: service.ServiceConf{
 			Name: "api breaker",
 			Log:  logx.LogConf{Mode: "console"},
 		},

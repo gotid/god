@@ -23,7 +23,7 @@ import (
 	{{.importPackages}}
 )
 
-var configFile = flag.String("f", "etc/{{.serviceName}}.yaml", "the config file")
+var configFile = flag.String("f", "etc/{{.serviceName}}.yaml", "配置文件")
 
 func main() {
 	flag.Parse()
@@ -32,7 +32,7 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 
 	ctx := svc.NewServiceContext(c)
-	server := api.MustNewServer(c.Conf)
+	server := api.MustNewServer(c.ServerConf)
 	defer server.Stop()
 
 	handler.RegisterHandlers(server, ctx)

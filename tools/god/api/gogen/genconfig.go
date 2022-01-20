@@ -21,7 +21,7 @@ const (
 import {{.authImport}}
 
 type Config struct {
-	api.Conf
+	api.ServerConf
 	{{.auth}}
 }
 `

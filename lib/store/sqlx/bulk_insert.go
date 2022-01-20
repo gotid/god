@@ -102,6 +102,7 @@ func NewBulkInserterWithTx(c TxSession, stmt string) (*BulkInserter, error) {
 }
 
 func (bi *BulkInserter) Insert(args ...interface{}) error {
+	// TODO 对于 pkg.Table 等间接字符串类型，无法正常格式化
 	value, err := format(bi.stmt.valueFormat, args...)
 	if err != nil {
 		return err

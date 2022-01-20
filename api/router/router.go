@@ -2,11 +2,13 @@ package router
 
 import (
 	"errors"
-	"git.zc0901.com/go/god/api/internal/context"
-	"git.zc0901.com/go/god/lib/search"
 	"net/http"
 	"path"
 	"strings"
+
+	"git.zc0901.com/go/god/api/pathvar"
+
+	"git.zc0901.com/go/god/lib/search"
 )
 
 const (
@@ -19,7 +21,7 @@ var (
 	ErrInvalidPath   = errors.New("路径必须以 / 开头")
 )
 
-// 继承于 http.Handler 的路由器
+// Router 继承于 http.Handler 的路由器
 type Router interface {
 	http.Handler
 	Handle(method, path string, handler http.Handler) error
@@ -43,7 +45,7 @@ func (rt *router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if tree, ok := rt.trees[r.Method]; ok {
 		if result, ok := tree.Search(reqPath); ok {
 			if len(result.Params) > 0 {
-				r = context.WithPathVars(r, result.Params)
+				r = pathvar.WithVars(r, result.Params)
 			}
 			result.Item.(http.Handler).ServeHTTP(w, r)
 			return
@@ -83,12 +85,12 @@ func (rt *router) Handle(method, reqPath string, handler http.Handler) error {
 	}
 }
 
-// 设置资源未找到处理器
+// SetNotFoundHandler 设置资源未找到处理器
 func (rt *router) SetNotFoundHandler(handler http.Handler) {
 	rt.notFound = handler
 }
 
-// 设置资源不允许访问处理器
+// SetNotAllowedHandler 设置资源不允许访问处理器
 func (rt *router) SetNotAllowedHandler(handler http.Handler) {
 	rt.notAllowed = handler
 }

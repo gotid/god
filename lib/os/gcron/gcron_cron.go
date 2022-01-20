@@ -3,18 +3,19 @@ package gcron
 import (
 	"errors"
 	"fmt"
+	"time"
+
 	"git.zc0901.com/go/god/lib/container/garray"
 	"git.zc0901.com/go/god/lib/container/gmap"
 	"git.zc0901.com/go/god/lib/container/gtype"
 	"git.zc0901.com/go/god/lib/os/glog"
 	"git.zc0901.com/go/god/lib/os/gtimer"
-	"time"
 )
 
 type Cron struct {
 	idGen    *gtype.Int64    // Used for unique name generation.
 	status   *gtype.Int      // Timed task status(0: Not Start; 1: Running; 2: Stopped; -1: Closed)
-	entries  *gmap.StrAnyMap // All timed task entries.
+	entries  *gmap.StrAnyMap // Clean timed task entries.
 	logPath  *gtype.String   // Logging path(folder).
 	logLevel *gtype.Int      // Logging level.
 }

@@ -25,8 +25,11 @@ type (
 	}
 )
 
-func newBaseServer(address string, metrics *stat.Metrics) *baseServer {
-	return &baseServer{address: address, metrics: metrics}
+func newBaseServer(address string, opts *serverOptions) *baseServer {
+	return &baseServer{
+		address: address,
+		metrics: opts.metrics,
+	}
 }
 
 func (bs *baseServer) AddOptions(options ...grpc.ServerOption) {

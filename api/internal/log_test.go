@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -18,6 +19,7 @@ func TestInfo(t *testing.T) {
 	Info(req, "first")
 	Infof(req, "second %s", "third")
 	val := collector.Flush()
+	fmt.Println(val)
 	assert.True(t, strings.Contains(val, "first"))
 	assert.True(t, strings.Contains(val, "second"))
 	assert.True(t, strings.Contains(val, "third"))
@@ -31,6 +33,7 @@ func TestError(t *testing.T) {
 	Error(req, "first")
 	Errorf(req, "second %s", "third")
 	val := writer.String()
+	fmt.Println(val)
 	assert.True(t, strings.Contains(val, "first"))
 	assert.True(t, strings.Contains(val, "second"))
 	assert.True(t, strings.Contains(val, "third"))

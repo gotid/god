@@ -402,17 +402,14 @@ func (s Stream) Walk(fn WalkFunc, opts ...Option) Stream {
 }
 
 func (s Stream) walkUnlimited(fn WalkFunc, option *rxOption) Stream {
-	pipe := make(chan interface{}, option.workers)
+	pipe := make(chan interface{}, defaultWorkers)
 
 	go func() {
 		var wg sync.WaitGroup
-		pool := make(chan lang.PlaceholderType, option.workers)
 
 		for {
-			pool <- lang.Placeholder
 			item, ok := <-s.source
 			if !ok {
-				<-pool
 				break
 			}
 
@@ -420,7 +417,6 @@ func (s Stream) walkUnlimited(fn WalkFunc, option *rxOption) Stream {
 			threading.GoSafe(func() {
 				defer func() {
 					wg.Done()
-					<-pool
 				}()
 
 				fn(item, pipe)

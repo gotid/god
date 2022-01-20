@@ -11,8 +11,8 @@ func Expose() *Logger {
 }
 
 // Ctx is a chaining function,
-// which sets the context for current logging.
-// The parameter <keys> specifies the context keys for retrieving values.
+// which sets the pathvar for current logging.
+// The parameter <keys> specifies the pathvar keys for retrieving values.
 func Ctx(ctx context.Context, keys ...interface{}) *Logger {
 	return logger.Ctx(ctx, keys...)
 }

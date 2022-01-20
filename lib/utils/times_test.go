@@ -1,13 +1,14 @@
 package utils
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 )
 
-const sleepInterval = time.Millisecond * 10
+const sleepInterval = 10 * time.Millisecond
 
 func TestElapsedTimer_Duration(t *testing.T) {
 	timer := NewElapsedTimer()
@@ -34,6 +35,8 @@ func TestElapsedTimer_ElapsedMs(t *testing.T) {
 func TestCurrent(t *testing.T) {
 	currentMillis := CurrentMillis()
 	currentMicros := CurrentMicros()
+	fmt.Println(currentMillis)
+	fmt.Println(currentMicros)
 	assert.True(t, currentMillis > 0)
 	assert.True(t, currentMicros > 0)
 	assert.True(t, currentMillis*1000 <= currentMicros)

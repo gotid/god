@@ -5,11 +5,7 @@ import (
 	"time"
 )
 
-// MillisecondDuration 返回毫秒格式的时间段字符串
-func MillisecondDuration(d time.Duration) string {
+// MsOfDuration 返回毫秒格式的时间段字符串
+func MsOfDuration(d time.Duration) string {
 	return fmt.Sprintf("%.1fms", float32(d)/float32(time.Millisecond))
-}
-
-func ReprOfDuration(duration time.Duration) string {
-	return fmt.Sprintf("%.1fms", float32(duration)/float32(time.Millisecond))
 }

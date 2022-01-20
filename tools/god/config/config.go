@@ -2,11 +2,12 @@ package config
 
 import (
 	"errors"
-	"git.zc0901.com/go/god/lib/fs"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"git.zc0901.com/go/god/lib/fs"
 
 	"git.zc0901.com/go/god/tools/god/util"
 	"gopkg.in/yaml.v2"
@@ -54,9 +55,7 @@ func NewConfig(format string) (*Config, error) {
 }
 
 func InitOrGetConfig() (*Config, error) {
-	var (
-		defaultConfig Config
-	)
+	var defaultConfig Config
 	err := yaml.Unmarshal([]byte(defaultYaml), &defaultConfig)
 	if err != nil {
 		return nil, err

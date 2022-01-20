@@ -1,3 +1,3 @@
 package tpl
 
-var Tag = "`db:\"{{.field}}\"`"
+var Tag = "`db:\"{{.field}}\" json:\"{{.fieldCamel}}\"`"

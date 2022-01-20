@@ -24,57 +24,64 @@ import (
 
 // 日志级别值
 const (
+	// InfoLevel 记录所有日志。
 	InfoLevel = iota
-	SlowLevel
+	// DebugLevel 调试级别
+	DebugLevel
+	// ErrorLevel 包括错误日志、慢日志和堆栈日志。
 	ErrorLevel
-	FatalLevel
+	// SevereLevel 仅记录严重错误。
+	SevereLevel
 )
 
 const (
-	// 日志级别名称
-	alertLevel = "alert" // 警告级
-	infoLevel  = "info"  // 信息级
-	errorLevel = "error" // 错误级
-	fatalLevel = "fatal" // 重大级
-	slowLevel  = "slow"  // 慢级别
-	statLevel  = "stat"  // 统计级
-
-	// 日志文件
 	accessFilename = "access.log"
 	errorFilename  = "error.log"
-	fatalFilename  = "fatal.log"
+	severeFilename = "severe.log"
 	slowFilename   = "slow.log"
 	statFilename   = "stat.log"
 
-	// 日志模式
 	consoleMode = "console" // 命令行模式
 	volumeMode  = "volume"  // k8s 模式
 
+	alertLevel  = "alert"  // 警告级
+	infoLevel   = "info"   // 信息级
+	debugLevel  = "debug"  // 调试级
+	errorLevel  = "error"  // 错误级
+	serverLevel = "severe" // 严重级
+	fatalLevel  = "fatal"  // 致命级
+	slowLevel   = "slow"   // 慢级别
+	statLevel   = "stat"   // 统计级
+
 	callerInnerDepth    = 5 // 堆栈调用深度
 	flags               = 0x0
-	backupFileDelimiter = "-" // 日志备份文件分隔符
+	backupFileDelimiter = "-" // 备份文件分隔符
 )
 
 var (
-	// 日志类型
-	infoLogger  io.WriteCloser // 信息日志
-	errorLogger io.WriteCloser // 错误日志
-	fatalLogger io.WriteCloser // 重大日志
-	slowLogger  io.WriteCloser // 慢日志
-	statLogger  io.WriteCloser // 统计日志
-	stackLogger io.Writer      // 堆栈日志
+	infoLog   io.WriteCloser // 信息日志
+	debugLog  io.WriteCloser // 调试日志
+	errorLog  io.WriteCloser // 错误日志
+	severeLog io.WriteCloser // 严重日志
+	slowLog   io.WriteCloser // 慢日志
+	statLog   io.WriteCloser // 统计日志
+	stackLog  io.Writer      // 堆栈日志
 
 	initialized  uint32    // 初始状态
 	logLevel     uint32    // 日志级别
+	disableStat  uint32    // 禁用统计
 	writeConsole bool      // 写控制台
 	once         sync.Once // 一次操作对象
 	options      logOptions
 
 	timeFormat = "2006-01-02T15:04:05.000Z07" // 日期格式
 
+	// ErrLogPathNotSet 指示日志路径未设置的错误。
+	ErrLogPathNotSet = errors.New("日志路径必须设置")
+	// ErrLogNotInitialized 指示日志尚未初始化的错误。
+	ErrLogNotInitialized = errors.New("日志尚未初始化")
+	// ErrLogServiceNameNotSet 指示日志名称未设置的错误。
 	ErrLogServiceNameNotSet = errors.New("日志服务名称必须设置")
-	ErrLogPathNotSet        = errors.New("日志路径必须设置")
-	ErrLogNotInitialized    = errors.New("日志尚未初始化")
 )
 
 type (
@@ -99,30 +106,37 @@ type (
 	Logger interface {
 		Info(...interface{})
 		Infof(string, ...interface{})
+		Infov(interface{})
+		Debug(...interface{})
+		Debugf(string, ...interface{})
+		Debugv(interface{})
 		Error(...interface{})
 		Errorf(string, ...interface{})
 		Errorv(interface{})
 		Slow(...interface{})
 		Slowf(string, ...interface{})
+		Slowv(interface{})
 		WithDuration(time.Duration) Logger
 	}
 )
 
-// MustSetup 必须成功不能有错，否则直接退出系统
+// MustSetup 使用指定配置设置日志。出错退出。
 func MustSetup(c LogConf) {
 	Must(Setup(c))
 }
 
-// Must 必须无错，否则退出程序
+// Must 检查错误是否为空，否则记录错误并退出。
 func Must(err error) {
 	if err != nil {
 		msg := formatWithCaller(err.Error(), 3)
 		log.Print(msg)
-		output(fatalLogger, fatalLevel, msg)
+		outputText(severeLog, fatalLevel, msg)
 		os.Exit(1)
 	}
 }
 
+// Setup 设置 logx。如已设置则返回。
+// 允许不同的服务框架调用多次 Setup。
 func Setup(c LogConf) error {
 	if len(c.TimeFormat) > 0 {
 		timeFormat = c.TimeFormat
@@ -139,6 +153,7 @@ func Setup(c LogConf) error {
 	}
 }
 
+// Close 关闭日志。
 func Close() error {
 	if writeConsole {
 		return nil
@@ -150,10 +165,10 @@ func Close() error {
 
 	atomic.StoreUint32(&initialized, 0)
 
-	loggers := []io.WriteCloser{infoLogger, errorLogger, fatalLogger, slowLogger, statLogger}
+	loggers := []io.WriteCloser{infoLog, errorLog, severeLog, slowLog, statLog}
 	for _, logger := range loggers {
 		if logger != nil {
-			if err := infoLogger.Close(); err != nil {
+			if err := logger.Close(); err != nil {
 				return err
 			}
 		}
@@ -162,20 +177,27 @@ func Close() error {
 	return nil
 }
 
-// 禁用 logx 日志
+// Disable 禁用日志。
 func Disable() {
 	once.Do(func() {
 		atomic.StoreUint32(&initialized, 1)
 
-		infoLogger = iox.NopCloser(ioutil.Discard)
-		errorLogger = iox.NopCloser(ioutil.Discard)
-		fatalLogger = iox.NopCloser(ioutil.Discard)
-		slowLogger = iox.NopCloser(ioutil.Discard)
-		statLogger = iox.NopCloser(ioutil.Discard)
-		stackLogger = ioutil.Discard
+		infoLog = iox.NopCloser(ioutil.Discard)
+		debugLog = iox.NopCloser(ioutil.Discard)
+		errorLog = iox.NopCloser(ioutil.Discard)
+		severeLog = iox.NopCloser(ioutil.Discard)
+		slowLog = iox.NopCloser(ioutil.Discard)
+		statLog = iox.NopCloser(ioutil.Discard)
+		stackLog = ioutil.Discard
 	})
 }
 
+// DisableStat 禁用统计日志。
+func DisableStat() {
+	atomic.StoreUint32(&disableStat, 1)
+}
+
+// SetLevel 设置日志级别。可被用于抑制某些日志。
 func SetLevel(level uint32) {
 	atomic.StoreUint32(&logLevel, level)
 }
@@ -198,60 +220,100 @@ func WithCooldownMillis(millis int) LogOption {
 	}
 }
 
+// Alert 输出警报并写入错误日志。
 func Alert(v string) {
-	output(errorLogger, alertLevel, v)
+	outputText(errorLog, alertLevel, v)
 }
 
+// Info 将值写入访问日志。
 func Info(v ...interface{}) {
-	syncInfo(fmt.Sprint(v...))
+	syncInfoText(fmt.Sprint(v...))
 }
 
+// Infof 将格式化的值写入访问日志。
 func Infof(format string, args ...interface{}) {
-	syncInfo(fmt.Sprintf(format, args...))
+	syncInfoText(fmt.Sprintf(format, args...))
 }
 
+// Infov 将值以JSON格式写入访问日志。
+func Infov(v interface{}) {
+	syncInfoAny(v)
+}
+
+// Debug 将值写入调试日志。
+func Debug(v ...interface{}) {
+	syncDebugText(fmt.Sprint(v...))
+}
+
+// Debugf 将格式化的值写入调试日志。
+func Debugf(format string, args ...interface{}) {
+	syncDebugText(fmt.Sprintf(format, args...))
+}
+
+// Debugv 将值以JSON格式写入调试日志。
+func Debugv(v interface{}) {
+	syncDebugAny(v)
+}
+
+// Slow 将值写入慢日志。
+func Slow(v ...interface{}) {
+	syncSlowText(fmt.Sprint(v...))
+}
+
+// Slowf 将格式化值写入慢日志。
+func Slowf(format string, v ...interface{}) {
+	syncSlowText(fmt.Sprintf(format, v...))
+}
+
+// Slowv 将值以JSON格式写入慢日志。
+func Slowv(v interface{}) {
+	syncSlowAny(v)
+}
+
+// Error 将值写入错误日志。
 func Error(v ...interface{}) {
 	ErrorCaller(1, v...)
 }
 
-func Errorf(format string, args ...interface{}) {
-	ErrorCallerf(1, format, args...)
+// Errorf 将带格式的值写入错误日志。
+func Errorf(format string, v ...interface{}) {
+	ErrorCallerf(1, format, v...)
 }
 
+// ErrorCaller 将带上下文的值写入错误日志。
 func ErrorCaller(callDepth int, v ...interface{}) {
-	syncError(fmt.Sprint(v...), callDepth+callerInnerDepth)
+	syncErrorText(fmt.Sprint(v...), callDepth+callerInnerDepth)
 }
 
-func ErrorCallerf(callDepth int, format string, args ...interface{}) {
-	syncError(fmt.Sprintf(format, args...), callDepth+callerInnerDepth)
+// ErrorCallerf 将带上下文的格式化值写入错误日志。
+func ErrorCallerf(callDepth int, format string, v ...interface{}) {
+	syncErrorText(fmt.Errorf(format, v...).Error(), callDepth+callerInnerDepth)
 }
 
+// ErrorStack 将值和调用堆栈一起写入错误日志。
 func ErrorStack(v ...interface{}) {
 	syncStack(fmt.Sprint(v...))
 }
 
+// ErrorStackf 将格式化的值和调用堆栈一起写入错误日志。
 func ErrorStackf(format string, v ...interface{}) {
 	syncStack(fmt.Sprintf(format, v...))
 }
 
+// Errorv 将值以JSON格式写入错误日志。
+// 因调用堆栈打包不优雅故未打包。
 func Errorv(v interface{}) {
-	errorAnySync(v)
+	syncErrorAny(v)
 }
 
-func Fatal(v ...interface{}) {
-	syncFatal(fmt.Sprint(v...))
+// Severe 将值写入严重日志。
+func Severe(v ...interface{}) {
+	syncSevere(fmt.Sprint(v...))
 }
 
-func Fatalf(format string, args ...interface{}) {
-	syncFatal(fmt.Sprintf(format, args...))
-}
-
-func Slow(v ...interface{}) {
-	syncSlow(fmt.Sprint(v...))
-}
-
-func Slowf(format string, v ...interface{}) {
-	syncSlow(fmt.Sprintf(format, v...))
+// Severef 将格式化值写入严重日志。
+func Severef(format string, v ...interface{}) {
+	syncSevere(fmt.Sprintf(format, v...))
 }
 
 func Stat(v ...interface{}) {
@@ -266,17 +328,19 @@ func setupLogLevel(c LogConf) {
 	switch c.Level {
 	case infoLevel:
 		SetLevel(InfoLevel)
-	case slowLevel:
-		SetLevel(SlowLevel)
 	case errorLevel:
 		SetLevel(ErrorLevel)
-	case fatalLevel:
-		SetLevel(FatalLevel)
+	case serverLevel:
+		SetLevel(SevereLevel)
 	}
 }
 
 func shouldLog(level uint32) bool {
 	return atomic.LoadUint32(&logLevel) <= level
+}
+
+func shouldLogStat() bool {
+	return atomic.LoadUint32(&disableStat) == 0
 }
 
 func setupWithConsole(c LogConf) {
@@ -285,12 +349,12 @@ func setupWithConsole(c LogConf) {
 		writeConsole = true
 		setupLogLevel(c)
 
-		infoLogger = newLogWriter(log.New(os.Stdout, "", flags))
-		errorLogger = newLogWriter(log.New(os.Stderr, "", flags))
-		fatalLogger = newLogWriter(log.New(os.Stderr, "", flags))
-		slowLogger = newLogWriter(log.New(os.Stderr, "", flags))
-		stackLogger = NewShortTimeWriter(errorLogger, options.logStackCooldownMills)
-		statLogger = infoLogger
+		infoLog = newLogWriter(log.New(os.Stdout, "", flags))
+		errorLog = newLogWriter(log.New(os.Stderr, "", flags))
+		severeLog = newLogWriter(log.New(os.Stderr, "", flags))
+		slowLog = newLogWriter(log.New(os.Stderr, "", flags))
+		stackLog = newLessWriter(errorLog, options.logStackCooldownMills)
+		statLog = infoLog
 	})
 }
 
@@ -312,7 +376,7 @@ func setupWithFiles(c LogConf) error {
 
 	accessFile := path.Join(c.Path, accessFilename)
 	errorFile := path.Join(c.Path, errorFilename)
-	fatalFile := path.Join(c.Path, fatalFilename)
+	severeFile := path.Join(c.Path, severeFilename)
 	slowFile := path.Join(c.Path, slowFilename)
 	statFile := path.Join(c.Path, statFilename)
 
@@ -321,23 +385,27 @@ func setupWithFiles(c LogConf) error {
 		handleOptions(opts)
 		setupLogLevel(c)
 
-		if infoLogger, err = createOutput(accessFile); err != nil {
-			return
-		}
-		if errorLogger, err = createOutput(errorFile); err != nil {
-			return
-		}
-		if fatalLogger, err = createOutput(fatalFile); err != nil {
-			return
-		}
-		if slowLogger, err = createOutput(slowFile); err != nil {
-			return
-		}
-		if statLogger, err = createOutput(statFile); err != nil {
+		if infoLog, err = createOutput(accessFile); err != nil {
 			return
 		}
 
-		stackLogger = NewShortTimeWriter(errorLogger, options.logStackCooldownMills)
+		if errorLog, err = createOutput(errorFile); err != nil {
+			return
+		}
+
+		if severeLog, err = createOutput(severeFile); err != nil {
+			return
+		}
+
+		if slowLog, err = createOutput(slowFile); err != nil {
+			return
+		}
+
+		if statLog, err = createOutput(statFile); err != nil {
+			return
+		}
+
+		stackLog = newLessWriter(errorLog, options.logStackCooldownMills)
 	})
 
 	return err
@@ -363,63 +431,106 @@ func createOutput(filename string) (io.WriteCloser, error) {
 		return nil, ErrLogPathNotSet
 	}
 
-	return NewLogger(
-		filename,
+	return NewLogger(filename,
 		DefaultRotateRule(filename, backupFileDelimiter, options.keepDays, options.gzipEnabled),
-		options.gzipEnabled,
-	)
+		options.gzipEnabled)
 }
 
-func errorAnySync(v interface{}) {
-	if shouldLog(ErrorLevel) {
-		outputAny(errorLogger, errorLevel, v)
-	}
-}
-
-func syncInfo(msg string) {
+func syncInfoText(msg string) {
 	if shouldLog(InfoLevel) {
-		output(infoLogger, infoLevel, msg)
+		outputText(infoLog, infoLevel, msg)
 	}
 }
 
-func syncError(msg string, callDepth int) {
+func syncInfoAny(v interface{}) {
+	if shouldLog(InfoLevel) {
+		outputAny(infoLog, infoLevel, v)
+	}
+}
+
+func syncDebugText(msg string) {
+	if shouldLog(DebugLevel) {
+		outputText(infoLog, debugLevel, msg)
+	}
+}
+
+func syncDebugAny(v interface{}) {
+	if shouldLog(DebugLevel) {
+		outputAny(infoLog, debugLevel, v)
+	}
+}
+
+func syncSlowAny(v interface{}) {
 	if shouldLog(ErrorLevel) {
-		outputError(errorLogger, msg, callDepth)
+		outputAny(slowLog, slowLevel, v)
+	}
+}
+
+func syncSlowText(msg string) {
+	if shouldLog(ErrorLevel) {
+		outputText(slowLog, slowLevel, msg)
+	}
+}
+
+func syncErrorAny(v interface{}) {
+	if shouldLog(ErrorLevel) {
+		outputAny(errorLog, errorLevel, v)
+	}
+}
+
+func syncErrorText(msg string, callDepth int) {
+	if shouldLog(ErrorLevel) {
+		outputError(errorLog, msg, callDepth)
+	}
+}
+
+func syncSevere(msg string) {
+	if shouldLog(SevereLevel) {
+		outputText(severeLog, serverLevel, fmt.Sprintf("%s\n%s", msg, string(debug.Stack())))
 	}
 }
 
 func syncStack(msg string) {
-	output(stackLogger, errorLevel, fmt.Sprintf("%s\n%s", msg, string(debug.Stack())))
-}
-
-func syncFatal(msg string) {
-	if shouldLog(FatalLevel) {
-		output(fatalLogger, fatalLevel, fmt.Sprintf("%s\n%s", msg, string(debug.Stack())))
-	}
-}
-
-func syncSlow(msg string) {
-	if shouldLog(SlowLevel) {
-		output(slowLogger, slowLevel, msg)
+	if shouldLog(ErrorLevel) {
+		outputText(stackLog, errorLevel, fmt.Sprintf("%s\n%s", msg, string(debug.Stack())))
 	}
 }
 
 func syncStat(msg string) {
-	output(statLogger, statLevel, msg)
+	if shouldLogStat() && shouldLog(InfoLevel) {
+		outputText(statLog, statLevel, msg)
+	}
 }
 
 func outputError(writer io.WriteCloser, msg string, callDepth int) {
 	content := formatWithCaller(msg, callDepth)
-	output(writer, errorLevel, content)
+	outputText(writer, errorLevel, content)
 }
 
 func outputAny(writer io.Writer, level string, val interface{}) {
-	entry := logEntry{
+	outputJson(writer, logEntry{
 		Timestamp: getTimestamp(),
 		Level:     level,
 		Content:   val,
+	})
+}
+
+func outputText(writer io.Writer, level, msg string) {
+	outputJson(writer, logEntry{
+		Timestamp: getTimestamp(),
+		Level:     level,
+		Content:   msg,
+	})
+}
+
+func outputJson(writer io.Writer, info interface{}) {
+	if content, err := json.Marshal(info); err != nil {
+		log.Println(err.Error())
+	} else if atomic.LoadUint32(&initialized) == 0 || writer == nil {
+		log.Println(string(content))
+	} else {
+		writer.Write(append(content, '\n'))
 	}
-	outputJson(writer, entry)
 }
 
 func formatWithCaller(msg string, callDepth int) string {
@@ -455,24 +566,26 @@ func getCaller(callDepth int) string {
 	return b.String()
 }
 
-func output(writer io.Writer, level, msg string) {
-	outputJson(writer, logEntry{
-		Timestamp: getTimestamp(),
-		Level:     level,
-		Content:   msg,
-	})
+func getTimestamp() string {
+	return timex.Time().Format(timeFormat)
 }
 
-func outputJson(writer io.Writer, info interface{}) {
-	if content, err := json.Marshal(info); err != nil {
-		log.Println(err.Error())
-	} else if atomic.LoadUint32(&initialized) == 0 || writer == nil {
-		log.Println(string(content))
-	} else {
-		writer.Write(append(content, '\n'))
+// 日志输出器
+type logWriter struct {
+	logger *log.Logger
+}
+
+func newLogWriter(logger *log.Logger) logWriter {
+	return logWriter{
+		logger: logger,
 	}
 }
 
-func getTimestamp() string {
-	return timex.Time().Format(timeFormat)
+func (w logWriter) Close() error {
+	return nil
+}
+
+func (w logWriter) Write(data []byte) (int, error) {
+	w.logger.Print(string(data))
+	return len(data), nil
 }

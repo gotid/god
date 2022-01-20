@@ -10,56 +10,64 @@ import (
 	"git.zc0901.com/go/god/lib/logx"
 )
 
+// LogContext 是一个上下文键。
 var LogContext = contextKey("request_logs")
 
+// LogCollector 是一个日志采集器。
 type LogCollector struct {
 	Messages []string
 	lock     sync.Mutex
 }
 
-func (lc *LogCollector) Append(msg string) {
-	lc.lock.Lock()
-	lc.Messages = append(lc.Messages, msg)
-	lc.lock.Unlock()
+// Append 追加消息到日志上下文。
+func (c *LogCollector) Append(msg string) {
+	c.lock.Lock()
+	c.Messages = append(c.Messages, msg)
+	c.lock.Unlock()
 }
 
-func (lc *LogCollector) Flush() string {
-	var buffer bytes.Buffer
+// Flush 刷新已收集的日志。
+func (c *LogCollector) Flush() string {
+	var b bytes.Buffer
 
 	start := true
-	for _, message := range lc.takeAll() {
+	for _, msg := range c.takeAll() {
 		if start {
 			start = false
 		} else {
-			buffer.WriteByte('\n')
+			b.WriteByte('\n')
 		}
-		buffer.WriteString(message)
+		b.WriteString(msg)
 	}
 
-	return buffer.String()
+	return b.String()
 }
 
-func (lc *LogCollector) takeAll() []string {
-	lc.lock.Lock()
-	messages := lc.Messages
-	lc.Messages = nil
-	lc.lock.Unlock()
+func (c *LogCollector) takeAll() []string {
+	c.lock.Lock()
+	messages := c.Messages
+	c.Messages = nil
+	c.lock.Unlock()
 
 	return messages
 }
 
+// Error 将请求和错误写入错误日志。
 func Error(r *http.Request, v ...interface{}) {
 	logx.ErrorCaller(1, format(r, v...))
 }
 
+// Errorf 将请求和错误按指定格式写入错误日志。
 func Errorf(r *http.Request, format string, v ...interface{}) {
 	logx.ErrorCaller(1, formatf(r, format, v...))
 }
 
+// Info 将请求和信息写入访问日志。
 func Info(r *http.Request, v ...interface{}) {
 	appendLog(r, format(r, v...))
 }
 
+// Infof 将请求和信息按指定格式写入访问日志。
 func Infof(r *http.Request, format string, v ...interface{}) {
 	appendLog(r, formatf(r, format, v...))
 }
@@ -86,5 +94,5 @@ func formatWithReq(r *http.Request, v string) string {
 type contextKey string
 
 func (c contextKey) String() string {
-	return "rest/internal context key " + string(c)
+	return "api/internal pathvar key " + string(c)
 }
