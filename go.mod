@@ -1,6 +1,6 @@
-module git.zc0901.com/go/god
+module github.com/gotid/god
 
-go 1.17
+go 1.16
 
 require (
 	github.com/BurntSushi/toml v0.3.1
