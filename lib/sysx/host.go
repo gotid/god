@@ -16,6 +16,7 @@ func init() {
 	}
 }
 
+// Hostname 返回主机的名称，如无则返回一个随机id。
 func Hostname() string {
 	return hostname
 }

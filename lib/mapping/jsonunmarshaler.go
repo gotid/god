@@ -15,6 +15,11 @@ func UnmarshalJsonBytes(content []byte, v interface{}) error {
 	return unmarshalJsonBytes(content, v, jsonUnmarshaler)
 }
 
+// UnmarshalJsonMap 将内容 m 解编排到 v。
+func UnmarshalJsonMap(m map[string]interface{}, v interface{}) error {
+	return jsonUnmarshaler.Unmarshal(m, v)
+}
+
 func UnmarshalJsonReader(reader io.Reader) (*gmap.StrAnyMap, error) {
 	return unmarshalJsonReader(reader)
 }

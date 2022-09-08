@@ -1,6 +1,7 @@
 package mr
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"sync"
@@ -31,6 +32,7 @@ type (
 	Option          func(opts *mapReduceOptions)
 
 	mapReduceOptions struct {
+		ctx     context.Context
 		workers int
 	}
 
@@ -83,7 +85,7 @@ func Map(generate GenerateFunc, mapper MapFunc, opts ...Option) chan interface{}
 	collector := make(chan interface{}, options.workers)
 	done := syncx.NewDoneChan()
 
-	go executeMappers(mapper, source, collector, done.Done(), options.workers)
+	go executeMappers(options.ctx, mapper, source, collector, done.Done(), options.workers)
 
 	return collector
 }
@@ -101,7 +103,7 @@ func MapReduceWithSource(source <-chan interface{}, mapper MapperFunc, reducer R
 	output := make(chan interface{})
 	collector := make(chan interface{}, options.workers)
 	done := syncx.NewDoneChan()
-	writer := newGuardedWriter(output, done.Done())
+	writer := newGuardedWriter(options.ctx, output, done.Done())
 	var closeOnce sync.Once
 	var retErr errorx.AtomicError
 	finish := func() {
@@ -134,7 +136,7 @@ func MapReduceWithSource(source <-chan interface{}, mapper MapperFunc, reducer R
 		reducer(collector, writer, cancel)
 	}()
 
-	go executeMappers(func(item interface{}, w Writer) {
+	go executeMappers(options.ctx, func(item interface{}, w Writer) {
 		mapper(item, w, cancel)
 	}, source, collector, done.Done(), options.workers)
 
@@ -165,6 +167,13 @@ func MapVoid(generate GenerateFunc, mapper VoidMapFunc, opts ...Option) {
 	drain(Map(generate, func(item interface{}, writer Writer) {
 		mapper(item)
 	}, opts...))
+}
+
+// WithContext 自定义MapReduce的上下文。
+func WithContext(ctx context.Context) Option {
+	return func(opts *mapReduceOptions) {
+		opts.ctx = ctx
+	}
 }
 
 // WithWorkers 自定义MapReduce的worker数量。
@@ -204,7 +213,7 @@ func drain(channel <-chan interface{}) {
 	}
 }
 
-func executeMappers(mapper MapFunc, input <-chan interface{}, collector chan<- interface{},
+func executeMappers(ctx context.Context, mapper MapFunc, input <-chan interface{}, collector chan<- interface{},
 	done <-chan lang.PlaceholderType, workers int) {
 	var wg sync.WaitGroup
 	defer func() {
@@ -213,9 +222,11 @@ func executeMappers(mapper MapFunc, input <-chan interface{}, collector chan<- i
 	}()
 
 	pool := make(chan lang.PlaceholderType, workers)
-	writer := newGuardedWriter(collector, done)
+	writer := newGuardedWriter(ctx, collector, done)
 	for {
 		select {
+		case <-ctx.Done():
+			return
 		case <-done:
 			return
 		case pool <- lang.Placeholder:
@@ -241,6 +252,7 @@ func executeMappers(mapper MapFunc, input <-chan interface{}, collector chan<- i
 
 func newOptions() *mapReduceOptions {
 	return &mapReduceOptions{
+		ctx:     context.Background(),
 		workers: defaultWorkers,
 	}
 }
@@ -255,12 +267,14 @@ func once(fn func(error)) func(error) {
 }
 
 type guardedWriter struct {
+	ctx     context.Context
 	channel chan<- interface{}
 	done    <-chan lang.PlaceholderType
 }
 
-func newGuardedWriter(channel chan<- interface{}, done <-chan lang.PlaceholderType) guardedWriter {
+func newGuardedWriter(ctx context.Context, channel chan<- interface{}, done <-chan lang.PlaceholderType) guardedWriter {
 	return guardedWriter{
+		ctx:     ctx,
 		channel: channel,
 		done:    done,
 	}
@@ -268,6 +282,8 @@ func newGuardedWriter(channel chan<- interface{}, done <-chan lang.PlaceholderTy
 
 func (gw guardedWriter) Write(v interface{}) {
 	select {
+	case <-gw.ctx.Done():
+		return
 	case <-gw.done:
 		return
 	default:

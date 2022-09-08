@@ -1,10 +1,12 @@
 package httpx
 
+import "github.com/gotid/god/api/internal/header"
+
 const (
-	ApplicationJson = "application/json"
 	ContentEncoding = "Content-Encoding"
 	ContentSecurity = "X-Content-Security"
-	ContentType     = "Content-Type"
+	ContentType     = header.ContentType
+	JsonContentType = header.JsonContentType
 	KeyField        = "key"
 	SecretField     = "secret"
 	TypeField       = "type"

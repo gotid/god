@@ -13,10 +13,11 @@ import (
 // StartOption 自定义 http.Server 的方法。
 type StartOption func(s *http.Server)
 
-func StartHttp(host string, port int, handler http.Handler) error {
+// StartHttp 启动一个 http 服务器。
+func StartHttp(host string, port int, handler http.Handler, opts ...StartOption) error {
 	return start(host, port, handler, func(server *http.Server) error {
 		return server.ListenAndServe()
-	})
+	}, opts...)
 }
 
 // StartHttps 启动一个 https server。

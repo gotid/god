@@ -74,7 +74,7 @@ var (
 	once         sync.Once // 一次操作对象
 	options      logOptions
 
-	timeFormat = "2006-01-02T15:04:05.000Z07" // 日期格式
+	timeFormat = "2006-01-02T15:04:05.000Z07:00" // 日期格式
 
 	// ErrLogPathNotSet 指示日志路径未设置的错误。
 	ErrLogPathNotSet = errors.New("日志路径必须设置")

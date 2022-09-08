@@ -1,6 +1,11 @@
 package cors
 
-import "net/http"
+import (
+	"net/http"
+	"strings"
+
+	"github.com/gotid/god/api/internal/response"
+)
 
 const (
 	allowOrigin      = "Access-Control-Allow-Origin"
@@ -23,23 +28,30 @@ const (
 
 // NotAllowedHandler 处理不允许的跨域请求。
 // 仅允许一个 origin 源站或允许所有来源。
-func NotAllowedHandler(origin ...string) http.Handler {
+func NotAllowedHandler(fn func(w http.ResponseWriter), origins ...string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		checkAndSetHeader(w, r, origin)
+		ow := response.NewHeaderOnceResponseWriter(w)
+		checkAndSetHeader(ow, r, origins)
+		if fn != nil {
+			fn(ow)
+		}
 
-		if r.Method != http.MethodOptions {
-			w.WriteHeader(http.StatusNotFound)
-		} else {
+		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusNoContent)
+		} else {
+			w.WriteHeader(http.StatusNotFound)
 		}
 	})
 }
 
 // Middleware 返回一个添加了 CORS 响应头的中间件。
-func Middleware(origin ...string) func(handlerFunc http.HandlerFunc) http.HandlerFunc {
+func Middleware(fn func(w http.Header), origin ...string) func(http.HandlerFunc) http.HandlerFunc {
 	return func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
 			checkAndSetHeader(w, r, origin)
+			if fn != nil {
+				fn(w.Header())
+			}
 
 			if r.Method == http.MethodOptions {
 				w.WriteHeader(http.StatusNoContent)
@@ -70,11 +82,11 @@ func isOriginAllowed(allows []string, origin string) bool {
 			return true
 		}
 
-		if o == origin {
+		if strings.HasSuffix(origin, o) {
 			return true
 		}
-
 	}
+
 	return false
 }
 
