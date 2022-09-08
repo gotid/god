@@ -13,6 +13,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/gotid/god/api/httpx"
+
 	"github.com/gotid/god/api/internal"
 )
 
@@ -87,12 +89,16 @@ func (h *timeoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case <-ctx.Done():
 		tw.mu.Lock()
 		defer tw.mu.Unlock()
-		if errors.Is(ctx.Err(), context.Canceled) {
-			w.WriteHeader(statusClientClosedRequest)
-		} else {
-			w.WriteHeader(http.StatusServiceUnavailable)
-		}
-		io.WriteString(w, h.errorBody())
+		// 因为在 TimeoutHandler 之前没有任何用户定义的中间件，
+		// 所以我们可以保证业务相关的取消代码不会出现在这里。
+		httpx.Error(w, ctx.Err(), func(w http.ResponseWriter, err error) {
+			if errors.Is(ctx.Err(), context.Canceled) {
+				w.WriteHeader(statusClientClosedRequest)
+			} else {
+				w.WriteHeader(http.StatusServiceUnavailable)
+			}
+			io.WriteString(w, h.errorBody())
+		})
 		tw.timedOut = true
 	}
 }

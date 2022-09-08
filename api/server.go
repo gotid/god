@@ -108,8 +108,9 @@ func ToMiddleware(handler func(next http.Handler) http.Handler) Middleware {
 // WithCors 返回一个允许指定来源的CORS中间件，默认允许所有来源(*)。
 func WithCors(origin ...string) RunOption {
 	return func(server *Server) {
-		server.router.SetNotAllowedHandler(cors.NotAllowedHandler(origin...))
-		server.Use(cors.Middleware(origin...))
+		server.router.SetNotAllowedHandler(cors.NotAllowedHandler(nil, origin...))
+		// server.Use(cors.Middleware(origin...))
+		server.router = newCorsRouter(server.router, nil, origin...)
 	}
 }
 
@@ -252,4 +253,20 @@ func validateSecret(secret string) {
 	if len(secret) < 8 {
 		panic("JWT 密钥长度不能小于8位")
 	}
+}
+
+type corsRouter struct {
+	httpx.Router
+	middleware Middleware
+}
+
+func newCorsRouter(router httpx.Router, headerFn func(http.Header), origins ...string) httpx.Router {
+	return &corsRouter{
+		Router:     router,
+		middleware: cors.Middleware(headerFn, origins...),
+	}
+}
+
+func (c *corsRouter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	c.middleware(c.Router.ServeHTTP)(w, r)
 }

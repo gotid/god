@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/gotid/god/api/internal/errcode"
+
 	"github.com/gotid/god/lib/logx"
 )
 
@@ -33,13 +35,19 @@ func NewDefaultError(msg string) error {
 }
 
 // Error 错误响应，支持自定义错误处理器
-func Error(w http.ResponseWriter, err error) {
+func Error(w http.ResponseWriter, err error, fns ...func(w http.ResponseWriter, err error)) {
 	lock.RLock()
 	handler := errorHandler
 	lock.RUnlock()
 
 	if handler == nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		if len(fns) > 0 {
+			fns[0](w, err)
+		} else if errcode.IsGrpcError(err) {
+			http.Error(w, err.Error(), errcode.CodeFromGrpcError(err))
+		} else {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
 		return
 	}
 
@@ -51,10 +59,7 @@ func Error(w http.ResponseWriter, err error) {
 
 	e, ok := body.(error)
 	if ok {
-		WriteJson(w, http.StatusOK, &Message{
-			Code: code,
-			Msg:  e.Error(),
-		})
+		http.Error(w, e.Error(), code)
 	} else {
 		WriteJson(w, code, body)
 	}
@@ -94,7 +99,7 @@ func SetOkJsonHandler(handler func(body interface{}) interface{}) {
 
 // WriteJson 写JSON响应
 func WriteJson(w http.ResponseWriter, code int, body interface{}) {
-	w.Header().Set(ContentType, ApplicationJson)
+	w.Header().Set(ContentType, JsonContentType)
 	w.WriteHeader(code)
 
 	if bs, err := json.Marshal(body); err != nil {

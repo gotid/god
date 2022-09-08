@@ -6,6 +6,7 @@ require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/alicebob/miniredis/v2 v2.14.1
 	github.com/beanstalkd/go-beanstalk v0.1.0
+	github.com/fatih/color v1.13.0
 	github.com/clbanning/mxj v1.8.4
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/emicklei/proto v1.9.0

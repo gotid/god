@@ -152,5 +152,5 @@ func ParseHeader(headerValue string) map[string]string {
 
 // 判断是否带有JSON请求体
 func withJsonBody(r *http.Request) bool {
-	return r.ContentLength > 0 && strings.Contains(r.Header.Get(ContentType), ApplicationJson)
+	return r.ContentLength > 0 && strings.Contains(r.Header.Get(ContentType), JsonContentType)
 }

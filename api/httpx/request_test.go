@@ -7,6 +7,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/gotid/god/api/internal/header"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -54,7 +56,7 @@ func TestParseJsonBody(t *testing.T) {
 	//body := `{"id": "1"}`
 
 	r := httptest.NewRequest(http.MethodPost, "http://localhost:3333/", strings.NewReader(body))
-	r.Header.Set(ContentType, ApplicationJson)
+	r.Header.Set(ContentType, JsonContentType)
 
 	if e := Parse(r, &v); e != nil {
 		fmt.Println(e)
@@ -65,4 +67,33 @@ func TestParseJsonBody(t *testing.T) {
 	// assert.Nil(t, Parse(r, &v))
 	// assert.Equal(t, "kevin", v.Name)
 	// assert.Equal(t, 18, v.Age)
+}
+
+func TestParseJsonBody2(t *testing.T) {
+	t.Run("has body", func(t *testing.T) {
+		var v struct {
+			Name string `json:"name"`
+			Age  int    `json:"age"`
+		}
+
+		body := `{"name":"kevin", "age": 18}`
+		r := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(body))
+		r.Header.Set(ContentType, header.JsonContentType)
+
+		assert.Nil(t, Parse(r, &v))
+		assert.Equal(t, "kevin", v.Name)
+		assert.Equal(t, 18, v.Age)
+	})
+
+	t.Run("hasn't body", func(t *testing.T) {
+		var v struct {
+			Name string `json:"name,optional"`
+			Age  int    `json:"age,optional"`
+		}
+
+		r := httptest.NewRequest(http.MethodGet, "/", nil)
+		assert.Nil(t, Parse(r, &v))
+		assert.Equal(t, "", v.Name)
+		assert.Equal(t, 0, v.Age)
+	})
 }

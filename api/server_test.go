@@ -9,6 +9,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/gotid/god/lib/logx"
+
 	"github.com/gotid/god/api/httpx"
 	"github.com/gotid/god/api/router"
 	"github.com/gotid/god/lib/conf"
@@ -16,6 +18,8 @@ import (
 )
 
 func TestNewServer(t *testing.T) {
+	logx.Disable()
+
 	const configYaml = `
 Nickname: foo
 Port: 54321
