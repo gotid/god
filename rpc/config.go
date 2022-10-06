@@ -3,7 +3,7 @@ package rpc
 import (
 	"github.com/gotid/god/lib/discov"
 	"github.com/gotid/god/lib/service"
-	"github.com/gotid/god/lib/stores/redis"
+	"github.com/gotid/god/lib/store/redis"
 )
 
 type (

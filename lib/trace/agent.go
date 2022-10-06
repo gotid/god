@@ -69,7 +69,7 @@ func startAgent(c Config) error {
 		opts = append(opts, sdktrace.WithBatcher(exporter))
 	}
 
-	tp := sdktrace.NewTracerProvider(opts...)
+	tp = sdktrace.NewTracerProvider(opts...)
 	otel.SetTracerProvider(tp)
 	otel.SetErrorHandler(otel.ErrorHandlerFunc(func(err error) {
 		logx.Errorf("[otel] 错误：%v", err)

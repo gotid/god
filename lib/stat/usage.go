@@ -54,8 +54,9 @@ func CpuUsage() int64 {
 
 func printUsage() {
 	var m runtime.MemStats
+	runtime.GC()
 	runtime.ReadMemStats(&m)
-	logx.Statf("CPU: %dm, MEMORY: Alloc=%.1fMi, TotalAlloc=%.1fMi, Sys=%.1fMi, NumGC=%d",
+	logx.Statf("CPU: %dm，内存: 当前=%.1fMi，总计=%.1fMi，系统=%.1fMi，GC=%d",
 		CpuUsage(), bToMb(m.Alloc), bToMb(m.TotalAlloc), bToMb(m.Sys), m.NumGC)
 }
 

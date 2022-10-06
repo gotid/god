@@ -248,7 +248,7 @@ func (r *Redis) BlpopExCtx(ctx context.Context, node Node, key string) (string, 
 	}
 
 	if len(values) < 2 {
-		return "", false, fmt.Errorf("no value on key: %s", key)
+		return "", false, fmt.Errorf("列表键 %s 暂无可弹出元素", key)
 	}
 
 	return values[1], true, nil

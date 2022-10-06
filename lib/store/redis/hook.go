@@ -118,7 +118,7 @@ func (h hook) AfterProcessPipeline(ctx context.Context, cmds []red.Cmder) error 
 }
 
 func (h hook) startSpan(ctx context.Context, cmds ...red.Cmder) context.Context {
-	ctx, span := h.tracer.Start(ctx,
+	outCtx, span := h.tracer.Start(ctx,
 		spanName,
 		oteltrace.WithSpanKind(oteltrace.SpanKindClient),
 	)
@@ -129,7 +129,7 @@ func (h hook) startSpan(ctx context.Context, cmds ...red.Cmder) context.Context 
 	}
 	span.SetAttributes(redisCmdsAttributeKey.StringSlice(cmdStrs))
 
-	return ctx
+	return outCtx
 }
 
 func (h hook) endSpan(ctx context.Context, err error) {
