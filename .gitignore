@@ -15,7 +15,9 @@ tools/god/god-arm64
 **/.DS_Store
 **/logs
 !Makefile
-./test.*
+test.go
+test.sh
+go.sum
 
 
 # gitlab ci
