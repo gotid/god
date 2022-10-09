@@ -211,7 +211,7 @@ func TestRedis_Hmset(t *testing.T) {
 
 func TestRedis_Hscan(t *testing.T) {
 	runOnRedis(t, func(client *Redis) {
-		key := "hash:test"
+		key := "hash:redistest"
 		fieldsAndValues := make(map[string]string)
 		for i := 0; i < 1550; i++ {
 			fieldsAndValues["filed_"+strconv.Itoa(i)] = stringx.Randn(i)

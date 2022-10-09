@@ -27,7 +27,7 @@ type (
 	}
 )
 
-// NewRedis 基于配置返回一个 Redis 实例。
+// NewRedis 基于配置返回一个 Redis 节点实例。
 func (c Config) NewRedis() *Redis {
 	var opts []Option
 	if c.Type == ClusterType {

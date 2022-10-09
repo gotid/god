@@ -159,7 +159,7 @@ func TestPeriodicalExecutor_hasTasks(t *testing.T) {
 	assert.True(t, executor.hasTasks(1))
 }
 
-// go test -benchtime 10s -bench .
+// go redistest -benchtime 10s -bench .
 func BenchmarkExecutor(b *testing.B) {
 	b.ReportAllocs()
 

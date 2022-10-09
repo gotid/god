@@ -55,10 +55,10 @@ func TestParseFullMethod(t *testing.T) {
 		attr       []attribute.KeyValue
 	}{
 		{
-			fullMethod: "/grpc.test.EchoService/Echo",
-			name:       "grpc.test.EchoService/Echo",
+			fullMethod: "/grpc.redistest.EchoService/Echo",
+			name:       "grpc.redistest.EchoService/Echo",
 			attr: []attribute.KeyValue{
-				semconv.RPCServiceKey.String("grpc.test.EchoService"),
+				semconv.RPCServiceKey.String("grpc.redistest.EchoService"),
 				semconv.RPCMethodKey.String("Echo"),
 			},
 		}, {

@@ -431,11 +431,11 @@ func (r *Redis) ExpireCtx(ctx context.Context, key string, seconds int) error {
 
 // Expireat 设置 key 的过期时间，过期会自动删除。
 func (r *Redis) Expireat(key string, expireTime int64) error {
-	return r.ExpireAtCtx(context.Background(), key, expireTime)
+	return r.ExpireatCtx(context.Background(), key, expireTime)
 }
 
-// ExpireAtCtx 设置 key 的过期时间，过期会自动删除。
-func (r *Redis) ExpireAtCtx(ctx context.Context, key string, expireTime int64) error {
+// ExpireatCtx 设置 key 的过期时间，过期会自动删除。
+func (r *Redis) ExpireatCtx(ctx context.Context, key string, expireTime int64) error {
 	return r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {

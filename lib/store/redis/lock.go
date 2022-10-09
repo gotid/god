@@ -30,7 +30,7 @@ end`
 
 // Lock 是一把 redis 锁。
 type Lock struct {
-	store   *Redis
+	rds     *Redis
 	seconds uint32
 	key     string
 	id      string
@@ -41,11 +41,11 @@ func init() {
 }
 
 // NewLock 返回一个 Lock 实例。
-func NewLock(store *Redis, key string) *Lock {
+func NewLock(rds *Redis, key string) *Lock {
 	return &Lock{
-		store: store,
-		key:   key,
-		id:    stringx.Randn(randomLen),
+		rds: rds,
+		key: key,
+		id:  stringx.Randn(randomLen),
 	}
 }
 
@@ -57,7 +57,7 @@ func (l *Lock) Acquire() (bool, error) {
 // AcquireCtx 获取具有给定上下文的 redis 锁。
 func (l *Lock) AcquireCtx(ctx context.Context) (bool, error) {
 	seconds := atomic.LoadUint32(&l.seconds)
-	resp, err := l.store.EvalCtx(ctx, lockCommand, []string{l.key}, []string{
+	resp, err := l.rds.EvalCtx(ctx, lockCommand, []string{l.key}, []string{
 		l.id, strconv.Itoa(int(seconds)*millisPerSecond + tolerance),
 	})
 	if err == red.Nil {
@@ -84,7 +84,7 @@ func (l *Lock) Release() (bool, error) {
 
 // ReleaseCtx 释放给定上下文的 redis 锁。
 func (l *Lock) ReleaseCtx(ctx context.Context) (bool, error) {
-	resp, err := l.store.EvalCtx(ctx, delCommand, []string{l.key}, []string{l.id})
+	resp, err := l.rds.EvalCtx(ctx, delCommand, []string{l.key}, []string{l.id})
 	if err != nil {
 		return false, err
 	}

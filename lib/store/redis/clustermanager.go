@@ -17,16 +17,16 @@ func getCluster(r *Redis) (*red.ClusterClient, error) {
 				InsecureSkipVerify: true,
 			}
 		}
-		store := red.NewClusterClient(&red.ClusterOptions{
+		client := red.NewClusterClient(&red.ClusterOptions{
 			Addrs:        []string{r.Addr},
 			Password:     r.Pass,
 			MaxRetries:   maxRetries,
 			MinIdleConns: idleConns,
 			TLSConfig:    tlsConfig,
 		})
-		store.AddHook(durationHook)
+		client.AddHook(durationHook)
 
-		return store, nil
+		return client, nil
 	})
 	if err != nil {
 		return nil, err

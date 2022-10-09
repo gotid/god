@@ -23,7 +23,7 @@ func getClient(r *Redis) (*red.Client, error) {
 				InsecureSkipVerify: true,
 			}
 		}
-		store := red.NewClient(&red.Options{
+		client := red.NewClient(&red.Options{
 			Addr:         r.Addr,
 			Password:     r.Pass,
 			DB:           defaultDatabase,
@@ -31,9 +31,9 @@ func getClient(r *Redis) (*red.Client, error) {
 			MinIdleConns: idleConns,
 			TLSConfig:    tlsConfig,
 		})
-		store.AddHook(durationHook)
+		client.AddHook(durationHook)
 
-		return store, nil
+		return client, nil
 	})
 	if err != nil {
 		return nil, err

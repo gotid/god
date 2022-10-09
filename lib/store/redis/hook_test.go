@@ -15,7 +15,7 @@ import (
 
 func TestHookProcessCase1(t *testing.T) {
 	gtrace.StartAgent(gtrace.Config{
-		Name:     "god-test",
+		Name:     "god-redistest",
 		Endpoint: "http://localhost:14268/api/traces",
 		Batcher:  "jaeger",
 		Sampler:  1.0,
@@ -39,7 +39,7 @@ func TestHookProcessCase1(t *testing.T) {
 
 func TestHookProcessCase2(t *testing.T) {
 	gtrace.StartAgent(gtrace.Config{
-		Name:     "god-test",
+		Name:     "god-redistest",
 		Endpoint: "http://localhost:14268/api/traces",
 		Batcher:  "jaeger",
 		Sampler:  1.0,
@@ -86,7 +86,7 @@ func TestHookProcessCase4(t *testing.T) {
 
 func TestHookProcessPipelineCase1(t *testing.T) {
 	gtrace.StartAgent(gtrace.Config{
-		Name:     "god-test",
+		Name:     "god-redistest",
 		Endpoint: "http://localhost:14268/api/traces",
 		Batcher:  "jaeger",
 		Sampler:  1.0,
@@ -110,7 +110,7 @@ func TestHookProcessPipelineCase1(t *testing.T) {
 
 func TestHookProcessPipelineCase2(t *testing.T) {
 	gtrace.StartAgent(gtrace.Config{
-		Name:     "god-test",
+		Name:     "god-redistest",
 		Endpoint: "http://localhost:14268/api/traces",
 		Batcher:  "jaeger",
 		Sampler:  1.0,
