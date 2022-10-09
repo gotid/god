@@ -123,7 +123,7 @@ func (n node) SetWithExpireCtx(ctx context.Context, key string, val interface{},
 		return err
 	}
 
-	return n.rds.SetexCtx(ctx, key, string(data), int(math.Ceil(expire.Seconds())))
+	return n.rds.SetExCtx(ctx, key, string(data), int(math.Ceil(expire.Seconds())))
 }
 
 // String 返回一个节点的字符串表示形式。
@@ -257,5 +257,5 @@ func (n node) aroundDuration(expire time.Duration) time.Duration {
 
 func (n node) setCacheWithNotFound(ctx context.Context, key string) error {
 	seconds := int(math.Ceil(n.aroundDuration(n.notFoundExpire).Seconds()))
-	return n.rds.SetexCtx(ctx, key, notFoundPlaceholder, seconds)
+	return n.rds.SetExCtx(ctx, key, notFoundPlaceholder, seconds)
 }

@@ -215,29 +215,29 @@ func (r *Redis) BitPosCtx(ctx context.Context, key string, bit, start, end int64
 	return
 }
 
-// Blpop 阻塞式查询节点 node 中列表 key 的第一个非空元素。否则阻塞列表至超时或有可弹元素为止。
+// BLPop 阻塞式查询节点 node 中列表 key 的第一个非空元素。否则阻塞列表至超时或有可弹元素为止。
 // 注意：阻塞式查询无法获取连接池的好处（如断路器保护）。
-func (r *Redis) Blpop(node Node, key string) (string, error) {
-	return r.BlpopCtx(context.Background(), node, key)
+func (r *Redis) BLPop(node Node, key string) (string, error) {
+	return r.BLPopCtx(context.Background(), node, key)
 }
 
-// BlpopCtx 阻塞式查询节点 node 中列表 key 的第一个非空元素。否则阻塞列表至超时或有可弹元素为止。
+// BLPopCtx 阻塞式查询节点 node 中列表 key 的第一个非空元素。否则阻塞列表至超时或有可弹元素为止。
 // // 注意：阻塞式查询无法获取连接池的好处（如断路器保护）。
-func (r *Redis) BlpopCtx(ctx context.Context, node Node, key string) (string, error) {
-	return r.BlpopWithTimeoutCtx(ctx, node, blockingQueryTimeout, key)
+func (r *Redis) BLPopCtx(ctx context.Context, node Node, key string) (string, error) {
+	return r.BLPopWithTimeoutCtx(ctx, node, blockingQueryTimeout, key)
 }
 
-// BlpopEx 阻塞式查询节点 node 中列表 key 的第一个非空元素。否则阻塞列表至超时或有可弹元素为止。
-// 和 Blpop 的差异是该方法返回了一个 bool 来指示成功。
+// BLPopEx 阻塞式查询节点 node 中列表 key 的第一个非空元素。否则阻塞列表至超时或有可弹元素为止。
+// 和 BLPop 的差异是该方法返回了一个 bool 来指示成功。
 // 注意：阻塞式查询无法获取连接池的好处（如断路器保护）。
-func (r *Redis) BlpopEx(node Node, key string) (string, bool, error) {
-	return r.BlpopExCtx(context.Background(), node, key)
+func (r *Redis) BLPopEx(node Node, key string) (string, bool, error) {
+	return r.BLPopExCtx(context.Background(), node, key)
 }
 
-// BlpopExCtx 阻塞式查询节点 node 中列表 key 的第一个非空元素。否则阻塞列表至超时或有可弹元素为止。
-// 和 Blpop 的差异是该方法返回了一个 bool 来指示成功。
+// BLPopExCtx 阻塞式查询节点 node 中列表 key 的第一个非空元素。否则阻塞列表至超时或有可弹元素为止。
+// 和 BLPop 的差异是该方法返回了一个 bool 来指示成功。
 // 注意：阻塞式查询无法获取连接池的好处（如断路器保护）。
-func (r *Redis) BlpopExCtx(ctx context.Context, node Node, key string) (string, bool, error) {
+func (r *Redis) BLPopExCtx(ctx context.Context, node Node, key string) (string, bool, error) {
 	if node == nil {
 		return "", false, ErrNilNode
 	}
@@ -254,15 +254,15 @@ func (r *Redis) BlpopExCtx(ctx context.Context, node Node, key string) (string, 
 	return values[1], true, nil
 }
 
-// BlpopWithTimeout 阻塞式查询节点 node 中列表 key 的第一个非空元素，否则阻塞列表至超时或有可弹元素为止，可以控制阻塞时间。
+// BLPopWithTimeout 阻塞式查询节点 node 中列表 key 的第一个非空元素，否则阻塞列表至超时或有可弹元素为止，可以控制阻塞时间。
 // 注意：阻塞式查询无法获取连接池的好处（如断路器保护）。
-func (r *Redis) BlpopWithTimeout(node Node, timeout time.Duration, key string) (string, error) {
-	return r.BlpopWithTimeoutCtx(context.Background(), node, timeout, key)
+func (r *Redis) BLPopWithTimeout(node Node, timeout time.Duration, key string) (string, error) {
+	return r.BLPopWithTimeoutCtx(context.Background(), node, timeout, key)
 }
 
-// BlpopWithTimeoutCtx 阻塞式查询节点 node 中列表 key 的第一个非空元素，否则阻塞列表至超时或有可弹元素为止，可以控制阻塞时间。
+// BLPopWithTimeoutCtx 阻塞式查询节点 node 中列表 key 的第一个非空元素，否则阻塞列表至超时或有可弹元素为止，可以控制阻塞时间。
 // // 注意：阻塞式查询无法获取连接池的好处（如断路器保护）。
-func (r *Redis) BlpopWithTimeoutCtx(ctx context.Context, node Node, timeout time.Duration,
+func (r *Redis) BLPopWithTimeoutCtx(ctx context.Context, node Node, timeout time.Duration,
 	key string) (string, error) {
 	if node == nil {
 		return "", ErrNilNode
@@ -300,13 +300,13 @@ func (r *Redis) DecrCtx(ctx context.Context, key string) (val int64, err error) 
 	return
 }
 
-// Decrby 将 key 中存储的数值减去 decrement。
-func (r *Redis) Decrby(key string, decrement int64) (int64, error) {
-	return r.DecrbyCtx(context.Background(), key, decrement)
+// DecrBy 将 key 中存储的数值减去 decrement。
+func (r *Redis) DecrBy(key string, decrement int64) (int64, error) {
+	return r.DecrByCtx(context.Background(), key, decrement)
 }
 
-// DecrbyCtx 将 key 中存储的数值减去 decrement。
-func (r *Redis) DecrbyCtx(ctx context.Context, key string, decrement int64) (val int64, err error) {
+// DecrByCtx 将 key 中存储的数值减去 decrement。
+func (r *Redis) DecrByCtx(ctx context.Context, key string, decrement int64) (val int64, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -429,13 +429,13 @@ func (r *Redis) ExpireCtx(ctx context.Context, key string, seconds int) error {
 	}, acceptable)
 }
 
-// Expireat 设置 key 的过期时间，过期会自动删除。
-func (r *Redis) Expireat(key string, expireTime int64) error {
-	return r.ExpireatCtx(context.Background(), key, expireTime)
+// ExpireAt 设置 key 的过期时间，过期会自动删除。
+func (r *Redis) ExpireAt(key string, expireTime int64) error {
+	return r.ExpireAtCtx(context.Background(), key, expireTime)
 }
 
-// ExpireatCtx 设置 key 的过期时间，过期会自动删除。
-func (r *Redis) ExpireatCtx(ctx context.Context, key string, expireTime int64) error {
+// ExpireAtCtx 设置 key 的过期时间，过期会自动删除。
+func (r *Redis) ExpireAtCtx(ctx context.Context, key string, expireTime int64) error {
 	return r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -678,13 +678,13 @@ func (r *Redis) GetSetCtx(ctx context.Context, key, value string) (val string, e
 	return
 }
 
-// Hdel 删除哈希 key 中的多个字段 fields。
-func (r *Redis) Hdel(key string, fields ...string) (bool, error) {
-	return r.HdelCtx(context.Background(), key, fields...)
+// HDel 删除哈希 key 中的多个字段 fields。
+func (r *Redis) HDel(key string, fields ...string) (bool, error) {
+	return r.HDelCtx(context.Background(), key, fields...)
 }
 
-// HdelCtx 删除哈希 key 中的多个字段 fields。
-func (r *Redis) HdelCtx(ctx context.Context, key string, fields ...string) (val bool, err error) {
+// HDelCtx 删除哈希 key 中的多个字段 fields。
+func (r *Redis) HDelCtx(ctx context.Context, key string, fields ...string) (val bool, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -703,13 +703,13 @@ func (r *Redis) HdelCtx(ctx context.Context, key string, fields ...string) (val 
 	return
 }
 
-// Hexists 判断哈希 key 中成员 field 是否存在。
-func (r *Redis) Hexists(key, field string) (bool, error) {
-	return r.HexistsCtx(context.Background(), key, field)
+// HExists 判断哈希 key 中成员 field 是否存在。
+func (r *Redis) HExists(key, field string) (bool, error) {
+	return r.HExistsCtx(context.Background(), key, field)
 }
 
-// HexistsCtx 判断哈希 key 中成员 field 是否存在。
-func (r *Redis) HexistsCtx(ctx context.Context, key, field string) (val bool, err error) {
+// HExistsCtx 判断哈希 key 中成员 field 是否存在。
+func (r *Redis) HExistsCtx(ctx context.Context, key, field string) (val bool, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -723,13 +723,13 @@ func (r *Redis) HexistsCtx(ctx context.Context, key, field string) (val bool, er
 	return
 }
 
-// Hget 获取哈希 key 中字段 field 的值。
-func (r *Redis) Hget(key, field string) (string, error) {
-	return r.HgetCtx(context.Background(), key, field)
+// HGet 获取哈希 key 中字段 field 的值。
+func (r *Redis) HGet(key, field string) (string, error) {
+	return r.HGetCtx(context.Background(), key, field)
 }
 
-// HgetCtx 获取哈希 key 中字段 field 的值。
-func (r *Redis) HgetCtx(ctx context.Context, key, field string) (val string, err error) {
+// HGetCtx 获取哈希 key 中字段 field 的值。
+func (r *Redis) HGetCtx(ctx context.Context, key, field string) (val string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -743,13 +743,13 @@ func (r *Redis) HgetCtx(ctx context.Context, key, field string) (val string, err
 	return
 }
 
-// Hgetall 获取哈希 key 的所有字段:值映射。
-func (r *Redis) Hgetall(key string) (map[string]string, error) {
-	return r.HgetallCtx(context.Background(), key)
+// HGetAll 获取哈希 key 的所有字段:值映射。
+func (r *Redis) HGetAll(key string) (map[string]string, error) {
+	return r.HGetAllCtx(context.Background(), key)
 }
 
-// HgetallCtx 获取哈希 key 的所有字段:值映射。
-func (r *Redis) HgetallCtx(ctx context.Context, key string) (val map[string]string, err error) {
+// HGetAllCtx 获取哈希 key 的所有字段:值映射。
+func (r *Redis) HGetAllCtx(ctx context.Context, key string) (val map[string]string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -763,13 +763,13 @@ func (r *Redis) HgetallCtx(ctx context.Context, key string) (val map[string]stri
 	return
 }
 
-// Hincrby 为哈希 key 的字段 field 的值增加 increment。
-func (r *Redis) Hincrby(key, field string, increment int) (int, error) {
-	return r.HincrbyCtx(context.Background(), key, field, increment)
+// HIncrBy 为哈希 key 的字段 field 的值增加 increment。
+func (r *Redis) HIncrBy(key, field string, increment int) (int, error) {
+	return r.HIncrByCtx(context.Background(), key, field, increment)
 }
 
-// HincrbyCtx 为哈希 key 的字段 field 的值增加 increment。
-func (r *Redis) HincrbyCtx(ctx context.Context, key, field string, increment int) (val int, err error) {
+// HIncrByCtx 为哈希 key 的字段 field 的值增加 increment。
+func (r *Redis) HIncrByCtx(ctx context.Context, key, field string, increment int) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -788,13 +788,13 @@ func (r *Redis) HincrbyCtx(ctx context.Context, key, field string, increment int
 	return
 }
 
-// Hkeys 返回哈希 key 的所有字段。
-func (r *Redis) Hkeys(key string) ([]string, error) {
-	return r.HkeysCtx(context.Background(), key)
+// HKeys 返回哈希 key 的所有字段。
+func (r *Redis) HKeys(key string) ([]string, error) {
+	return r.HKeysCtx(context.Background(), key)
 }
 
-// HkeysCtx 返回哈希 key 的所有字段。
-func (r *Redis) HkeysCtx(ctx context.Context, key string) (val []string, err error) {
+// HKeysCtx 返回哈希 key 的所有字段。
+func (r *Redis) HKeysCtx(ctx context.Context, key string) (val []string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -808,13 +808,13 @@ func (r *Redis) HkeysCtx(ctx context.Context, key string) (val []string, err err
 	return
 }
 
-// Hlen 返回哈希 key 的字段数量。
-func (r *Redis) Hlen(key string) (int, error) {
-	return r.HlenCtx(context.Background(), key)
+// HLen 返回哈希 key 的字段数量。
+func (r *Redis) HLen(key string) (int, error) {
+	return r.HLenCtx(context.Background(), key)
 }
 
-// HlenCtx 返回哈希 key 的字段数量。
-func (r *Redis) HlenCtx(ctx context.Context, key string) (val int, err error) {
+// HLenCtx 返回哈希 key 的字段数量。
+func (r *Redis) HLenCtx(ctx context.Context, key string) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -833,13 +833,13 @@ func (r *Redis) HlenCtx(ctx context.Context, key string) (val int, err error) {
 	return
 }
 
-// Hmget 获取哈希 key 中所有给定字段 fields 的值。
-func (r *Redis) Hmget(key string, fields ...string) ([]string, error) {
-	return r.HmgetCtx(context.Background(), key, fields...)
+// HMGet 获取哈希 key 中所有给定字段 fields 的值。
+func (r *Redis) HMGet(key string, fields ...string) ([]string, error) {
+	return r.HMGetCtx(context.Background(), key, fields...)
 }
 
-// HmgetCtx 获取哈希 key 中所有给定字段 fields 的值。
-func (r *Redis) HmgetCtx(ctx context.Context, key string, fields ...string) (val []string, err error) {
+// HMGetCtx 获取哈希 key 中所有给定字段 fields 的值。
+func (r *Redis) HMGetCtx(ctx context.Context, key string, fields ...string) (val []string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -858,13 +858,13 @@ func (r *Redis) HmgetCtx(ctx context.Context, key string, fields ...string) (val
 	return
 }
 
-// Hset 设置哈希 key 的字段 field 的值为 value。
-func (r *Redis) Hset(key, field, value string) error {
-	return r.HsetCtx(context.Background(), key, field, value)
+// HSet 设置哈希 key 的字段 field 的值为 value。
+func (r *Redis) HSet(key, field, value string) error {
+	return r.HSetCtx(context.Background(), key, field, value)
 }
 
-// HsetCtx 设置哈希 key 的字段 field 的值为 value。
-func (r *Redis) HsetCtx(ctx context.Context, key, field, value string) error {
+// HSetCtx 设置哈希 key 的字段 field 的值为 value。
+func (r *Redis) HSetCtx(ctx context.Context, key, field, value string) error {
 	return r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -875,13 +875,13 @@ func (r *Redis) HsetCtx(ctx context.Context, key, field, value string) error {
 	}, acceptable)
 }
 
-// Hsetnx 当哈希 key 中字段 field 不存在时，增加字段值 field:value。
-func (r *Redis) Hsetnx(key, field, value string) (bool, error) {
-	return r.HsetnxCtx(context.Background(), key, field, value)
+// HSetNX 当哈希 key 中字段 field 不存在时，增加字段值 field:value。
+func (r *Redis) HSetNX(key, field, value string) (bool, error) {
+	return r.HSetNXCtx(context.Background(), key, field, value)
 }
 
-// HsetnxCtx 当哈希 key 中字段 field 不存在时，增加字段值 field:value。
-func (r *Redis) HsetnxCtx(ctx context.Context, key, field, value string) (val bool, err error) {
+// HSetNXCtx 当哈希 key 中字段 field 不存在时，增加字段值 field:value。
+func (r *Redis) HSetNXCtx(ctx context.Context, key, field, value string) (val bool, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -895,13 +895,13 @@ func (r *Redis) HsetnxCtx(ctx context.Context, key, field, value string) (val bo
 	return
 }
 
-// Hmset 同时设置多个键值到哈希 key。
-func (r *Redis) Hmset(key string, fieldsAndValues map[string]string) error {
-	return r.HmsetCtx(context.Background(), key, fieldsAndValues)
+// HMSet 同时设置多个键值到哈希 key。
+func (r *Redis) HMSet(key string, fieldsAndValues map[string]string) error {
+	return r.HMSetCtx(context.Background(), key, fieldsAndValues)
 }
 
-// HmsetCtx 同时设置多个键值到哈希 key。
-func (r *Redis) HmsetCtx(ctx context.Context, key string, fieldsAndValues map[string]string) error {
+// HMSetCtx 同时设置多个键值到哈希 key。
+func (r *Redis) HMSetCtx(ctx context.Context, key string, fieldsAndValues map[string]string) error {
 	return r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -917,14 +917,14 @@ func (r *Redis) HmsetCtx(ctx context.Context, key string, fieldsAndValues map[st
 	}, acceptable)
 }
 
-// Hscan 迭代哈希表中的键值对。
-func (r *Redis) Hscan(key string, cursor uint64, match string, count int64) (
+// HScan 迭代哈希表中的键值对。
+func (r *Redis) HScan(key string, cursor uint64, match string, count int64) (
 	keys []string, cur uint64, err error) {
-	return r.HscanCtx(context.Background(), key, cursor, match, count)
+	return r.HScanCtx(context.Background(), key, cursor, match, count)
 }
 
-// HscanCtx 迭代哈希表中的键值对。
-func (r *Redis) HscanCtx(ctx context.Context, key string, cursor uint64, match string, count int64) (
+// HScanCtx 迭代哈希表中的键值对。
+func (r *Redis) HScanCtx(ctx context.Context, key string, cursor uint64, match string, count int64) (
 	keys []string, cur uint64, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
@@ -939,13 +939,13 @@ func (r *Redis) HscanCtx(ctx context.Context, key string, cursor uint64, match s
 	return
 }
 
-// Hvals 获取哈希表中所有值。
-func (r *Redis) Hvals(key string) ([]string, error) {
-	return r.HvalsCtx(context.Background(), key)
+// HVals 获取哈希表中所有值。
+func (r *Redis) HVals(key string) ([]string, error) {
+	return r.HValsCtx(context.Background(), key)
 }
 
-// HvalsCtx 获取哈希表中所有值。
-func (r *Redis) HvalsCtx(ctx context.Context, key string) (val []string, err error) {
+// HValsCtx 获取哈希表中所有值。
+func (r *Redis) HValsCtx(ctx context.Context, key string) (val []string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -979,13 +979,13 @@ func (r *Redis) IncrCtx(ctx context.Context, key string) (val int64, err error) 
 	return
 }
 
-// Incrby 将 key 所储存的值加上给定的增量值（increment） 。
-func (r *Redis) Incrby(key string, increment int64) (int64, error) {
-	return r.IncrbyCtx(context.Background(), key, increment)
+// IncrBy 将 key 所储存的值加上给定的增量值（increment） 。
+func (r *Redis) IncrBy(key string, increment int64) (int64, error) {
+	return r.IncrByCtx(context.Background(), key, increment)
 }
 
-// IncrbyCtx 将 key 所储存的值加上给定的增量值（increment） 。
-func (r *Redis) IncrbyCtx(ctx context.Context, key string, increment int64) (val int64, err error) {
+// IncrByCtx 将 key 所储存的值加上给定的增量值（increment） 。
+func (r *Redis) IncrByCtx(ctx context.Context, key string, increment int64) (val int64, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1019,13 +1019,13 @@ func (r *Redis) KeysCtx(ctx context.Context, pattern string) (val []string, err 
 	return
 }
 
-// Llen 获取列表长度。
-func (r *Redis) Llen(key string) (int, error) {
-	return r.LlenCtx(context.Background(), key)
+// LLen 获取列表长度。
+func (r *Redis) LLen(key string) (int, error) {
+	return r.LLenCtx(context.Background(), key)
 }
 
-// LlenCtx 获取列表长度。
-func (r *Redis) LlenCtx(ctx context.Context, key string) (val int, err error) {
+// LLenCtx 获取列表长度。
+func (r *Redis) LLenCtx(ctx context.Context, key string) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1044,13 +1044,13 @@ func (r *Redis) LlenCtx(ctx context.Context, key string) (val int, err error) {
 	return
 }
 
-// Lindex 通过索引获取列表中的元素。
-func (r *Redis) Lindex(key string, index int64) (string, error) {
-	return r.LindexCtx(context.Background(), key, index)
+// LIndex 通过索引获取列表中的元素。
+func (r *Redis) LIndex(key string, index int64) (string, error) {
+	return r.LIndexCtx(context.Background(), key, index)
 }
 
-// LindexCtx 通过索引获取列表中的元素。
-func (r *Redis) LindexCtx(ctx context.Context, key string, index int64) (val string, err error) {
+// LIndexCtx 通过索引获取列表中的元素。
+func (r *Redis) LIndexCtx(ctx context.Context, key string, index int64) (val string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1064,13 +1064,13 @@ func (r *Redis) LindexCtx(ctx context.Context, key string, index int64) (val str
 	return
 }
 
-// Lpop 移除并返回列表的第一个元素。
-func (r *Redis) Lpop(key string) (string, error) {
-	return r.LpopCtx(context.Background(), key)
+// LPop 移除并返回列表的第一个元素。
+func (r *Redis) LPop(key string) (string, error) {
+	return r.LPopCtx(context.Background(), key)
 }
 
-// LpopCtx 移除并返回列表的第一个元素。
-func (r *Redis) LpopCtx(ctx context.Context, key string) (val string, err error) {
+// LPopCtx 移除并返回列表的第一个元素。
+func (r *Redis) LPopCtx(ctx context.Context, key string) (val string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1084,13 +1084,13 @@ func (r *Redis) LpopCtx(ctx context.Context, key string) (val string, err error)
 	return
 }
 
-// Lpush 将一个或多个值插入到列表头部。
-func (r *Redis) Lpush(key string, values ...interface{}) (int, error) {
-	return r.LpushCtx(context.Background(), key, values...)
+// LPush 将一个或多个值插入到列表头部。
+func (r *Redis) LPush(key string, values ...interface{}) (int, error) {
+	return r.LPushCtx(context.Background(), key, values...)
 }
 
-// LpushCtx 将一个或多个值插入到列表头部。
-func (r *Redis) LpushCtx(ctx context.Context, key string, values ...interface{}) (val int, err error) {
+// LPushCtx 将一个或多个值插入到列表头部。
+func (r *Redis) LPushCtx(ctx context.Context, key string, values ...interface{}) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1109,13 +1109,13 @@ func (r *Redis) LpushCtx(ctx context.Context, key string, values ...interface{})
 	return
 }
 
-// Lrange 获取列表指定范围内的元素。
-func (r *Redis) Lrange(key string, start, stop int) ([]string, error) {
-	return r.LrangeCtx(context.Background(), key, start, stop)
+// LRange 获取列表指定范围内的元素。
+func (r *Redis) LRange(key string, start, stop int) ([]string, error) {
+	return r.LRangeCtx(context.Background(), key, start, stop)
 }
 
-// LrangeCtx 获取列表指定范围内的元素。
-func (r *Redis) LrangeCtx(ctx context.Context, key string, start, stop int) (val []string, err error) {
+// LRangeCtx 获取列表指定范围内的元素。
+func (r *Redis) LRangeCtx(ctx context.Context, key string, start, stop int) (val []string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1129,15 +1129,15 @@ func (r *Redis) LrangeCtx(ctx context.Context, key string, start, stop int) (val
 	return
 }
 
-// Lrem 移除列表元素。
+// LRem 移除列表元素。
 // count 控制移除的方向和数量： 为正数从头到尾找，为负数从尾到头找，都删除count个；为0移除所有。
-func (r *Redis) Lrem(key string, count int, value string) (int, error) {
-	return r.LremCtx(context.Background(), key, count, value)
+func (r *Redis) LRem(key string, count int, value string) (int, error) {
+	return r.LRemCtx(context.Background(), key, count, value)
 }
 
-// LremCtx 移除列表元素。
+// LRemCtx 移除列表元素。
 // count 控制移除的方向和数量： 为正数从头到尾找，为负数从尾到头找，都删除count个；为0移除所有。
-func (r *Redis) LremCtx(ctx context.Context, key string, count int, value string) (val int, err error) {
+func (r *Redis) LRemCtx(ctx context.Context, key string, count int, value string) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1156,13 +1156,13 @@ func (r *Redis) LremCtx(ctx context.Context, key string, count int, value string
 	return
 }
 
-// Ltrim 修剪列表，只保留指定起止区间的元素。
-func (r *Redis) Ltrim(key string, start, stop int64) error {
-	return r.LtrimCtx(context.Background(), key, start, stop)
+// LTrim 修剪列表，只保留指定起止区间的元素。
+func (r *Redis) LTrim(key string, start, stop int64) error {
+	return r.LTrimCtx(context.Background(), key, start, stop)
 }
 
-// LtrimCtx 修剪列表，只保留指定起止区间的元素。
-func (r *Redis) LtrimCtx(ctx context.Context, key string, start, stop int64) error {
+// LTrimCtx 修剪列表，只保留指定起止区间的元素。
+func (r *Redis) LTrimCtx(ctx context.Context, key string, start, stop int64) error {
 	return r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1173,13 +1173,13 @@ func (r *Redis) LtrimCtx(ctx context.Context, key string, start, stop int64) err
 	}, acceptable)
 }
 
-// Mget 获取所有给定 key 的值。
-func (r *Redis) Mget(keys ...string) ([]string, error) {
-	return r.MgetCtx(context.Background(), keys...)
+// MGet 获取所有给定 key 的值。
+func (r *Redis) MGet(keys ...string) ([]string, error) {
+	return r.MGetCtx(context.Background(), keys...)
 }
 
-// MgetCtx 获取所有给定 key 的值。
-func (r *Redis) MgetCtx(ctx context.Context, keys ...string) (val []string, err error) {
+// MGetCtx 获取所有给定 key 的值。
+func (r *Redis) MGetCtx(ctx context.Context, keys ...string) (val []string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1218,13 +1218,13 @@ func (r *Redis) PersistCtx(ctx context.Context, key string) (val bool, err error
 	return
 }
 
-// Pfadd 将 values 加入到键为 key 的 HyperLogLog 中，用于快速统计超大数据的唯一元素（基数）估算值。
-func (r *Redis) Pfadd(key string, values ...interface{}) (bool, error) {
-	return r.PfaddCtx(context.Background(), key, values...)
+// PFAdd 将 values 加入到键为 key 的 HyperLogLog 中，用于快速统计超大数据的唯一元素（基数）估算值。
+func (r *Redis) PFAdd(key string, values ...interface{}) (bool, error) {
+	return r.PFAddCtx(context.Background(), key, values...)
 }
 
-// PfaddCtx 将 values 加入到键为 key 的 HyperLogLog 中，用于快速统计超大数据的唯一元素（基数）估算值。
-func (r *Redis) PfaddCtx(ctx context.Context, key string, values ...interface{}) (val bool, err error) {
+// PFAddCtx 将 values 加入到键为 key 的 HyperLogLog 中，用于快速统计超大数据的唯一元素（基数）估算值。
+func (r *Redis) PFAddCtx(ctx context.Context, key string, values ...interface{}) (val bool, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1243,13 +1243,13 @@ func (r *Redis) PfaddCtx(ctx context.Context, key string, values ...interface{})
 	return
 }
 
-// Pfcount 返回给定 HyperLogLog 的基数估算值。
-func (r *Redis) Pfcount(key string) (int64, error) {
-	return r.PfcountCtx(context.Background(), key)
+// PFCount 返回给定 HyperLogLog 的基数估算值。
+func (r *Redis) PFCount(key string) (int64, error) {
+	return r.PFCountCtx(context.Background(), key)
 }
 
-// PfcountCtx 返回给定 HyperLogLog 的基数估算值。
-func (r *Redis) PfcountCtx(ctx context.Context, key string) (val int64, err error) {
+// PFCountCtx 返回给定 HyperLogLog 的基数估算值。
+func (r *Redis) PFCountCtx(ctx context.Context, key string) (val int64, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1263,13 +1263,13 @@ func (r *Redis) PfcountCtx(ctx context.Context, key string) (val int64, err erro
 	return
 }
 
-// Pfmerge 将多个 HyperLogLog 合并为一个 HyperLogLog。
-func (r *Redis) Pfmerge(dest string, keys ...string) error {
-	return r.PfmergeCtx(context.Background(), dest, keys...)
+// PFMerge 将多个 HyperLogLog 合并为一个 HyperLogLog。
+func (r *Redis) PFMerge(dest string, keys ...string) error {
+	return r.PFMergeCtx(context.Background(), dest, keys...)
 }
 
-// PfmergeCtx 将多个 HyperLogLog 合并为一个 HyperLogLog。
-func (r *Redis) PfmergeCtx(ctx context.Context, dest string, keys ...string) error {
+// PFMergeCtx 将多个 HyperLogLog 合并为一个 HyperLogLog。
+func (r *Redis) PFMergeCtx(ctx context.Context, dest string, keys ...string) error {
 	return r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1328,13 +1328,13 @@ func (r *Redis) PipelinedCtx(ctx context.Context, fn func(Pipeliner) error) erro
 	}, acceptable)
 }
 
-// Rpop 移除并返回列表的最后一个元素。
-func (r *Redis) Rpop(key string) (string, error) {
-	return r.RpopCtx(context.Background(), key)
+// RPop 移除并返回列表的最后一个元素。
+func (r *Redis) RPop(key string) (string, error) {
+	return r.RPopCtx(context.Background(), key)
 }
 
-// RpopCtx 移除并返回列表的最后一个元素。
-func (r *Redis) RpopCtx(ctx context.Context, key string) (val string, err error) {
+// RPopCtx 移除并返回列表的最后一个元素。
+func (r *Redis) RPopCtx(ctx context.Context, key string) (val string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1348,13 +1348,13 @@ func (r *Redis) RpopCtx(ctx context.Context, key string) (val string, err error)
 	return
 }
 
-// Rpush 在列表右侧添加一个或多个值。
-func (r *Redis) Rpush(key string, values ...interface{}) (int, error) {
-	return r.RpushCtx(context.Background(), key, values...)
+// RPush 在列表右侧添加一个或多个值。
+func (r *Redis) RPush(key string, values ...interface{}) (int, error) {
+	return r.RPushCtx(context.Background(), key, values...)
 }
 
-// RpushCtx 在列表右侧添加一个或多个值。
-func (r *Redis) RpushCtx(ctx context.Context, key string, values ...interface{}) (val int, err error) {
+// RPushCtx 在列表右侧添加一个或多个值。
+func (r *Redis) RPushCtx(ctx context.Context, key string, values ...interface{}) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1373,13 +1373,13 @@ func (r *Redis) RpushCtx(ctx context.Context, key string, values ...interface{})
 	return
 }
 
-// Sadd 向集合添加一个或多个成员。
-func (r *Redis) Sadd(key string, values ...interface{}) (int, error) {
-	return r.SaddCtx(context.Background(), key, values...)
+// SAdd 向集合添加一个或多个成员。
+func (r *Redis) SAdd(key string, values ...interface{}) (int, error) {
+	return r.SAddCtx(context.Background(), key, values...)
 }
 
-// SaddCtx 向集合添加一个或多个成员。
-func (r *Redis) SaddCtx(ctx context.Context, key string, values ...interface{}) (val int, err error) {
+// SAddCtx 向集合添加一个或多个成员。
+func (r *Redis) SAddCtx(ctx context.Context, key string, values ...interface{}) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1444,14 +1444,14 @@ func (r *Redis) SetBitCtx(ctx context.Context, key string, offset int64, value i
 	return
 }
 
-// Sscan 迭代集合中的元素。
-func (r *Redis) Sscan(key string, cursor uint64, match string, count int64) (
+// SScan 迭代集合中的元素。
+func (r *Redis) SScan(key string, cursor uint64, match string, count int64) (
 	keys []string, cur uint64, err error) {
-	return r.SscanCtx(context.Background(), key, cursor, match, count)
+	return r.SScanCtx(context.Background(), key, cursor, match, count)
 }
 
-// SscanCtx 迭代集合中的元素。
-func (r *Redis) SscanCtx(ctx context.Context, key string, cursor uint64, match string, count int64) (
+// SScanCtx 迭代集合中的元素。
+func (r *Redis) SScanCtx(ctx context.Context, key string, cursor uint64, match string, count int64) (
 	keys []string, cur uint64, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
@@ -1466,13 +1466,13 @@ func (r *Redis) SscanCtx(ctx context.Context, key string, cursor uint64, match s
 	return
 }
 
-// Scard 获取集合的成员数。
-func (r *Redis) Scard(key string) (int64, error) {
-	return r.ScardCtx(context.Background(), key)
+// SCard 获取集合的成员数。
+func (r *Redis) SCard(key string) (int64, error) {
+	return r.SCardCtx(context.Background(), key)
 }
 
-// ScardCtx 获取集合的成员数。
-func (r *Redis) ScardCtx(ctx context.Context, key string) (val int64, err error) {
+// SCardCtx 获取集合的成员数。
+func (r *Redis) SCardCtx(ctx context.Context, key string) (val int64, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1520,13 +1520,13 @@ func (r *Redis) SetCtx(ctx context.Context, key, value string) error {
 	}, acceptable)
 }
 
-// Setex 设置键值及其存活秒数，过期会自动删除。
-func (r *Redis) Setex(key, value string, seconds int) error {
-	return r.SetexCtx(context.Background(), key, value, seconds)
+// SetEx 设置键值及其存活秒数，过期会自动删除。
+func (r *Redis) SetEx(key, value string, seconds int) error {
+	return r.SetExCtx(context.Background(), key, value, seconds)
 }
 
-// SetexCtx 设置键值及其存活秒数，过期会自动删除。
-func (r *Redis) SetexCtx(ctx context.Context, key, value string, seconds int) error {
+// SetExCtx 设置键值及其存活秒数，过期会自动删除。
+func (r *Redis) SetExCtx(ctx context.Context, key, value string, seconds int) error {
 	return r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1537,13 +1537,13 @@ func (r *Redis) SetexCtx(ctx context.Context, key, value string, seconds int) er
 	}, acceptable)
 }
 
-// Setnx 当 key 不存在时，设置键值对。
-func (r *Redis) Setnx(key, value string) (bool, error) {
-	return r.SetnxCtx(context.Background(), key, value)
+// SetNX 当 key 不存在时，设置键值对。
+func (r *Redis) SetNX(key, value string) (bool, error) {
+	return r.SetNXCtx(context.Background(), key, value)
 }
 
-// SetnxCtx 当 key 不存在时，设置键值对。
-func (r *Redis) SetnxCtx(ctx context.Context, key, value string) (val bool, err error) {
+// SetNXCtx 当 key 不存在时，设置键值对。
+func (r *Redis) SetNXCtx(ctx context.Context, key, value string) (val bool, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1557,13 +1557,13 @@ func (r *Redis) SetnxCtx(ctx context.Context, key, value string) (val bool, err 
 	return
 }
 
-// SetnxEx 当 key 不存时，设置键值对及其存活秒数，过期会自动删除。
-func (r *Redis) SetnxEx(key, value string, seconds int) (bool, error) {
-	return r.SetnxExCtx(context.Background(), key, value, seconds)
+// SetNXEx 当 key 不存时，设置键值对及其存活秒数，过期会自动删除。
+func (r *Redis) SetNXEx(key, value string, seconds int) (bool, error) {
+	return r.SetNXExCtx(context.Background(), key, value, seconds)
 }
 
-// SetnxExCtx 当 key 不存时，设置键值对及其存活秒数，过期会自动删除。
-func (r *Redis) SetnxExCtx(ctx context.Context, key, value string, seconds int) (val bool, err error) {
+// SetNXExCtx 当 key 不存时，设置键值对及其存活秒数，过期会自动删除。
+func (r *Redis) SetNXExCtx(ctx context.Context, key, value string, seconds int) (val bool, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1577,13 +1577,13 @@ func (r *Redis) SetnxExCtx(ctx context.Context, key, value string, seconds int) 
 	return
 }
 
-// Sismember 判断 member 是否为集合 key 的成员。
-func (r *Redis) Sismember(key string, member interface{}) (bool, error) {
-	return r.SismemberCtx(context.Background(), key, member)
+// SIsMember 判断 member 是否为集合 key 的成员。
+func (r *Redis) SIsMember(key string, member interface{}) (bool, error) {
+	return r.SIsMemberCtx(context.Background(), key, member)
 }
 
-// SismemberCtx 判断 member 是否为集合 key 的成员。
-func (r *Redis) SismemberCtx(ctx context.Context, key string, member interface{}) (val bool, err error) {
+// SIsMemberCtx 判断 member 是否为集合 key 的成员。
+func (r *Redis) SIsMemberCtx(ctx context.Context, key string, member interface{}) (val bool, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1597,13 +1597,13 @@ func (r *Redis) SismemberCtx(ctx context.Context, key string, member interface{}
 	return
 }
 
-// Smembers 返回集合 key 中的所有成员。
-func (r *Redis) Smembers(key string) ([]string, error) {
-	return r.SmembersCtx(context.Background(), key)
+// SMembers 返回集合 key 中的所有成员。
+func (r *Redis) SMembers(key string) ([]string, error) {
+	return r.SMembersCtx(context.Background(), key)
 }
 
-// SmembersCtx 返回集合 key 中的所有成员。
-func (r *Redis) SmembersCtx(ctx context.Context, key string) (val []string, err error) {
+// SMembersCtx 返回集合 key 中的所有成员。
+func (r *Redis) SMembersCtx(ctx context.Context, key string) (val []string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1617,13 +1617,13 @@ func (r *Redis) SmembersCtx(ctx context.Context, key string) (val []string, err 
 	return
 }
 
-// Spop 随机移除并返回集合 key 中的一个成员。
-func (r *Redis) Spop(key string) (string, error) {
-	return r.SpopCtx(context.Background(), key)
+// SPop 随机移除并返回集合 key 中的一个成员。
+func (r *Redis) SPop(key string) (string, error) {
+	return r.SPopCtx(context.Background(), key)
 }
 
-// SpopCtx 随机移除并返回集合 key 中的一个成员。
-func (r *Redis) SpopCtx(ctx context.Context, key string) (val string, err error) {
+// SPopCtx 随机移除并返回集合 key 中的一个成员。
+func (r *Redis) SPopCtx(ctx context.Context, key string) (val string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1637,13 +1637,13 @@ func (r *Redis) SpopCtx(ctx context.Context, key string) (val string, err error)
 	return
 }
 
-// Srandmember 随机返回集合 key 中的 count 个成员。
-func (r *Redis) Srandmember(key string, count int) ([]string, error) {
-	return r.SrandmemberCtx(context.Background(), key, count)
+// SRandMember 随机返回集合 key 中的 count 个成员。
+func (r *Redis) SRandMember(key string, count int) ([]string, error) {
+	return r.SRandMemberCtx(context.Background(), key, count)
 }
 
-// SrandmemberCtx 随机返回集合 key 中的 count 个成员。
-func (r *Redis) SrandmemberCtx(ctx context.Context, key string, count int) (val []string, err error) {
+// SRandMemberCtx 随机返回集合 key 中的 count 个成员。
+func (r *Redis) SRandMemberCtx(ctx context.Context, key string, count int) (val []string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1657,13 +1657,13 @@ func (r *Redis) SrandmemberCtx(ctx context.Context, key string, count int) (val 
 	return
 }
 
-// Srem 移除集合 key 中的一个或多个成员 members。
-func (r *Redis) Srem(key string, members ...interface{}) (int, error) {
-	return r.SremCtx(context.Background(), key, members...)
+// SRem 移除集合 key 中的一个或多个成员 members。
+func (r *Redis) SRem(key string, members ...interface{}) (int, error) {
+	return r.SRemCtx(context.Background(), key, members...)
 }
 
-// SremCtx 移除集合 key 中的一个或多个成员 members。
-func (r *Redis) SremCtx(ctx context.Context, key string, members ...interface{}) (val int, err error) {
+// SRemCtx 移除集合 key 中的一个或多个成员 members。
+func (r *Redis) SRemCtx(ctx context.Context, key string, members ...interface{}) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1687,13 +1687,13 @@ func (r *Redis) String() string {
 	return r.Addr
 }
 
-// Sunion 返回一组集合 keys 的并集。
-func (r *Redis) Sunion(keys ...string) ([]string, error) {
-	return r.SunionCtx(context.Background(), keys...)
+// SUnion 返回一组集合 keys 的并集。
+func (r *Redis) SUnion(keys ...string) ([]string, error) {
+	return r.SUnionCtx(context.Background(), keys...)
 }
 
-// SunionCtx 返回一组集合 keys 的并集。
-func (r *Redis) SunionCtx(ctx context.Context, keys ...string) (val []string, err error) {
+// SUnionCtx 返回一组集合 keys 的并集。
+func (r *Redis) SUnionCtx(ctx context.Context, keys ...string) (val []string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1707,13 +1707,13 @@ func (r *Redis) SunionCtx(ctx context.Context, keys ...string) (val []string, er
 	return
 }
 
-// Sunionstore 求一组集合 keys 的并集，将结果存储在 destination 集合中。
-func (r *Redis) Sunionstore(destination string, keys ...string) (int, error) {
-	return r.SunionstoreCtx(context.Background(), destination, keys...)
+// SUnionStore 求一组集合 keys 的并集，将结果存储在 destination 集合中。
+func (r *Redis) SUnionStore(destination string, keys ...string) (int, error) {
+	return r.SUnionStoreCtx(context.Background(), destination, keys...)
 }
 
-// SunionstoreCtx 求一组集合 keys 的并集，将结果存储在 destination 集合中。
-func (r *Redis) SunionstoreCtx(ctx context.Context, destination string, keys ...string) (
+// SUnionStoreCtx 求一组集合 keys 的并集，将结果存储在 destination 集合中。
+func (r *Redis) SUnionStoreCtx(ctx context.Context, destination string, keys ...string) (
 	val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
@@ -1733,13 +1733,13 @@ func (r *Redis) SunionstoreCtx(ctx context.Context, destination string, keys ...
 	return
 }
 
-// Sdiff 返回第一个集合相比于其他集合独有的成员。
-func (r *Redis) Sdiff(keys ...string) ([]string, error) {
-	return r.SdiffCtx(context.Background(), keys...)
+// SDiff 返回第一个集合相比于其他集合独有的成员。
+func (r *Redis) SDiff(keys ...string) ([]string, error) {
+	return r.SDiffCtx(context.Background(), keys...)
 }
 
-// SdiffCtx 返回第一个集合相比于其他集合独有的成员。
-func (r *Redis) SdiffCtx(ctx context.Context, keys ...string) (val []string, err error) {
+// SDiffCtx 返回第一个集合相比于其他集合独有的成员。
+func (r *Redis) SDiffCtx(ctx context.Context, keys ...string) (val []string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1753,13 +1753,13 @@ func (r *Redis) SdiffCtx(ctx context.Context, keys ...string) (val []string, err
 	return
 }
 
-// Sdiffstore 返回第一个集合相比于其他集合独有的成员，将结果存储到结合 destination。
-func (r *Redis) Sdiffstore(destination string, keys ...string) (int, error) {
-	return r.SdiffstoreCtx(context.Background(), destination, keys...)
+// SDiffStore 返回第一个集合相比于其他集合独有的成员，将结果存储到结合 destination。
+func (r *Redis) SDiffStore(destination string, keys ...string) (int, error) {
+	return r.SDiffStoreCtx(context.Background(), destination, keys...)
 }
 
-// SdiffstoreCtx 返回第一个集合相比于其他集合独有的成员，将结果存储到结合 destination。
-func (r *Redis) SdiffstoreCtx(ctx context.Context, destination string, keys ...string) (
+// SDiffStoreCtx 返回第一个集合相比于其他集合独有的成员，将结果存储到结合 destination。
+func (r *Redis) SDiffStoreCtx(ctx context.Context, destination string, keys ...string) (
 	val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
@@ -1779,13 +1779,13 @@ func (r *Redis) SdiffstoreCtx(ctx context.Context, destination string, keys ...s
 	return
 }
 
-// Sinter 返回所有集合 keys 的交集。
-func (r *Redis) Sinter(keys ...string) ([]string, error) {
-	return r.SinterCtx(context.Background(), keys...)
+// SInter 返回所有集合 keys 的交集。
+func (r *Redis) SInter(keys ...string) ([]string, error) {
+	return r.SInterCtx(context.Background(), keys...)
 }
 
-// SinterCtx 返回所有集合 keys 的交集。
-func (r *Redis) SinterCtx(ctx context.Context, keys ...string) (val []string, err error) {
+// SInterCtx 返回所有集合 keys 的交集。
+func (r *Redis) SInterCtx(ctx context.Context, keys ...string) (val []string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1799,13 +1799,13 @@ func (r *Redis) SinterCtx(ctx context.Context, keys ...string) (val []string, er
 	return
 }
 
-// Sinterstore 返回所有集合 keys 的交集，将结果存储至集合 destination。
-func (r *Redis) Sinterstore(destination string, keys ...string) (int, error) {
-	return r.SinterstoreCtx(context.Background(), destination, keys...)
+// SInterStore 返回所有集合 keys 的交集，将结果存储至集合 destination。
+func (r *Redis) SInterStore(destination string, keys ...string) (int, error) {
+	return r.SInterStoreCtx(context.Background(), destination, keys...)
 }
 
-// SinterstoreCtx 返回所有集合 keys 的交集，将结果存储至集合 destination。
-func (r *Redis) SinterstoreCtx(ctx context.Context, destination string, keys ...string) (
+// SInterStoreCtx 返回所有集合 keys 的交集，将结果存储至集合 destination。
+func (r *Redis) SInterStoreCtx(ctx context.Context, destination string, keys ...string) (
 	val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
@@ -1825,13 +1825,13 @@ func (r *Redis) SinterstoreCtx(ctx context.Context, destination string, keys ...
 	return
 }
 
-// Ttl 返回 key 的剩余生存秒数。
-func (r *Redis) Ttl(key string) (int, error) {
-	return r.TtlCtx(context.Background(), key)
+// TTL 返回 key 的剩余生存秒数。
+func (r *Redis) TTL(key string) (int, error) {
+	return r.TTLCtx(context.Background(), key)
 }
 
-// TtlCtx 返回 key 的剩余生存秒数。
-func (r *Redis) TtlCtx(ctx context.Context, key string) (val int, err error) {
+// TTLCtx 返回 key 的剩余生存秒数。
+func (r *Redis) TTLCtx(ctx context.Context, key string) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1850,24 +1850,24 @@ func (r *Redis) TtlCtx(ctx context.Context, key string) (val int, err error) {
 	return
 }
 
-// Zadd 向有序集合 key 添加或更新一个成员及其分数。
-func (r *Redis) Zadd(key string, score int64, member string) (bool, error) {
-	return r.ZaddCtx(context.Background(), key, score, member)
+// ZAdd 向有序集合 key 添加或更新一个成员及其分数。
+func (r *Redis) ZAdd(key string, score int64, member string) (bool, error) {
+	return r.ZAddCtx(context.Background(), key, score, member)
 }
 
-// ZaddFloat 向有序集合 key 添加或更新一个成员及其分数。
-func (r *Redis) ZaddFloat(key string, score float64, member string) (bool, error) {
-	return r.ZaddFloatCtx(context.Background(), key, score, member)
+// ZAddFloat 向有序集合 key 添加或更新一个成员及其分数。
+func (r *Redis) ZAddFloat(key string, score float64, member string) (bool, error) {
+	return r.ZAddFloatCtx(context.Background(), key, score, member)
 }
 
-// ZaddCtx 向有序集合 key 添加或更新一个成员及其分数。
-func (r *Redis) ZaddCtx(ctx context.Context, key string, score int64, member string) (
+// ZAddCtx 向有序集合 key 添加或更新一个成员及其分数。
+func (r *Redis) ZAddCtx(ctx context.Context, key string, score int64, member string) (
 	val bool, err error) {
-	return r.ZaddFloatCtx(ctx, key, float64(score), member)
+	return r.ZAddFloatCtx(ctx, key, float64(score), member)
 }
 
-// ZaddFloatCtx 向有序集合 key 添加或更新一个成员及其分数。
-func (r *Redis) ZaddFloatCtx(ctx context.Context, key string, score float64, member string) (
+// ZAddFloatCtx 向有序集合 key 添加或更新一个成员及其分数。
+func (r *Redis) ZAddFloatCtx(ctx context.Context, key string, score float64, member string) (
 	val bool, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
@@ -1890,13 +1890,13 @@ func (r *Redis) ZaddFloatCtx(ctx context.Context, key string, score float64, mem
 	return
 }
 
-// Zadds 向有序集合添加或更新一个或多个成员及其分数。
-func (r *Redis) Zadds(key string, ps ...Pair) (int64, error) {
-	return r.ZaddsCtx(context.Background(), key, ps...)
+// ZAdds 向有序集合添加或更新一个或多个成员及其分数。
+func (r *Redis) ZAdds(key string, ps ...Pair) (int64, error) {
+	return r.ZAddsCtx(context.Background(), key, ps...)
 }
 
-// ZaddsCtx 向有序集合添加或更新一个或多个成员及其分数。
-func (r *Redis) ZaddsCtx(ctx context.Context, key string, ps ...Pair) (val int64, err error) {
+// ZAddsCtx 向有序集合添加或更新一个或多个成员及其分数。
+func (r *Redis) ZAddsCtx(ctx context.Context, key string, ps ...Pair) (val int64, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1921,13 +1921,13 @@ func (r *Redis) ZaddsCtx(ctx context.Context, key string, ps ...Pair) (val int64
 	return
 }
 
-// Zcard 获取有序集合 key 的成员数量。
-func (r *Redis) Zcard(key string) (int, error) {
-	return r.ZcardCtx(context.Background(), key)
+// ZCard 获取有序集合 key 的成员数量。
+func (r *Redis) ZCard(key string) (int, error) {
+	return r.ZCardCtx(context.Background(), key)
 }
 
-// ZcardCtx 获取有序集合 key 的成员数量。
-func (r *Redis) ZcardCtx(ctx context.Context, key string) (val int, err error) {
+// ZCardCtx 获取有序集合 key 的成员数量。
+func (r *Redis) ZCardCtx(ctx context.Context, key string) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1946,13 +1946,13 @@ func (r *Redis) ZcardCtx(ctx context.Context, key string) (val int, err error) {
 	return
 }
 
-// Zcount 求有序集合中指定分数区间的成员数量。
-func (r *Redis) Zcount(key string, start, stop int64) (int, error) {
-	return r.ZcountCtx(context.Background(), key, start, stop)
+// ZCount 求有序集合中指定分数区间的成员数量。
+func (r *Redis) ZCount(key string, start, stop int64) (int, error) {
+	return r.ZCountCtx(context.Background(), key, start, stop)
 }
 
-// ZcountCtx 求有序集合中指定分数区间的成员数量。
-func (r *Redis) ZcountCtx(ctx context.Context, key string, start, stop int64) (val int, err error) {
+// ZCountCtx 求有序集合中指定分数区间的成员数量。
+func (r *Redis) ZCountCtx(ctx context.Context, key string, start, stop int64) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1972,13 +1972,13 @@ func (r *Redis) ZcountCtx(ctx context.Context, key string, start, stop int64) (v
 	return
 }
 
-// Zincrby 在有序集合中指定成员的分数上增加 increment 分。
-func (r *Redis) Zincrby(key string, increment int64, member string) (int64, error) {
-	return r.ZincrbyCtx(context.Background(), key, increment, member)
+// ZIncrBy 在有序集合中指定成员的分数上增加 increment 分。
+func (r *Redis) ZIncrBy(key string, increment int64, member string) (int64, error) {
+	return r.ZIncrByCtx(context.Background(), key, increment, member)
 }
 
-// ZincrbyCtx 在有序集合中指定成员的分数上增加 increment 分。
-func (r *Redis) ZincrbyCtx(ctx context.Context, key string, increment int64, member string) (
+// ZIncrByCtx 在有序集合中指定成员的分数上增加 increment 分。
+func (r *Redis) ZIncrByCtx(ctx context.Context, key string, increment int64, member string) (
 	val int64, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
@@ -1998,13 +1998,13 @@ func (r *Redis) ZincrbyCtx(ctx context.Context, key string, increment int64, mem
 	return
 }
 
-// Zscore 返回有序集合中指定成员的分数。
-func (r *Redis) Zscore(key, value string) (int64, error) {
-	return r.ZscoreCtx(context.Background(), key, value)
+// ZScore 返回有序集合中指定成员的分数。
+func (r *Redis) ZScore(key, value string) (int64, error) {
+	return r.ZScoreCtx(context.Background(), key, value)
 }
 
-// ZscoreCtx 返回有序集合中指定成员的分数。
-func (r *Redis) ZscoreCtx(ctx context.Context, key, member string) (val int64, err error) {
+// ZScoreCtx 返回有序集合中指定成员的分数。
+func (r *Redis) ZScoreCtx(ctx context.Context, key, member string) (val int64, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -2023,13 +2023,13 @@ func (r *Redis) ZscoreCtx(ctx context.Context, key, member string) (val int64, e
 	return
 }
 
-// Zrank 获取有序集合中给定成员的升序索引排名。
-func (r *Redis) Zrank(key, field string) (int64, error) {
-	return r.ZrankCtx(context.Background(), key, field)
+// ZRank 获取有序集合中给定成员的升序索引排名。
+func (r *Redis) ZRank(key, field string) (int64, error) {
+	return r.ZRankCtx(context.Background(), key, field)
 }
 
-// ZrankCtx 获取有序集合中给定成员的升序索引排名。
-func (r *Redis) ZrankCtx(ctx context.Context, key, field string) (val int64, err error) {
+// ZRankCtx 获取有序集合中给定成员的升序索引排名。
+func (r *Redis) ZRankCtx(ctx context.Context, key, field string) (val int64, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -2043,13 +2043,13 @@ func (r *Redis) ZrankCtx(ctx context.Context, key, field string) (val int64, err
 	return
 }
 
-// Zrem 移除有序集合中给定的一个或多个成员。
-func (r *Redis) Zrem(key string, members ...interface{}) (int, error) {
-	return r.ZremCtx(context.Background(), key, members...)
+// ZRem 移除有序集合中给定的一个或多个成员。
+func (r *Redis) ZRem(key string, members ...interface{}) (int, error) {
+	return r.ZRemCtx(context.Background(), key, members...)
 }
 
-// ZremCtx 移除有序集合中给定的一个或多个成员。
-func (r *Redis) ZremCtx(ctx context.Context, key string, members ...interface{}) (val int, err error) {
+// ZRemCtx 移除有序集合中给定的一个或多个成员。
+func (r *Redis) ZRemCtx(ctx context.Context, key string, members ...interface{}) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -2068,13 +2068,13 @@ func (r *Redis) ZremCtx(ctx context.Context, key string, members ...interface{})
 	return
 }
 
-// Zremrangebyscore 移除有序集合中给定分数区间的所有成员。
-func (r *Redis) Zremrangebyscore(key string, start, stop int64) (int, error) {
-	return r.ZremrangebyscoreCtx(context.Background(), key, start, stop)
+// ZRemRangeByScore 移除有序集合中给定分数区间的所有成员。
+func (r *Redis) ZRemRangeByScore(key string, start, stop int64) (int, error) {
+	return r.ZRemRangeByScoreCtx(context.Background(), key, start, stop)
 }
 
-// ZremrangebyscoreCtx 移除有序集合中给定分数区间的所有成员。
-func (r *Redis) ZremrangebyscoreCtx(ctx context.Context, key string, start, stop int64) (
+// ZRemRangeByScoreCtx 移除有序集合中给定分数区间的所有成员。
+func (r *Redis) ZRemRangeByScoreCtx(ctx context.Context, key string, start, stop int64) (
 	val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
@@ -2095,13 +2095,13 @@ func (r *Redis) ZremrangebyscoreCtx(ctx context.Context, key string, start, stop
 	return
 }
 
-// Zremrangebyrank 移除有序集合中给定排名区间的所有成员。
-func (r *Redis) Zremrangebyrank(key string, start, stop int64) (int, error) {
-	return r.ZremrangebyrankCtx(context.Background(), key, start, stop)
+// ZRemRangeByRank 移除有序集合中给定排名区间的所有成员。
+func (r *Redis) ZRemRangeByRank(key string, start, stop int64) (int, error) {
+	return r.ZRemRangeByRankCtx(context.Background(), key, start, stop)
 }
 
-// ZremrangebyrankCtx 移除有序集合中给定排名区间的所有成员。
-func (r *Redis) ZremrangebyrankCtx(ctx context.Context, key string, start, stop int64) (
+// ZRemRangeByRankCtx 移除有序集合中给定排名区间的所有成员。
+func (r *Redis) ZRemRangeByRankCtx(ctx context.Context, key string, start, stop int64) (
 	val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
@@ -2121,13 +2121,13 @@ func (r *Redis) ZremrangebyrankCtx(ctx context.Context, key string, start, stop 
 	return
 }
 
-// Zrange 获取有序集合中在索引区间内的所有成员。
-func (r *Redis) Zrange(key string, start, stop int64) ([]string, error) {
-	return r.ZrangeCtx(context.Background(), key, start, stop)
+// ZRange 获取有序集合中在索引区间内的所有成员。
+func (r *Redis) ZRange(key string, start, stop int64) ([]string, error) {
+	return r.ZRangeCtx(context.Background(), key, start, stop)
 }
 
-// ZrangeCtx 获取有序集合中在索引区间内的所有成员。
-func (r *Redis) ZrangeCtx(ctx context.Context, key string, start, stop int64) (
+// ZRangeCtx 获取有序集合中在索引区间内的所有成员。
+func (r *Redis) ZRangeCtx(ctx context.Context, key string, start, stop int64) (
 	val []string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
@@ -2142,13 +2142,13 @@ func (r *Redis) ZrangeCtx(ctx context.Context, key string, start, stop int64) (
 	return
 }
 
-// ZrangeWithScores 获取有序集合中在索引区间内的所有成员及其分数。
-func (r *Redis) ZrangeWithScores(key string, start, stop int64) ([]Pair, error) {
-	return r.ZrangeWithScoresCtx(context.Background(), key, start, stop)
+// ZRangeWithScores 获取有序集合中在索引区间内的所有成员及其分数。
+func (r *Redis) ZRangeWithScores(key string, start, stop int64) ([]Pair, error) {
+	return r.ZRangeWithScoresCtx(context.Background(), key, start, stop)
 }
 
-// ZrangeWithScoresCtx 获取有序集合中在索引区间内的所有成员及其分数。
-func (r *Redis) ZrangeWithScoresCtx(ctx context.Context, key string, start, stop int64) (
+// ZRangeWithScoresCtx 获取有序集合中在索引区间内的所有成员及其分数。
+func (r *Redis) ZRangeWithScoresCtx(ctx context.Context, key string, start, stop int64) (
 	val []Pair, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
@@ -2194,13 +2194,13 @@ func (r *Redis) ZRevRangeWithScoresCtx(ctx context.Context, key string, start, s
 	return
 }
 
-// ZrangebyscoreWithScores 获取有序集合中在分数区间内的所有成员及其分数。
-func (r *Redis) ZrangebyscoreWithScores(key string, start, stop int64) ([]Pair, error) {
-	return r.ZrangebyscoreWithScoresCtx(context.Background(), key, start, stop)
+// ZRangeByScoreWithScores 获取有序集合中在分数区间内的所有成员及其分数。
+func (r *Redis) ZRangeByScoreWithScores(key string, start, stop int64) ([]Pair, error) {
+	return r.ZRangeByScoreWithScoresCtx(context.Background(), key, start, stop)
 }
 
-// ZrangebyscoreWithScoresCtx 获取有序集合中在分数区间内的所有成员及其分数。
-func (r *Redis) ZrangebyscoreWithScoresCtx(ctx context.Context, key string, start, stop int64) (
+// ZRangeByScoreWithScoresCtx 获取有序集合中在分数区间内的所有成员及其分数。
+func (r *Redis) ZRangeByScoreWithScoresCtx(ctx context.Context, key string, start, stop int64) (
 	val []Pair, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
@@ -2223,14 +2223,14 @@ func (r *Redis) ZrangebyscoreWithScoresCtx(ctx context.Context, key string, star
 	return
 }
 
-// ZrangebyscoreWithScoresAndLimit 获取有序集合中在分数区间内的指定分页的成员及其分数。
-func (r *Redis) ZrangebyscoreWithScoresAndLimit(key string, start, stop int64,
+// ZRangeByScoreWithScoresAndLimit 获取有序集合中在分数区间内的指定分页的成员及其分数。
+func (r *Redis) ZRangeByScoreWithScoresAndLimit(key string, start, stop int64,
 	page, size int) ([]Pair, error) {
-	return r.ZrangebyscoreWithScoresAndLimitCtx(context.Background(), key, start, stop, page, size)
+	return r.ZRangeByScoreWithScoresAndLimitCtx(context.Background(), key, start, stop, page, size)
 }
 
-// ZrangebyscoreWithScoresAndLimitCtx 获取有序集合中在分数区间内的指定分页的成员及其分数。
-func (r *Redis) ZrangebyscoreWithScoresAndLimitCtx(ctx context.Context, key string, start,
+// ZRangeByScoreWithScoresAndLimitCtx 获取有序集合中在分数区间内的指定分页的成员及其分数。
+func (r *Redis) ZRangeByScoreWithScoresAndLimitCtx(ctx context.Context, key string, start,
 	stop int64, page, size int) (val []Pair, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		if size <= 0 {
@@ -2259,13 +2259,13 @@ func (r *Redis) ZrangebyscoreWithScoresAndLimitCtx(ctx context.Context, key stri
 	return
 }
 
-// Zrevrange 获取有序集合中在索引区间内的所有成员，按分数从高到低排序。
-func (r *Redis) Zrevrange(key string, start, stop int64) ([]string, error) {
-	return r.ZrevrangeCtx(context.Background(), key, start, stop)
+// ZRevRange 获取有序集合中在索引区间内的所有成员，按分数从高到低排序。
+func (r *Redis) ZRevRange(key string, start, stop int64) ([]string, error) {
+	return r.ZRevRangeCtx(context.Background(), key, start, stop)
 }
 
-// ZrevrangeCtx 获取有序集合中在索引区间内的所有成员，按分数从高到低排序。
-func (r *Redis) ZrevrangeCtx(ctx context.Context, key string, start, stop int64) (
+// ZRevRangeCtx 获取有序集合中在索引区间内的所有成员，按分数从高到低排序。
+func (r *Redis) ZRevRangeCtx(ctx context.Context, key string, start, stop int64) (
 	val []string, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
@@ -2280,13 +2280,13 @@ func (r *Redis) ZrevrangeCtx(ctx context.Context, key string, start, stop int64)
 	return
 }
 
-// ZrevrangebyscoreWithScores 获取有序集合中在分数区间内的所有成员及其分数，按索引从高到低排序。
-func (r *Redis) ZrevrangebyscoreWithScores(key string, start, stop int64) ([]Pair, error) {
-	return r.ZrevrangebyscoreWithScoresCtx(context.Background(), key, start, stop)
+// ZRevRangeByScoreWithScores 获取有序集合中在分数区间内的所有成员及其分数，按索引从高到低排序。
+func (r *Redis) ZRevRangeByScoreWithScores(key string, start, stop int64) ([]Pair, error) {
+	return r.ZRevRangeByScoreWithScoresCtx(context.Background(), key, start, stop)
 }
 
-// ZrevrangebyscoreWithScoresCtx 获取有序集合中在分数区间内的所有成员及其分数，按索引从高到低排序。
-func (r *Redis) ZrevrangebyscoreWithScoresCtx(ctx context.Context, key string, start, stop int64) (
+// ZRevRangeByScoreWithScoresCtx 获取有序集合中在分数区间内的所有成员及其分数，按索引从高到低排序。
+func (r *Redis) ZRevRangeByScoreWithScoresCtx(ctx context.Context, key string, start, stop int64) (
 	val []Pair, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
@@ -2309,14 +2309,14 @@ func (r *Redis) ZrevrangebyscoreWithScoresCtx(ctx context.Context, key string, s
 	return
 }
 
-// ZrevrangebyscoreWithScoresAndLimit 获取有序集合中在分数区间内的指定分页的成员及其分数，按分数从高到低排序。
-func (r *Redis) ZrevrangebyscoreWithScoresAndLimit(key string, start, stop int64,
+// ZRevRangeByScoreWithScoresAndLimit 获取有序集合中在分数区间内的指定分页的成员及其分数，按分数从高到低排序。
+func (r *Redis) ZRevRangeByScoreWithScoresAndLimit(key string, start, stop int64,
 	page, size int) ([]Pair, error) {
-	return r.ZrevrangebyscoreWithScoresAndLimitCtx(context.Background(), key, start, stop, page, size)
+	return r.ZRevRangeByScoreWithScoresAndLimitCtx(context.Background(), key, start, stop, page, size)
 }
 
-// ZrevrangebyscoreWithScoresAndLimitCtx 获取有序集合中在分数区间内的指定分页的成员及其分数，按分数从高到低排序。
-func (r *Redis) ZrevrangebyscoreWithScoresAndLimitCtx(ctx context.Context, key string,
+// ZRevRangeByScoreWithScoresAndLimitCtx 获取有序集合中在分数区间内的指定分页的成员及其分数，按分数从高到低排序。
+func (r *Redis) ZRevRangeByScoreWithScoresAndLimitCtx(ctx context.Context, key string,
 	start, stop int64, page, size int) (val []Pair, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		if size <= 0 {
@@ -2345,13 +2345,13 @@ func (r *Redis) ZrevrangebyscoreWithScoresAndLimitCtx(ctx context.Context, key s
 	return
 }
 
-// Zrevrank 获取有序集合中给定成员的降序索引排名。
-func (r *Redis) Zrevrank(key, member string) (int64, error) {
-	return r.ZrevrankCtx(context.Background(), key, member)
+// ZRevRank 获取有序集合中给定成员的降序索引排名。
+func (r *Redis) ZRevRank(key, member string) (int64, error) {
+	return r.ZRevRankCtx(context.Background(), key, member)
 }
 
-// ZrevrankCtx 获取有序集合中给定成员的降序索引排名。
-func (r *Redis) ZrevrankCtx(ctx context.Context, key, member string) (val int64, err error) {
+// ZRevRankCtx 获取有序集合中给定成员的降序索引排名。
+func (r *Redis) ZRevRankCtx(ctx context.Context, key, member string) (val int64, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -2365,13 +2365,13 @@ func (r *Redis) ZrevrankCtx(ctx context.Context, key, member string) (val int64,
 	return
 }
 
-// Zunionstore 求一个或多个有序集合的并集，将结果存储至 dest。
-func (r *Redis) Zunionstore(dest string, store *ZStore) (int64, error) {
-	return r.ZunionstoreCtx(context.Background(), dest, store)
+// ZUnionStore 求一个或多个有序集合的并集，将结果存储至 dest。
+func (r *Redis) ZUnionStore(dest string, store *ZStore) (int64, error) {
+	return r.ZUnionStoreCtx(context.Background(), dest, store)
 }
 
-// ZunionstoreCtx 求一个或多个有序集合的并集，将结果存储至 dest。
-func (r *Redis) ZunionstoreCtx(ctx context.Context, dest string, store *ZStore) (
+// ZUnionStoreCtx 求一个或多个有序集合的并集，将结果存储至 dest。
+func (r *Redis) ZUnionStoreCtx(ctx context.Context, dest string, store *ZStore) (
 	val int64, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)

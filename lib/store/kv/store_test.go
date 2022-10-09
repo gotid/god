@@ -33,14 +33,14 @@ func TestRedis_Decr(t *testing.T) {
 
 func TestRedis_DecrBy(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	_, err := store.Incrby("a", 2)
+	_, err := store.IncrBy("a", 2)
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		val, err := client.Decrby("a", 2)
+		val, err := client.DecrBy("a", 2)
 		assert.Nil(t, err)
 		assert.Equal(t, int64(-2), val)
-		val, err = client.Decrby("a", 3)
+		val, err = client.DecrBy("a", 3)
 		assert.Nil(t, err)
 		assert.Equal(t, int64(-5), val)
 	})
@@ -82,15 +82,15 @@ func TestRedis_Eval(t *testing.T) {
 
 func TestRedis_Hgetall(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	err := store.Hset("a", "aa", "aaa")
+	err := store.HSet("a", "aa", "aaa")
 	assert.NotNil(t, err)
-	_, err = store.Hgetall("a")
+	_, err = store.HGetAll("a")
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		assert.Nil(t, client.Hset("a", "aa", "aaa"))
-		assert.Nil(t, client.Hset("a", "bb", "bbb"))
-		vals, err := client.Hgetall("a")
+		assert.Nil(t, client.HSet("a", "aa", "aaa"))
+		assert.Nil(t, client.HSet("a", "bb", "bbb"))
+		vals, err := client.HGetAll("a")
 		assert.Nil(t, err)
 		assert.EqualValues(t, map[string]string{
 			"aa": "aaa",
@@ -101,13 +101,13 @@ func TestRedis_Hgetall(t *testing.T) {
 
 func TestRedis_Hvals(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	_, err := store.Hvals("a")
+	_, err := store.HVals("a")
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		assert.Nil(t, client.Hset("a", "aa", "aaa"))
-		assert.Nil(t, client.Hset("a", "bb", "bbb"))
-		vals, err := client.Hvals("a")
+		assert.Nil(t, client.HSet("a", "aa", "aaa"))
+		assert.Nil(t, client.HSet("a", "bb", "bbb"))
+		vals, err := client.HVals("a")
 		assert.Nil(t, err)
 		assert.ElementsMatch(t, []string{"aaa", "bbb"}, vals)
 	})
@@ -115,19 +115,19 @@ func TestRedis_Hvals(t *testing.T) {
 
 func TestRedis_Hsetnx(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	_, err := store.Hsetnx("a", "dd", "ddd")
+	_, err := store.HSetNx("a", "dd", "ddd")
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		assert.Nil(t, client.Hset("a", "aa", "aaa"))
-		assert.Nil(t, client.Hset("a", "bb", "bbb"))
-		ok, err := client.Hsetnx("a", "bb", "ccc")
+		assert.Nil(t, client.HSet("a", "aa", "aaa"))
+		assert.Nil(t, client.HSet("a", "bb", "bbb"))
+		ok, err := client.HSetNx("a", "bb", "ccc")
 		assert.Nil(t, err)
 		assert.False(t, ok)
-		ok, err = client.Hsetnx("a", "dd", "ddd")
+		ok, err = client.HSetNx("a", "dd", "ddd")
 		assert.Nil(t, err)
 		assert.True(t, ok)
-		vals, err := client.Hvals("a")
+		vals, err := client.HVals("a")
 		assert.Nil(t, err)
 		assert.ElementsMatch(t, []string{"aaa", "bbb", "ddd"}, vals)
 	})
@@ -135,21 +135,21 @@ func TestRedis_Hsetnx(t *testing.T) {
 
 func TestRedis_HdelHlen(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	_, err := store.Hdel("a", "aa")
+	_, err := store.HDel("a", "aa")
 	assert.NotNil(t, err)
-	_, err = store.Hlen("a")
+	_, err = store.HLen("a")
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		assert.Nil(t, client.Hset("a", "aa", "aaa"))
-		assert.Nil(t, client.Hset("a", "bb", "bbb"))
-		num, err := client.Hlen("a")
+		assert.Nil(t, client.HSet("a", "aa", "aaa"))
+		assert.Nil(t, client.HSet("a", "bb", "bbb"))
+		num, err := client.HLen("a")
 		assert.Nil(t, err)
 		assert.Equal(t, 2, num)
-		val, err := client.Hdel("a", "aa")
+		val, err := client.HDel("a", "aa")
 		assert.Nil(t, err)
 		assert.True(t, val)
-		vals, err := client.Hvals("a")
+		vals, err := client.HVals("a")
 		assert.Nil(t, err)
 		assert.ElementsMatch(t, []string{"bbb"}, vals)
 	})
@@ -157,14 +157,14 @@ func TestRedis_HdelHlen(t *testing.T) {
 
 func TestRedis_HIncrBy(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	_, err := store.Hincrby("key", "field", 3)
+	_, err := store.HIncrBy("key", "field", 3)
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		val, err := client.Hincrby("key", "field", 2)
+		val, err := client.HIncrBy("key", "field", 2)
 		assert.Nil(t, err)
 		assert.Equal(t, 2, val)
-		val, err = client.Hincrby("key", "field", 3)
+		val, err = client.HIncrBy("key", "field", 3)
 		assert.Nil(t, err)
 		assert.Equal(t, 5, val)
 	})
@@ -172,13 +172,13 @@ func TestRedis_HIncrBy(t *testing.T) {
 
 func TestRedis_Hkeys(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	_, err := store.Hkeys("a")
+	_, err := store.HKeys("a")
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		assert.Nil(t, client.Hset("a", "aa", "aaa"))
-		assert.Nil(t, client.Hset("a", "bb", "bbb"))
-		vals, err := client.Hkeys("a")
+		assert.Nil(t, client.HSet("a", "aa", "aaa"))
+		assert.Nil(t, client.HSet("a", "bb", "bbb"))
+		vals, err := client.HKeys("a")
 		assert.Nil(t, err)
 		assert.ElementsMatch(t, []string{"aa", "bb"}, vals)
 	})
@@ -186,16 +186,16 @@ func TestRedis_Hkeys(t *testing.T) {
 
 func TestRedis_Hmget(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	_, err := store.Hmget("a", "aa", "bb")
+	_, err := store.HMGet("a", "aa", "bb")
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		assert.Nil(t, client.Hset("a", "aa", "aaa"))
-		assert.Nil(t, client.Hset("a", "bb", "bbb"))
-		vals, err := client.Hmget("a", "aa", "bb")
+		assert.Nil(t, client.HSet("a", "aa", "aaa"))
+		assert.Nil(t, client.HSet("a", "bb", "bbb"))
+		vals, err := client.HMGet("a", "aa", "bb")
 		assert.Nil(t, err)
 		assert.EqualValues(t, []string{"aaa", "bbb"}, vals)
-		vals, err = client.Hmget("a", "aa", "no", "bb")
+		vals, err = client.HMGet("a", "aa", "no", "bb")
 		assert.Nil(t, err)
 		assert.EqualValues(t, []string{"aaa", "", "bbb"}, vals)
 	})
@@ -203,17 +203,17 @@ func TestRedis_Hmget(t *testing.T) {
 
 func TestRedis_Hmset(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	err := store.Hmset("a", map[string]string{
+	err := store.HMSet("a", map[string]string{
 		"aa": "aaa",
 	})
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		assert.Nil(t, client.Hmset("a", map[string]string{
+		assert.Nil(t, client.HMSet("a", map[string]string{
 			"aa": "aaa",
 			"bb": "bbb",
 		}))
-		vals, err := client.Hmget("a", "aa", "bb")
+		vals, err := client.HMGet("a", "aa", "bb")
 		assert.Nil(t, err)
 		assert.EqualValues(t, []string{"aaa", "bbb"}, vals)
 	})
@@ -236,14 +236,14 @@ func TestRedis_Incr(t *testing.T) {
 
 func TestRedis_IncrBy(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	_, err := store.Incrby("a", 2)
+	_, err := store.IncrBy("a", 2)
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		val, err := client.Incrby("a", 2)
+		val, err := client.IncrBy("a", 2)
 		assert.Nil(t, err)
 		assert.Equal(t, int64(2), val)
-		val, err = client.Incrby("a", 3)
+		val, err = client.IncrBy("a", 3)
 		assert.Nil(t, err)
 		assert.Equal(t, int64(5), val)
 	})
@@ -251,56 +251,56 @@ func TestRedis_IncrBy(t *testing.T) {
 
 func TestRedis_List(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	_, err := store.Lpush("key", "value1", "value2")
+	_, err := store.LPush("key", "value1", "value2")
 	assert.NotNil(t, err)
-	_, err = store.Rpush("key", "value3", "value4")
+	_, err = store.RPush("key", "value3", "value4")
 	assert.NotNil(t, err)
-	_, err = store.Llen("key")
+	_, err = store.LLen("key")
 	assert.NotNil(t, err)
-	_, err = store.Lrange("key", 0, 10)
+	_, err = store.LRange("key", 0, 10)
 	assert.NotNil(t, err)
-	_, err = store.Lpop("key")
+	_, err = store.LPop("key")
 	assert.NotNil(t, err)
-	_, err = store.Lrem("key", 0, "val")
+	_, err = store.LRem("key", 0, "val")
 	assert.NotNil(t, err)
-	_, err = store.Lindex("key", 0)
+	_, err = store.LIndex("key", 0)
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		val, err := client.Lpush("key", "value1", "value2")
+		val, err := client.LPush("key", "value1", "value2")
 		assert.Nil(t, err)
 		assert.Equal(t, 2, val)
-		val, err = client.Rpush("key", "value3", "value4")
+		val, err = client.RPush("key", "value3", "value4")
 		assert.Nil(t, err)
 		assert.Equal(t, 4, val)
-		val, err = client.Llen("key")
+		val, err = client.LLen("key")
 		assert.Nil(t, err)
 		assert.Equal(t, 4, val)
-		value, err := client.Lindex("key", 0)
+		value, err := client.LIndex("key", 0)
 		assert.Nil(t, err)
 		assert.Equal(t, "value2", value)
-		vals, err := client.Lrange("key", 0, 10)
+		vals, err := client.LRange("key", 0, 10)
 		assert.Nil(t, err)
 		assert.EqualValues(t, []string{"value2", "value1", "value3", "value4"}, vals)
-		v, err := client.Lpop("key")
+		v, err := client.LPop("key")
 		assert.Nil(t, err)
 		assert.Equal(t, "value2", v)
-		val, err = client.Lpush("key", "value1", "value2")
+		val, err = client.LPush("key", "value1", "value2")
 		assert.Nil(t, err)
 		assert.Equal(t, 5, val)
-		val, err = client.Rpush("key", "value3", "value3")
+		val, err = client.RPush("key", "value3", "value3")
 		assert.Nil(t, err)
 		assert.Equal(t, 7, val)
-		n, err := client.Lrem("key", 2, "value1")
+		n, err := client.LRem("key", 2, "value1")
 		assert.Nil(t, err)
 		assert.Equal(t, 2, n)
-		vals, err = client.Lrange("key", 0, 10)
+		vals, err = client.LRange("key", 0, 10)
 		assert.Nil(t, err)
 		assert.EqualValues(t, []string{"value2", "value3", "value4", "value3", "value3"}, vals)
-		n, err = client.Lrem("key", -2, "value3")
+		n, err = client.LRem("key", -2, "value3")
 		assert.Nil(t, err)
 		assert.Equal(t, 2, n)
-		vals, err = client.Lrange("key", 0, 10)
+		vals, err = client.LRange("key", 0, 10)
 		assert.Nil(t, err)
 		assert.EqualValues(t, []string{"value2", "value3", "value4"}, vals)
 	})
@@ -312,7 +312,7 @@ func TestRedis_Persist(t *testing.T) {
 	assert.NotNil(t, err)
 	err = store.Expire("key", 5)
 	assert.NotNil(t, err)
-	err = store.Expireat("key", time.Now().Unix()+5)
+	err = store.ExpireAt("key", time.Now().Unix()+5)
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
@@ -329,7 +329,7 @@ func TestRedis_Persist(t *testing.T) {
 		ok, err = client.Persist("key")
 		assert.Nil(t, err)
 		assert.True(t, ok)
-		err = client.Expireat("key", time.Now().Unix()+5)
+		err = client.ExpireAt("key", time.Now().Unix()+5)
 		assert.Nil(t, err)
 		ok, err = client.Persist("key")
 		assert.Nil(t, err)
@@ -340,9 +340,9 @@ func TestRedis_Persist(t *testing.T) {
 func TestRedis_Sscan(t *testing.T) {
 	key := "list"
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	_, err := store.Sadd(key, nil)
+	_, err := store.SAdd(key, nil)
 	assert.NotNil(t, err)
-	_, _, err = store.Sscan(key, 0, "", 100)
+	_, _, err = store.SScan(key, 0, "", 100)
 	assert.NotNil(t, err)
 	_, err = store.Del(key)
 	assert.NotNil(t, err)
@@ -352,14 +352,14 @@ func TestRedis_Sscan(t *testing.T) {
 		for i := 0; i < 1550; i++ {
 			list = append(list, stringx.Randn(i))
 		}
-		lens, err := client.Sadd(key, list)
+		lens, err := client.SAdd(key, list)
 		assert.Nil(t, err)
 		assert.Equal(t, lens, 1550)
 
 		var cursor uint64 = 0
 		sum := 0
 		for {
-			keys, next, err := client.Sscan(key, cursor, "", 100)
+			keys, next, err := client.SScan(key, cursor, "", 100)
 			assert.Nil(t, err)
 			sum += len(keys)
 			if next == 0 {
@@ -376,49 +376,49 @@ func TestRedis_Sscan(t *testing.T) {
 
 func TestRedis_Set(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	_, err := store.Scard("key")
+	_, err := store.SCard("key")
 	assert.NotNil(t, err)
-	_, err = store.Sismember("key", 2)
+	_, err = store.SIsMember("key", 2)
 	assert.NotNil(t, err)
-	_, err = store.Srem("key", 3, 4)
+	_, err = store.SRem("key", 3, 4)
 	assert.NotNil(t, err)
-	_, err = store.Smembers("key")
+	_, err = store.SMembers("key")
 	assert.NotNil(t, err)
-	_, err = store.Srandmember("key", 1)
+	_, err = store.SRandMember("key", 1)
 	assert.NotNil(t, err)
-	_, err = store.Spop("key")
+	_, err = store.SPop("key")
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		num, err := client.Sadd("key", 1, 2, 3, 4)
+		num, err := client.SAdd("key", 1, 2, 3, 4)
 		assert.Nil(t, err)
 		assert.Equal(t, 4, num)
-		val, err := client.Scard("key")
+		val, err := client.SCard("key")
 		assert.Nil(t, err)
 		assert.Equal(t, int64(4), val)
-		ok, err := client.Sismember("key", 2)
+		ok, err := client.SIsMember("key", 2)
 		assert.Nil(t, err)
 		assert.True(t, ok)
-		num, err = client.Srem("key", 3, 4)
+		num, err = client.SRem("key", 3, 4)
 		assert.Nil(t, err)
 		assert.Equal(t, 2, num)
-		vals, err := client.Smembers("key")
+		vals, err := client.SMembers("key")
 		assert.Nil(t, err)
 		assert.ElementsMatch(t, []string{"1", "2"}, vals)
-		members, err := client.Srandmember("key", 1)
+		members, err := client.SRandMember("key", 1)
 		assert.Nil(t, err)
 		assert.Len(t, members, 1)
 		assert.Contains(t, []string{"1", "2"}, members[0])
-		member, err := client.Spop("key")
+		member, err := client.SPop("key")
 		assert.Nil(t, err)
 		assert.Contains(t, []string{"1", "2"}, member)
-		vals, err = client.Smembers("key")
+		vals, err = client.SMembers("key")
 		assert.Nil(t, err)
 		assert.NotContains(t, vals, member)
-		num, err = client.Sadd("key1", 1, 2, 3, 4)
+		num, err = client.SAdd("key1", 1, 2, 3, 4)
 		assert.Nil(t, err)
 		assert.Equal(t, 4, num)
-		num, err = client.Sadd("key2", 2, 3, 4, 5)
+		num, err = client.SAdd("key2", 2, 3, 4, 5)
 		assert.Nil(t, err)
 		assert.Equal(t, 4, num)
 	})
@@ -447,22 +447,22 @@ func TestRedis_SetGetDel(t *testing.T) {
 
 func TestRedis_SetExNx(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	err := store.Setex("hello", "world", 5)
+	err := store.SetEx("hello", "world", 5)
 	assert.NotNil(t, err)
-	_, err = store.Setnx("newhello", "newworld")
+	_, err = store.SetNX("newhello", "newworld")
 	assert.NotNil(t, err)
-	_, err = store.Ttl("hello")
+	_, err = store.TTL("hello")
 	assert.NotNil(t, err)
-	_, err = store.SetnxEx("newhello", "newworld", 5)
+	_, err = store.SetNXEx("newhello", "newworld", 5)
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		err := client.Setex("hello", "world", 5)
+		err := client.SetEx("hello", "world", 5)
 		assert.Nil(t, err)
-		ok, err := client.Setnx("hello", "newworld")
+		ok, err := client.SetNX("hello", "newworld")
 		assert.Nil(t, err)
 		assert.False(t, ok)
-		ok, err = client.Setnx("newhello", "newworld")
+		ok, err = client.SetNX("newhello", "newworld")
 		assert.Nil(t, err)
 		assert.True(t, ok)
 		val, err := client.Get("hello")
@@ -471,16 +471,16 @@ func TestRedis_SetExNx(t *testing.T) {
 		val, err = client.Get("newhello")
 		assert.Nil(t, err)
 		assert.Equal(t, "newworld", val)
-		ttl, err := client.Ttl("hello")
+		ttl, err := client.TTL("hello")
 		assert.Nil(t, err)
 		assert.True(t, ttl > 0)
-		ok, err = client.SetnxEx("newhello", "newworld", 5)
+		ok, err = client.SetNXEx("newhello", "newworld", 5)
 		assert.Nil(t, err)
 		assert.False(t, ok)
 		num, err := client.Del("newhello")
 		assert.Nil(t, err)
 		assert.Equal(t, 1, num)
-		ok, err = client.SetnxEx("newhello", "newworld", 5)
+		ok, err = client.SetNXEx("newhello", "newworld", 5)
 		assert.Nil(t, err)
 		assert.True(t, ok)
 		val, err = client.Get("newhello")
@@ -514,28 +514,28 @@ func TestRedis_Getset(t *testing.T) {
 
 func TestRedis_SetGetDelHashField(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	err := store.Hset("key", "field", "value")
+	err := store.HSet("key", "field", "value")
 	assert.NotNil(t, err)
-	_, err = store.Hget("key", "field")
+	_, err = store.HGet("key", "field")
 	assert.NotNil(t, err)
-	_, err = store.Hexists("key", "field")
+	_, err = store.HExists("key", "field")
 	assert.NotNil(t, err)
-	_, err = store.Hdel("key", "field")
+	_, err = store.HDel("key", "field")
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		err := client.Hset("key", "field", "value")
+		err := client.HSet("key", "field", "value")
 		assert.Nil(t, err)
-		val, err := client.Hget("key", "field")
+		val, err := client.HGet("key", "field")
 		assert.Nil(t, err)
 		assert.Equal(t, "value", val)
-		ok, err := client.Hexists("key", "field")
+		ok, err := client.HExists("key", "field")
 		assert.Nil(t, err)
 		assert.True(t, ok)
-		ret, err := client.Hdel("key", "field")
+		ret, err := client.HDel("key", "field")
 		assert.Nil(t, err)
 		assert.True(t, ret)
-		ok, err = client.Hexists("key", "field")
+		ok, err = client.HExists("key", "field")
 		assert.Nil(t, err)
 		assert.False(t, ok)
 	})
@@ -543,41 +543,41 @@ func TestRedis_SetGetDelHashField(t *testing.T) {
 
 func TestRedis_SortedSet(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	_, err := store.Zadd("key", 1, "value1")
+	_, err := store.ZAdd("key", 1, "value1")
 	assert.NotNil(t, err)
-	_, err = store.Zscore("key", "value1")
+	_, err = store.ZScore("key", "value1")
 	assert.NotNil(t, err)
-	_, err = store.Zcount("key", 6, 7)
+	_, err = store.ZCount("key", 6, 7)
 	assert.NotNil(t, err)
-	_, err = store.Zincrby("key", 3, "value1")
+	_, err = store.ZIncrBy("key", 3, "value1")
 	assert.NotNil(t, err)
-	_, err = store.Zrank("key", "value2")
+	_, err = store.ZRank("key", "value2")
 	assert.NotNil(t, err)
-	_, err = store.Zrem("key", "value2", "value3")
+	_, err = store.ZRem("key", "value2", "value3")
 	assert.NotNil(t, err)
-	_, err = store.Zremrangebyscore("key", 6, 7)
+	_, err = store.ZRemRangeByScore("key", 6, 7)
 	assert.NotNil(t, err)
-	_, err = store.Zremrangebyrank("key", 1, 2)
+	_, err = store.ZRemRangeByRank("key", 1, 2)
 	assert.NotNil(t, err)
-	_, err = store.Zcard("key")
+	_, err = store.ZCard("key")
 	assert.NotNil(t, err)
-	_, err = store.Zrange("key", 0, -1)
+	_, err = store.ZRange("key", 0, -1)
 	assert.NotNil(t, err)
-	_, err = store.Zrevrange("key", 0, -1)
+	_, err = store.ZRevRange("key", 0, -1)
 	assert.NotNil(t, err)
-	_, err = store.ZrangeWithScores("key", 0, -1)
+	_, err = store.ZRangeWithScores("key", 0, -1)
 	assert.NotNil(t, err)
-	_, err = store.ZrangebyscoreWithScores("key", 5, 8)
+	_, err = store.ZRangeByScoreWithScores("key", 5, 8)
 	assert.NotNil(t, err)
-	_, err = store.ZrangebyscoreWithScoresAndLimit("key", 5, 8, 1, 1)
+	_, err = store.ZRangeByScoreWithScoresAndLimit("key", 5, 8, 1, 1)
 	assert.NotNil(t, err)
-	_, err = store.ZrevrangebyscoreWithScores("key", 5, 8)
+	_, err = store.ZRevRangeByScoreWithScores("key", 5, 8)
 	assert.NotNil(t, err)
-	_, err = store.ZrevrangebyscoreWithScoresAndLimit("key", 5, 8, 1, 1)
+	_, err = store.ZRevRangeByScoreWithScoresAndLimit("key", 5, 8, 1, 1)
 	assert.NotNil(t, err)
-	_, err = store.Zrevrank("key", "value")
+	_, err = store.ZRevRank("key", "value")
 	assert.NotNil(t, err)
-	_, err = store.Zadds("key", redis.Pair{
+	_, err = store.ZAdds("key", redis.Pair{
 		Member: "value2",
 		Score:  6,
 	}, redis.Pair{
@@ -587,69 +587,69 @@ func TestRedis_SortedSet(t *testing.T) {
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		ok, err := client.ZaddFloat("key", 1, "value1")
+		ok, err := client.ZAddFloat("key", 1, "value1")
 		assert.Nil(t, err)
 		assert.True(t, ok)
-		ok, err = client.Zadd("key", 2, "value1")
+		ok, err = client.ZAdd("key", 2, "value1")
 		assert.Nil(t, err)
 		assert.False(t, ok)
-		val, err := client.Zscore("key", "value1")
+		val, err := client.ZScore("key", "value1")
 		assert.Nil(t, err)
 		assert.Equal(t, int64(2), val)
-		val, err = client.Zincrby("key", 3, "value1")
+		val, err = client.ZIncrBy("key", 3, "value1")
 		assert.Nil(t, err)
 		assert.Equal(t, int64(5), val)
-		val, err = client.Zscore("key", "value1")
+		val, err = client.ZScore("key", "value1")
 		assert.Nil(t, err)
 		assert.Equal(t, int64(5), val)
-		ok, err = client.Zadd("key", 6, "value2")
+		ok, err = client.ZAdd("key", 6, "value2")
 		assert.Nil(t, err)
 		assert.True(t, ok)
-		ok, err = client.Zadd("key", 7, "value3")
+		ok, err = client.ZAdd("key", 7, "value3")
 		assert.Nil(t, err)
 		assert.True(t, ok)
-		rank, err := client.Zrank("key", "value2")
+		rank, err := client.ZRank("key", "value2")
 		assert.Nil(t, err)
 		assert.Equal(t, int64(1), rank)
-		_, err = client.Zrank("key", "value4")
+		_, err = client.ZRank("key", "value4")
 		assert.Equal(t, redis.Nil, err)
-		num, err := client.Zrem("key", "value2", "value3")
+		num, err := client.ZRem("key", "value2", "value3")
 		assert.Nil(t, err)
 		assert.Equal(t, 2, num)
-		ok, err = client.Zadd("key", 6, "value2")
+		ok, err = client.ZAdd("key", 6, "value2")
 		assert.Nil(t, err)
 		assert.True(t, ok)
-		ok, err = client.Zadd("key", 7, "value3")
+		ok, err = client.ZAdd("key", 7, "value3")
 		assert.Nil(t, err)
 		assert.True(t, ok)
-		ok, err = client.Zadd("key", 8, "value4")
+		ok, err = client.ZAdd("key", 8, "value4")
 		assert.Nil(t, err)
 		assert.True(t, ok)
-		num, err = client.Zremrangebyscore("key", 6, 7)
+		num, err = client.ZRemRangeByScore("key", 6, 7)
 		assert.Nil(t, err)
 		assert.Equal(t, 2, num)
-		ok, err = client.Zadd("key", 6, "value2")
+		ok, err = client.ZAdd("key", 6, "value2")
 		assert.Nil(t, err)
 		assert.True(t, ok)
-		ok, err = client.Zadd("key", 7, "value3")
+		ok, err = client.ZAdd("key", 7, "value3")
 		assert.Nil(t, err)
 		assert.True(t, ok)
-		num, err = client.Zcount("key", 6, 7)
+		num, err = client.ZCount("key", 6, 7)
 		assert.Nil(t, err)
 		assert.Equal(t, 2, num)
-		num, err = client.Zremrangebyrank("key", 1, 2)
+		num, err = client.ZRemRangeByRank("key", 1, 2)
 		assert.Nil(t, err)
 		assert.Equal(t, 2, num)
-		card, err := client.Zcard("key")
+		card, err := client.ZCard("key")
 		assert.Nil(t, err)
 		assert.Equal(t, 2, card)
-		vals, err := client.Zrange("key", 0, -1)
+		vals, err := client.ZRange("key", 0, -1)
 		assert.Nil(t, err)
 		assert.EqualValues(t, []string{"value1", "value4"}, vals)
-		vals, err = client.Zrevrange("key", 0, -1)
+		vals, err = client.ZRevRange("key", 0, -1)
 		assert.Nil(t, err)
 		assert.EqualValues(t, []string{"value4", "value1"}, vals)
-		pairs, err := client.ZrangeWithScores("key", 0, -1)
+		pairs, err := client.ZRangeWithScores("key", 0, -1)
 		assert.Nil(t, err)
 		assert.EqualValues(t, []redis.Pair{
 			{
@@ -661,7 +661,7 @@ func TestRedis_SortedSet(t *testing.T) {
 				Score:  8,
 			},
 		}, pairs)
-		pairs, err = client.ZrangebyscoreWithScores("key", 5, 8)
+		pairs, err = client.ZRangeByScoreWithScores("key", 5, 8)
 		assert.Nil(t, err)
 		assert.EqualValues(t, []redis.Pair{
 			{
@@ -673,7 +673,7 @@ func TestRedis_SortedSet(t *testing.T) {
 				Score:  8,
 			},
 		}, pairs)
-		pairs, err = client.ZrangebyscoreWithScoresAndLimit("key", 5, 8, 1, 1)
+		pairs, err = client.ZRangeByScoreWithScoresAndLimit("key", 5, 8, 1, 1)
 		assert.Nil(t, err)
 		assert.EqualValues(t, []redis.Pair{
 			{
@@ -681,7 +681,7 @@ func TestRedis_SortedSet(t *testing.T) {
 				Score:  8,
 			},
 		}, pairs)
-		pairs, err = client.ZrevrangebyscoreWithScores("key", 5, 8)
+		pairs, err = client.ZRevRangeByScoreWithScores("key", 5, 8)
 		assert.Nil(t, err)
 		assert.EqualValues(t, []redis.Pair{
 			{
@@ -693,7 +693,7 @@ func TestRedis_SortedSet(t *testing.T) {
 				Score:  5,
 			},
 		}, pairs)
-		pairs, err = client.ZrevrangebyscoreWithScoresAndLimit("key", 5, 8, 1, 1)
+		pairs, err = client.ZRevRangeByScoreWithScoresAndLimit("key", 5, 8, 1, 1)
 		assert.Nil(t, err)
 		assert.EqualValues(t, []redis.Pair{
 			{
@@ -701,10 +701,10 @@ func TestRedis_SortedSet(t *testing.T) {
 				Score:  5,
 			},
 		}, pairs)
-		rank, err = client.Zrevrank("key", "value1")
+		rank, err = client.ZRevRank("key", "value1")
 		assert.Nil(t, err)
 		assert.Equal(t, int64(1), rank)
-		val, err = client.Zadds("key", redis.Pair{
+		val, err = client.ZAdds("key", redis.Pair{
 			Member: "value2",
 			Score:  6,
 		}, redis.Pair{
@@ -718,16 +718,16 @@ func TestRedis_SortedSet(t *testing.T) {
 
 func TestRedis_HyperLogLog(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	_, err := store.Pfadd("key")
+	_, err := store.PFAdd("key")
 	assert.NotNil(t, err)
-	_, err = store.Pfcount("key")
+	_, err = store.PFCount("key")
 	assert.NotNil(t, err)
 
 	runOnCluster(func(cluster Store) {
-		ok, err := cluster.Pfadd("key", "a", "b", "a", "c")
+		ok, err := cluster.PFAdd("key", "a", "b", "a", "c")
 		assert.Nil(t, err)
 		assert.True(t, ok)
-		val, err := cluster.Pfcount("key")
+		val, err := cluster.PFCount("key")
 		assert.Nil(t, err)
 		assert.Equal(t, int64(3), val)
 	})
