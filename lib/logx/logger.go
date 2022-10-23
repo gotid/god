@@ -48,4 +48,6 @@ type Logger interface {
 	WithDuration(duration time.Duration) Logger
 	// WithCallerSkip 返回具有给定调用者跳跃级别的日志记录器。
 	WithCallerSkip(skip int) Logger
+	// WithFields 返回具有给定字段的日志记录器。
+	WithFields(fields ...LogField) Logger
 }

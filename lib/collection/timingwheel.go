@@ -21,7 +21,7 @@ type (
 	// Execute 定义执行任务的方法。
 	Execute func(key, val interface{})
 
-	// TimingWheel 是一个调度任务的时间轮对象。
+	// TimingWheel 是一个基于时间轮的任务调度器。
 	TimingWheel struct {
 		interval      time.Duration
 		ticker        timex.Ticker

@@ -9,6 +9,13 @@ import (
 
 const messageEvent = "message"
 
+var (
+	// MessageSent 是指发送消息的类型。
+	MessageSent = messageType(RPCMessageTypeSent)
+	// MessageReceived 是指接收消息的类型。
+	MessageReceived = messageType(RPCMessageTypeReceived)
+)
+
 type messageType attribute.KeyValue
 
 // Event 添加一个指定上下文、ID和消息到事件。

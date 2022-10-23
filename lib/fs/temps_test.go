@@ -8,7 +8,7 @@ import (
 )
 
 func TestTempFileWithText(t *testing.T) {
-	f, err := TempFileWithText("redistest")
+	f, err := TempFileWithText("test")
 	if err != nil {
 		t.Error(err)
 	}
@@ -31,7 +31,7 @@ func TestTempFileWithText(t *testing.T) {
 }
 
 func TestTempFilenameWithText(t *testing.T) {
-	f, err := TempFilenameWithText("redistest")
+	f, err := TempFilenameWithText("test")
 	if err != nil {
 		t.Error(err)
 	}

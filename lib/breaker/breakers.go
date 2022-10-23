@@ -14,6 +14,13 @@ func Do(name string, req func() error) error {
 	})
 }
 
+// DoWithAcceptable 使用给定的名称调用 Breaker.DoWithAcceptable。
+func DoWithAcceptable(name string, req func() error, acceptable Acceptable) error {
+	return do(name, func(b Breaker) error {
+		return b.DoWithAcceptable(req, acceptable)
+	})
+}
+
 // DoWithFallback 使用给定的名称调用 Breaker.DoWithFallback。
 func DoWithFallback(name string, req func() error, fallback func(err error) error) error {
 	return do(name, func(b Breaker) error {

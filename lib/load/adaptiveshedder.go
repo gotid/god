@@ -251,7 +251,7 @@ func WithBuckets(buckets int) ShedderOption {
 	}
 }
 
-// WithCpuThreshold 自定义泄流器的 cpu 阈值。
+// WithCpuThreshold 自定义负载泄流器的 cpu 阈值。
 func WithCpuThreshold(threshold int64) ShedderOption {
 	return func(opts *shedderOptions) {
 		opts.cpuThreshold = threshold

@@ -15,7 +15,7 @@ import (
 
 func TestHookProcessCase1(t *testing.T) {
 	gtrace.StartAgent(gtrace.Config{
-		Name:     "god-redistest",
+		Name:     "god-test",
 		Endpoint: "http://localhost:14268/api/traces",
 		Batcher:  "jaeger",
 		Sampler:  1.0,
@@ -39,7 +39,7 @@ func TestHookProcessCase1(t *testing.T) {
 
 func TestHookProcessCase2(t *testing.T) {
 	gtrace.StartAgent(gtrace.Config{
-		Name:     "god-redistest",
+		Name:     "god-test",
 		Endpoint: "http://localhost:14268/api/traces",
 		Batcher:  "jaeger",
 		Sampler:  1.0,
@@ -86,7 +86,7 @@ func TestHookProcessCase4(t *testing.T) {
 
 func TestHookProcessPipelineCase1(t *testing.T) {
 	gtrace.StartAgent(gtrace.Config{
-		Name:     "god-redistest",
+		Name:     "god-test",
 		Endpoint: "http://localhost:14268/api/traces",
 		Batcher:  "jaeger",
 		Sampler:  1.0,
@@ -96,10 +96,10 @@ func TestHookProcessPipelineCase1(t *testing.T) {
 	w, restore := injectLog()
 	defer restore()
 
-	ctx, err := durationHook.BeforeProcessPipeline(context.Background(), []red.Cmder{red.NewCmd(context.Background())})
-	if err != nil {
-		t.Fatal(err)
-	}
+	ctx, err := durationHook.BeforeProcessPipeline(context.Background(), []red.Cmder{
+		red.NewCmd(context.Background()),
+	})
+	assert.NoError(t, err)
 	assert.Equal(t, "redis", otrace.SpanFromContext(ctx).(interface{ Name() string }).Name())
 
 	assert.Nil(t, durationHook.AfterProcessPipeline(ctx, []red.Cmder{
@@ -110,7 +110,7 @@ func TestHookProcessPipelineCase1(t *testing.T) {
 
 func TestHookProcessPipelineCase2(t *testing.T) {
 	gtrace.StartAgent(gtrace.Config{
-		Name:     "god-redistest",
+		Name:     "god-test",
 		Endpoint: "http://localhost:14268/api/traces",
 		Batcher:  "jaeger",
 		Sampler:  1.0,
@@ -120,10 +120,10 @@ func TestHookProcessPipelineCase2(t *testing.T) {
 	w, restore := injectLog()
 	defer restore()
 
-	ctx, err := durationHook.BeforeProcessPipeline(context.Background(), []red.Cmder{red.NewCmd(context.Background())})
-	if err != nil {
-		t.Fatal(err)
-	}
+	ctx, err := durationHook.BeforeProcessPipeline(context.Background(), []red.Cmder{
+		red.NewCmd(context.Background()),
+	})
+	assert.NoError(t, err)
 	assert.Equal(t, "redis", otrace.SpanFromContext(ctx).(interface{ Name() string }).Name())
 
 	time.Sleep(slowThreshold.Load() + time.Millisecond)
@@ -166,6 +166,22 @@ func TestHookProcessPipelineCase5(t *testing.T) {
 	ctx := context.WithValue(context.Background(), startTimeKey, "foo")
 	assert.Nil(t, durationHook.AfterProcessPipeline(ctx, []red.Cmder{red.NewCmd(context.Background())}))
 	assert.True(t, buf.Len() == 0)
+}
+
+func TestLogDuration(t *testing.T) {
+	w, restore := injectLog()
+	defer restore()
+
+	logDuration(context.Background(), []red.Cmder{
+		red.NewCmd(context.Background(), "get", "foo"),
+	}, 1*time.Second)
+	assert.True(t, strings.Contains(w.String(), "get foo"))
+
+	logDuration(context.Background(), []red.Cmder{
+		red.NewCmd(context.Background(), "get", "foo"),
+		red.NewCmd(context.Background(), "set", "bar", 0),
+	}, 1*time.Second)
+	assert.True(t, strings.Contains(w.String(), "get foo\\nset bar 0"))
 }
 
 func injectLog() (r *strings.Builder, restore func()) {

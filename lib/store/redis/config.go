@@ -4,11 +4,11 @@ import "errors"
 
 var (
 	// ErrEmptyHost 是一个表示没设置 redis 主机的错误。
-	ErrEmptyHost = errors.New("redis 主机为空")
+	ErrEmptyHost = errors.New("redis 主机不能为空")
 	// ErrEmptyType 是一个表示没设置 redis 类型的错误。
-	ErrEmptyType = errors.New("redis 类型为空")
+	ErrEmptyType = errors.New("redis 类型不能为空")
 	// ErrEmptyKey 是一个表示没设置 redis 键名的错误。
-	ErrEmptyKey = errors.New("redis 键名为空")
+	ErrEmptyKey = errors.New("redis 键名不能为空")
 )
 
 type (
