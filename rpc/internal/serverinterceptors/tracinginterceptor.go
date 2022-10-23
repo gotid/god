@@ -13,7 +13,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// UnaryTracingInterceptor 是一个用于 opentelemetry 的 grpc.UnaryServerInterceptor。
+// UnaryTracingInterceptor 用于一元请求的 opentelemetry 链路跟踪拦截器。
 func UnaryTracingInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo,
 	handler grpc.UnaryHandler) (interface{}, error) {
 	ctx, span := startSpan(ctx, info.FullMethod)
@@ -39,7 +39,7 @@ func UnaryTracingInterceptor(ctx context.Context, req interface{}, info *grpc.Un
 	return resp, nil
 }
 
-// StreamTracingInterceptor 是一个用于 opentelemetry 的 grpc.StreamServerInterceptor。
+// StreamTracingInterceptor 用于流式请求的 opentelemetry 链路跟踪拦截器。
 func StreamTracingInterceptor(svr interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 	ctx, span := startSpan(ss.Context(), info.FullMethod)
 	defer span.End()

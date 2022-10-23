@@ -9,7 +9,7 @@ import (
 	"runtime/debug"
 )
 
-// UnaryCrashInterceptor 捕获 unary 请求中 recover() 的 panics。
+// UnaryCrashInterceptor 用于一元请求的异常捕获拦截器。
 func UnaryCrashInterceptor(ctx context.Context, req interface{}, _ *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 	defer handleCrash(func(r interface{}) {
 		err = toPanicError(r)

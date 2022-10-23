@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// TimeoutInterceptor 是一个控制超时时间的服务端拦截器。
+// TimeoutInterceptor 用于一元请求的超时控制拦截器。
 func TimeoutInterceptor(timeout time.Duration) grpc.UnaryClientInterceptor {
 	return func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 		if timeout <= 0 {

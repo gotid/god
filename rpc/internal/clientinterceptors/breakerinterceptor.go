@@ -8,7 +8,7 @@ import (
 	"path"
 )
 
-// BreakerInterceptor 是一个作为断路器的客户端拦截器。
+// BreakerInterceptor 用于一元请求的客户端自动熔断拦截器。
 func BreakerInterceptor(ctx context.Context, method string, req, reply interface{},
 	conn *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 	breakerName := path.Join(conn.Target(), method)

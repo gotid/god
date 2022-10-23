@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-// UnaryTimeoutInterceptor 是一个控制超时时间的服务端拦截器。
+// UnaryTimeoutInterceptor 用于一元请求的超时控制拦截器。
 func UnaryTimeoutInterceptor(timeout time.Duration) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		ctx, cancel := context.WithTimeout(ctx, timeout)

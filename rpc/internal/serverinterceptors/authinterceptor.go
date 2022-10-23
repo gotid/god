@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-// UnaryAuthorizeInterceptor 返回一个使用给定验证器处理 unary 请求的拦截器。
+// UnaryAuthorizeInterceptor 用于一元请求的鉴权拦截器。
 func UnaryAuthorizeInterceptor(authenticator *auth.Authenticator) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		if err := authenticator.Authenticate(ctx); err != nil {
@@ -17,7 +17,7 @@ func UnaryAuthorizeInterceptor(authenticator *auth.Authenticator) grpc.UnaryServ
 	}
 }
 
-// StreamAuthorizeInterceptor 返回一个使用给定验证器处理 stream 请求的拦截器。
+// StreamAuthorizeInterceptor 用于流式请求的鉴权拦截器。
 func StreamAuthorizeInterceptor(authenticator *auth.Authenticator) grpc.StreamServerInterceptor {
 	return func(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		if err := authenticator.Authenticate(stream.Context()); err != nil {

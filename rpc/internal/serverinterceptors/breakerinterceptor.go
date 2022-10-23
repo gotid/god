@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-// UnaryBreakerInterceptor 是一个作为断路器的服务端拦截器。
+// UnaryBreakerInterceptor 用于一元请求的自动熔断拦截器。
 func UnaryBreakerInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 	breakerName := info.FullMethod
 	err = breaker.DoWithAcceptable(breakerName, func() error {
@@ -19,7 +19,7 @@ func UnaryBreakerInterceptor(ctx context.Context, req interface{}, info *grpc.Un
 	return resp, err
 }
 
-// StreamBreakerInterceptor 是一个作为断路器的服务端拦截器。
+// StreamBreakerInterceptor 用于流式请求的自动熔断拦截器。
 func StreamBreakerInterceptor(svr interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) (err error) {
 	breakerName := info.FullMethod
 	return breaker.DoWithAcceptable(breakerName, func() error {

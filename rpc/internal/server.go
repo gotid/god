@@ -51,18 +51,18 @@ func (s *server) Start(register RegisterFn) error {
 	}
 
 	unaryInterceptors := []grpc.UnaryServerInterceptor{
-		serverinterceptors.UnaryTracingInterceptor,
+		serverinterceptors.UnaryTracingInterceptor, // 链路跟踪
 		serverinterceptors.UnaryCrashInterceptor,
 		serverinterceptors.UnaryStatInterceptor(s.metrics),
-		serverinterceptors.UnaryPrometheusInterceptor,
-		serverinterceptors.UnaryBreakerInterceptor,
+		serverinterceptors.UnaryPrometheusInterceptor, // 数据统计
+		serverinterceptors.UnaryBreakerInterceptor,    // 自动熔断
 	}
 	unaryInterceptors = append(unaryInterceptors, s.unaryInterceptors...)
 
 	streamInterceptors := []grpc.StreamServerInterceptor{
 		serverinterceptors.StreamCrashInterceptor,
 		serverinterceptors.StreamCrashInterceptor,
-		serverinterceptors.StreamBreakerInterceptor,
+		serverinterceptors.StreamBreakerInterceptor, // 自动熔断
 	}
 	streamInterceptors = append(streamInterceptors, s.streamInterceptors...)
 

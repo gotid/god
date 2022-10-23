@@ -15,7 +15,7 @@ var (
 	sheddingStat *load.SheddingStat
 )
 
-// UnarySheddingInterceptor 处理 unary 请求负载泄流的拦截器。
+// UnarySheddingInterceptor 用于一元请求的自动降载拦截器。
 func UnarySheddingInterceptor(shedder load.Shedder, metrics *stat.Metrics) grpc.UnaryServerInterceptor {
 	ensureSheddingStat()
 

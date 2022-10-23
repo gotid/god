@@ -18,7 +18,7 @@ const (
 	errorEvent
 )
 
-// UnaryTracingInterceptor 是一个用于 opentelemetry 的 一元拦截器。
+// UnaryTracingInterceptor 用于一元请求的 opentelemetry 客户端链路跟踪拦截器。
 func UnaryTracingInterceptor(ctx context.Context, method string, req, reply interface{},
 	cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 	ctx, span := startSpan(ctx, method, cc.Target())
@@ -42,7 +42,7 @@ func UnaryTracingInterceptor(ctx context.Context, method string, req, reply inte
 	return nil
 }
 
-// StreamTracingInterceptor 是一个用于 opentelemetry 的 流式拦截器。
+// StreamTracingInterceptor 用于流式请求的 opentelemetry 客户端链路跟踪拦截器。
 func StreamTracingInterceptor(ctx context.Context, desc *grpc.StreamDesc, cc *grpc.ClientConn,
 	method string, streamer grpc.Streamer, opts ...grpc.CallOption) (grpc.ClientStream, error) {
 	ctx, span := startSpan(ctx, method, cc.Target())

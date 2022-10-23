@@ -31,7 +31,7 @@ var (
 	})
 )
 
-// UnaryPrometheusInterceptor 报告统计信息给普罗米修斯服务器的服务端拦截器。
+// UnaryPrometheusInterceptor 用于一元请求的数据统计拦截器。
 func UnaryPrometheusInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	startTime := timex.Now()
 	resp, err := handler(ctx, req)

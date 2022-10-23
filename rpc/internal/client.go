@@ -104,7 +104,7 @@ func (c *client) buildDialOptions(opts ...ClientOption) []grpc.DialOption {
 			clientinterceptors.UnaryTracingInterceptor,             // 跟踪
 			clientinterceptors.DurationInterceptor,                 // 时长
 			clientinterceptors.PrometheusInterceptor,               // 统计
-			clientinterceptors.BreakerInterceptor,                  // 断路保护
+			clientinterceptors.BreakerInterceptor,                  // 自动熔断
 			clientinterceptors.TimeoutInterceptor(cliOpts.Timeout), // 超时控制
 		),
 		WithStreamClientInterceptors(

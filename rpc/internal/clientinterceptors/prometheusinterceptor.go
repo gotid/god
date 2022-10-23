@@ -31,7 +31,7 @@ var (
 	})
 )
 
-// PrometheusInterceptor 报告统计信息给普罗米修斯服务器的客户端拦截器。
+// PrometheusInterceptor 用于一元请求的客户端数据统计拦截器。
 func PrometheusInterceptor(ctx context.Context, method string, req, reply interface{},
 	cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 	startTime := timex.Now()

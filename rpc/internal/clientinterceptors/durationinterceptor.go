@@ -15,6 +15,7 @@ const defaultSlowThreshold = 500 * time.Millisecond
 
 var slowThreshold = syncx.ForAtomicDuration(defaultSlowThreshold)
 
+// DurationInterceptor 用于时长记录的客户端拦截器。
 func DurationInterceptor(ctx context.Context, method string, req, reply interface{},
 	conn *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 	serverName := path.Join(conn.Target(), method)
