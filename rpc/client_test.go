@@ -172,25 +172,6 @@ func TestNewClientWithError(t *testing.T) {
 		}),
 	)
 	assert.NotNil(t, err)
-
-	_, err = NewClient(
-		ClientConfig{
-			Etcd: discov.EtcdConfig{
-				Hosts: []string{"localhost:2379"},
-				Key:   "mock",
-			},
-			App:     "foo",
-			Token:   "bar",
-			Timeout: 1,
-		},
-		WithDialOption(grpc.WithTransportCredentials(insecure.NewCredentials())),
-		WithDialOption(grpc.WithContextDialer(dialer())),
-		WithUnaryClientInterceptor(func(ctx context.Context, method string, req, reply interface{},
-			cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
-			return invoker(ctx, method, req, reply, cc, opts...)
-		}),
-	)
-	assert.NotNil(t, err)
 }
 
 func TestEtcdError(t *testing.T) {

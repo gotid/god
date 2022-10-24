@@ -64,7 +64,8 @@ func NewClient(config ClientConfig, options ...ClientOption) (Client, error) {
 		opts = append(opts, WithNonBlock())
 	}
 	if config.Timeout > 0 {
-		opts = append(opts, WithTimeout(time.Duration(config.Timeout)*time.Millisecond))
+		duration := time.Duration(config.Timeout) * time.Millisecond
+		opts = append(opts, WithTimeout(duration))
 	}
 	opts = append(opts, options...)
 

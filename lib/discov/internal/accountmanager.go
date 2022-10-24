@@ -58,8 +58,8 @@ func AddTLS(endpoints []string, certFile, certKeyFile, caFile string, insecureSk
 
 // GetAccount 获取给定 etcd 集群的用户名/密码。
 func GetAccount(endpoints []string) (Account, bool) {
-	lock.Lock()
-	defer lock.Lock()
+	lock.RLock()
+	defer lock.RUnlock()
 
 	account, ok := accounts[getClusterKey(endpoints)]
 	return account, ok
@@ -67,8 +67,8 @@ func GetAccount(endpoints []string) (Account, bool) {
 
 // GetTLS 获取给定 etcd 集群的 TLS 配置。
 func GetTLS(endpoints []string) (*tls.Config, bool) {
-	lock.Lock()
-	defer lock.Lock()
+	lock.RLock()
+	defer lock.RUnlock()
 
 	config, ok := tlsConfigs[getClusterKey(endpoints)]
 	return config, ok
