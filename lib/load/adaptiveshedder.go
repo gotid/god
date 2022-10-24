@@ -31,9 +31,9 @@ var (
 	// ErrServiceOverloaded 由 Shedder.Allow 在服务发生超载时返回
 	ErrServiceOverloaded = errors.New("服务已超载")
 
-	//默认启用负载泄流
+	//默认启用自动降载
 	enabled = syncx.ForAtomicBool(true)
-	//默认启用负载泄流的统计日志
+	//默认启用自动降载的统计日志
 	logEnabled = syncx.ForAtomicBool(true)
 	//检测当前 cpu 阈值是否过载
 	systemOverloadChecker = func(cpuThreshold int64) bool {
@@ -79,17 +79,17 @@ type (
 	}
 )
 
-// Disable 禁用负载泄流。
+// Disable 禁用自动降载。
 func Disable() {
 	enabled.Set(false)
 }
 
-// DisableLog 禁用负载泄流器的统计日志。
+// DisableLog 禁用自动降载器的统计日志。
 func DisableLog() {
 	logEnabled.Set(false)
 }
 
-// NewAdaptiveShedder 返回一个自适应的 CPU 负载泄流器。
+// NewAdaptiveShedder 返回一个自适应的 CPU 自动降载器。
 func NewAdaptiveShedder(opts ...ShedderOption) Shedder {
 	if !enabled.True() {
 		return newNopShedder()
@@ -251,7 +251,7 @@ func WithBuckets(buckets int) ShedderOption {
 	}
 }
 
-// WithCpuThreshold 自定义负载泄流器的 cpu 阈值。
+// WithCpuThreshold 自定义自动降载器的 cpu 阈值。
 func WithCpuThreshold(threshold int64) ShedderOption {
 	return func(opts *shedderOptions) {
 		opts.cpuThreshold = threshold

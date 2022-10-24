@@ -8,7 +8,7 @@ import (
 )
 
 type (
-	// SheddingStat 用于存储负载泄流的统计信息。
+	// SheddingStat 用于存储自动降载的统计信息。
 	SheddingStat struct {
 		name  string
 		total int64
