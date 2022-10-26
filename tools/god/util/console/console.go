@@ -16,6 +16,7 @@ type (
 		Warning(format string, a ...interface{})
 		Error(format string, a ...interface{})
 		Success(format string, a ...interface{})
+		Debug(format string, a ...interface{})
 		MarkDone()
 	}
 
@@ -45,6 +46,11 @@ func (i *ideaConsole) Error(format string, a ...interface{}) {
 func (i *ideaConsole) Success(format string, a ...interface{}) {
 	msg := fmt.Sprintf(format, a...)
 	fmt.Println("[成功]：", msg)
+}
+
+func (i *ideaConsole) Debug(format string, a ...interface{}) {
+	msg := fmt.Sprintf(format, a...)
+	fmt.Println(aurora.BrightCyan(msg))
 }
 
 func (i *ideaConsole) MarkDone() {
@@ -82,6 +88,14 @@ func (c *colorConsole) Success(format string, a ...interface{}) {
 	}
 	msg := fmt.Sprintf(format, a...)
 	println(aurora.BrightGreen(msg))
+}
+
+func (c *colorConsole) Debug(format string, a ...interface{}) {
+	if !c.enable {
+		return
+	}
+	msg := fmt.Sprintf(format, a...)
+	println(aurora.BrightCyan(msg))
 }
 
 func (c *colorConsole) MarkDone() {

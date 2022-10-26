@@ -1,7 +1,6 @@
 package generator
 
 import (
-	"fmt"
 	"github.com/gotid/god/tools/god/rpc/parser"
 	"github.com/gotid/god/tools/god/util/console"
 	"github.com/gotid/god/tools/god/util/ctx"
@@ -26,7 +25,7 @@ type RpcContext struct {
 	GrpcOutput string
 	// 是生成后的文件的输出目录。
 	Output string
-	// 指示 proto 文件是否在 multiple 模式下生成的标志位。
+	// 指示 proto 文件是否在 multiple 模式下生成。
 	Multiple bool
 }
 
@@ -64,21 +63,36 @@ func (g *Generator) Generate(rpcCtx *RpcContext) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(dirCtx)
 
 	// 生成 etc 配置文件
-	//err = g.GenEtc(dirCtx, proto, g.cfg)
-	//if err != nil {
-	//	return err
-	//}
+	err = g.GenEtc(dirCtx, proto, g.cfg)
+	if err != nil {
+		return err
+	}
 
 	// 生成 Pb
+	err = g.GenPb(dirCtx, rpcCtx)
+	if err != nil {
+		return err
+	}
 
 	// 生成 config 配置代码
+	err = g.GenConfig(dirCtx, proto, g.cfg)
+	if err != nil {
+		return err
+	}
 
 	// 生成服务
+	err = g.GenSvc(dirCtx, proto, g.cfg)
+	if err != nil {
+		return err
+	}
 
 	// 生成逻辑
+	err = g.GenLogic(dirCtx, proto, g.cfg, rpcCtx)
+	if err != nil {
+		return err
+	}
 
 	// 生成服务器
 

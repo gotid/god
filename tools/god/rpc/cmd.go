@@ -25,5 +25,8 @@ func init() {
 	Cmd.Flags().StringVar(&cli.VarStringOutput, "o", "", "输出一个示例 proto 文件")
 	Cmd.Flags().StringVar(&cli.VarStringHome, "home", "", "模板的 god home 路径，--remote 优先级高于 --home")
 
+	newCmd.Flags().StringVar(&cli.VarStringStyle, "style", "godesigner", "文件命名样式")
+	newCmd.Flags().BoolVarP(&cli.VarBoolVerbose, "verbose", "v", false, "启用日志输出")
+
 	Cmd.AddCommand(newCmd)
 }

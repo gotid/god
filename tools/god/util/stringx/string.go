@@ -12,6 +12,11 @@ type String struct {
 	source string
 }
 
+// Source 返回源文本的字符串值。
+func (s String) Source() string {
+	return s.source
+}
+
 // Title 首字母大写。
 func (s String) Title() string {
 	if s.IsEmptyOrSpace() {
