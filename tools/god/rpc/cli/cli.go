@@ -104,9 +104,9 @@ func RPCNew(_ *cobra.Command, args []string) error {
 	}
 
 	ctx := generator.RpcContext{
+		Multiple:       false,
 		Src:            src,
 		IsGooglePlugin: true,
-		Multiple:       false,
 		GoOutput:       filepath.Dir(src),
 		GrpcOutput:     filepath.Dir(src),
 		Output:         filepath.Dir(src),

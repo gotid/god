@@ -1,6 +1,6 @@
 module github.com/gotid/god/tools/god
 
-go 1.18
+go 1.19
 
 require (
 	github.com/emicklei/proto v1.11.0

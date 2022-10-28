@@ -9,24 +9,24 @@ import (
 )
 
 type RpcContext struct {
+	// 指示 proto 文件是否在 multiple 模式下生成。
+	Multiple bool
 	// proto 协议的源文件。
 	Src string
-	// 用于生成 proto 文件的命令。
-	ProtocCmd string
-	// 用于存储生成后的 proto 文件的目录。
-	ProtoGenGrpcDir string
-	// 用于存储生成后的 go 文件的目录。
-	ProtoGenGoDir string
-	// 指示 proto 文件是否由谷歌插件生成的标志位。
-	IsGooglePlugin bool
 	// 是生成后的 go 文件的输出目录。
 	GoOutput string
 	// 是生成后的 grpc 文件的输出目录。
 	GrpcOutput string
+	// 指示 proto 文件是否由谷歌插件生成的标志位。
+	IsGooglePlugin bool
 	// 是生成后的文件的输出目录。
 	Output string
-	// 指示 proto 文件是否在 multiple 模式下生成。
-	Multiple bool
+	// 用于存储生成后的 proto 文件的目录。
+	ProtoGenGrpcDir string
+	// 用于存储生成后的 go 文件的目录。
+	ProtoGenGoDir string
+	// 用于生成 proto 文件的命令。
+	ProtocCmd string
 }
 
 // Generate 通过 proto 文件、代码存储目录和导入参数生成一个 rpc 服务。

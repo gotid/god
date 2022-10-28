@@ -175,7 +175,7 @@ func (p *p2cPicker) logStats() {
 	defer p.lock.Unlock()
 
 	for _, conn := range p.conns {
-		stats = append(stats, fmt.Sprintf("服务器地址：%s，负载：%d，请求数：%d",
+		stats = append(stats, fmt.Sprintf("连接：%s，负载：%d，请求：%d",
 			conn.addr.Addr, conn.load(), atomic.SwapInt64(&conn.requests, 0)))
 	}
 

@@ -1,0 +1,9 @@
+Name: rpc.unary
+Log:
+  Mode: console
+  Level: debug
+ListenOn: localhost:3456
+Etcd:
+  Hosts:
+    - localhost:2379
+  Key: rpc.unary

@@ -12,7 +12,7 @@ const defaultConnectionIdleDuration = 5 * time.Minute
 
 type (
 	// RegisterFn 定义注册一个 rpc 服务器的方法。
-	RegisterFn func(server *grpc.Server)
+	RegisterFn func(grpcServer *grpc.Server)
 
 	// Server 接口表示一个 rpc 服务器。
 	Server interface {
