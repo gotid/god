@@ -25,10 +25,23 @@ var (
 	VarStringSliceGoGRPCOpt []string
 	// VarStringSliceGoOpt 表示 go 选项。
 	VarStringSliceGoOpt []string
+	// VarStringSliceProtoPath 表示 proto 路径。
+	VarStringSliceProtoPath []string
+	// VarStringSliceGoOut 表示 go 输出目录。
+	VarStringSliceGoOut []string
+	// VarStringSliceGoGRPCOut 表示 grpc 输出目录。
+	VarStringSliceGoGRPCOut []string
+	// VarStringSlicePlugin 表示 grpc 插件。
+	VarStringSlicePlugin []string
+	// VarStringRPCOut 表示 rpc 代码输出目录。
+	VarStringRPCOut string
+
 	// VarStringStyle 表示输出文件的命名风格。
 	VarStringStyle string
 	// VarBoolVerbose 表示是否输出详情。
 	VarBoolVerbose bool
+	// VarBoolMultiple 表示是否支持生成多个 rpc 服务。
+	VarBoolMultiple bool
 )
 
 // RPCTemplate 用于生成 rpc 示例模板。
