@@ -68,7 +68,7 @@ func logDuration(ctx context.Context, method string, req interface{}, duration t
 		} else if duration > slowThreshold.Load() {
 			logger.Slowf("[RPC] 慢调用 - %s - %s - %s", addr, method, string(content))
 		} else {
-			logger.Info("%s - %s - %s", addr, method, string(content))
+			logger.Infof("%s - %s - %s", addr, method, string(content))
 		}
 	}
 }
