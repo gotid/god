@@ -206,8 +206,7 @@ func (c *metricsContainer) RemoveAll() interface{} {
 func log(report *StatReport) {
 	writeReport(report)
 	if logEnabled.True() {
-		logx.Statf("（%s）指标 [1m] - 请求: %.1f/s, 丢弃：%d, 平均耗时: %.1fms, 中位数: %.1fms, "+
-			"90%: %.1fms, 99%: %.1fms, 99.9%: %.1fms",
+		logx.Statf("（%s）指标 [1m] - 请求: %.1f/s, 丢弃：%d, 平均耗时: %.1fms, 中位数: %.1fms, 90th: %.1fms, 99th: %.1fms, 99.9th: %.1fms",
 			report.Name, report.ReqsPerSecond, report.Drops, report.Average, report.Median,
 			report.Top90th, report.Top99th, report.Top99p9th)
 	}

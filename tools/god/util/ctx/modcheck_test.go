@@ -61,6 +61,6 @@ func TestIsGoModNot(t *testing.T) {
 func TestIsGoModWorkDirIsNil(t *testing.T) {
 	_, err := IsGoMod("")
 	assert.Equal(t, err.Error(), func() string {
-		return "the work directory is not found"
+		return "工作目录未找到 - "
 	}())
 }

@@ -8,7 +8,7 @@ message Request {
 }
 
 message Response {
-  string pong = 2;
+  string pong = 1;
 }
 
 service {{.serviceName}} {

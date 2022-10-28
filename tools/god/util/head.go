@@ -2,10 +2,10 @@ package util
 
 const (
 	// DontEditHead 添加文件开头声明，提示用户不要修改。
-	DontEditHead = "// 代码由 god 生成，不要修改！"
+	DontEditHead = "// 代码由 god 生成，不要修改。"
 
 	headTemplate = DontEditHead + `
-// proto 源文件: {{.source}}
+// 源文件: {{.source}}
 `
 )
 

@@ -3,6 +3,7 @@ package generator
 import (
 	_ "embed"
 	"github.com/gotid/god/tools/god/util"
+	"github.com/gotid/god/tools/god/util/console"
 	"github.com/gotid/god/tools/god/util/pathx"
 	"github.com/gotid/god/tools/god/util/stringx"
 	"path/filepath"
@@ -31,6 +32,8 @@ func ProtoTmpl(out string) error {
 		"package":     serviceName.UnTitle(),
 		"serviceName": serviceName.Title(),
 	}, out, false)
+
+	console.NewColorConsole().MarkDone()
 
 	return err
 }

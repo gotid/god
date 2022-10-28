@@ -271,14 +271,14 @@ func (u *Unmarshaler) processNamedFieldWithValue(field reflect.StructField, valu
 		if u.opts.fromString || opts.fromString() {
 			valueKind := reflect.TypeOf(mapValue).Kind()
 			if valueKind != reflect.String {
-				return fmt.Errorf("error: the value in map is not string, but %s", valueKind)
+				return fmt.Errorf("错误：字典值的值不是字符串，而是 %s", valueKind)
 			}
 
 			options := opts.options()
 			if len(options) > 0 {
 				if !stringx.Contains(options, mapValue.(string)) {
-					return fmt.Errorf(`error: value "%s" for field "%s" is not defined in options "%v"`,
-						mapValue, key, options)
+					return fmt.Errorf(`错误：字段 "%s" 的值 "%s" 未定义在选项 "%v" 中`,
+						key, mapValue, options)
 				}
 			}
 
@@ -854,12 +854,12 @@ func NewUnmarshaler(key string, opts ...UnmarshalOption) *Unmarshaler {
 	return &unmarshaler
 }
 
-// UnmarshalKey 解组字典 m 至 v。
+// UnmarshalKey 解组键值对字典 m 至 v。
 func UnmarshalKey(m map[string]interface{}, v interface{}) error {
 	return keyUnmarshaler.Unmarshal(m, v)
 }
 
-// WithStringValues customizes a Unmarshaler with number values from strings.
+// WithStringValues 使用字符串数值。
 func WithStringValues() UnmarshalOption {
 	return func(opt *unmarshalOptions) {
 		opt.fromString = true

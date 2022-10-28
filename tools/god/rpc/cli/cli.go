@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gotid/god/tools/god/rpc/generator"
 	"github.com/gotid/god/tools/god/util"
-	"github.com/gotid/god/tools/god/util/console"
 	"github.com/gotid/god/tools/god/util/pathx"
 	"github.com/spf13/cobra"
 	"path/filepath"
@@ -34,7 +33,7 @@ var (
 
 // RPCTemplate 用于生成 rpc 示例模板。
 func RPCTemplate(_ *cobra.Command, _ []string) error {
-	console.Warning("废弃：god rpc template -o 已废弃，请使用 god rpc -o")
+	//console.Warning("废弃：god rpc template -o 已废弃，请使用 god rpc -o")
 
 	protoFile := VarStringOutput
 	home := VarStringHome
@@ -63,7 +62,7 @@ func RPCNew(_ *cobra.Command, args []string) error {
 	rpcName := args[0]
 	ext := filepath.Ext(rpcName)
 	if len(ext) > 0 {
-		return fmt.Errorf("rpc名称不应设置扩展名：%s", ext)
+		return fmt.Errorf("rpc 名称不应设置扩展名：%s", ext)
 	}
 
 	home := VarStringHome
