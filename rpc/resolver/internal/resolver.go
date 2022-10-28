@@ -35,7 +35,7 @@ func RegisterResolver() {
 }
 
 type nopResolver struct {
-	conn resolver.ClientConn
+	cc resolver.ClientConn
 }
 
 func (r *nopResolver) Close() {}

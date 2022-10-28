@@ -56,7 +56,7 @@ func (r *Registry) Monitor(endpoints []string, key string, l UpdateListener) err
 func (r *Registry) getCluster(endpoints []string) (c *cluster, exists bool) {
 	clusterKey := getClusterKey(endpoints)
 	r.lock.Lock()
-	defer r.lock.Lock()
+	defer r.lock.Unlock()
 	c, exists = r.clusters[clusterKey]
 	if !exists {
 		c = newCluster(endpoints)
@@ -105,7 +105,7 @@ func (c *cluster) getClient() (EtcdClient, error) {
 func (c *cluster) newClient() (EtcdClient, error) {
 	cli, err := NewClient(c.endpoints)
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 
 	go c.watchConnState(cli)
@@ -127,7 +127,6 @@ func (c *cluster) reload(cli EtcdClient) {
 	c.watchGroup.Wait()
 	c.done = make(chan lang.PlaceholderType)
 	c.watchGroup = threading.NewRoutineGroup()
-
 	var keys []string
 	for k := range c.listeners {
 		keys = append(keys, k)
@@ -363,7 +362,8 @@ func NewClient(endpoints []string) (EtcdClient, error) {
 		config.TLS = tlsConfig
 	}
 
-	return clientv3.New(config)
+	client, err := clientv3.New(config)
+	return client, err
 }
 
 func makeKeyPrefix(key string) string {

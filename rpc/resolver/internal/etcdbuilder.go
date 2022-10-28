@@ -4,6 +4,6 @@ type etcdBuilder struct {
 	discovBuilder
 }
 
-func (e *etcdBuilder) Schema() string {
+func (e *etcdBuilder) Scheme() string {
 	return EtcdSchema
 }

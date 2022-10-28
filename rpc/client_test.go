@@ -174,11 +174,12 @@ func TestNewClientWithError(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
+// todo rpc 客户端测试失败，不应该连接成功！！！
 func TestEtcdError(t *testing.T) {
 	_, err := NewClient(
 		ClientConfig{
 			Etcd: discov.EtcdConfig{
-				Hosts: []string{"localhost:237932"},
+				Hosts: []string{"localhost:2379"},
 				Key:   "mock",
 			},
 			App:     "foo",

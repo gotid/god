@@ -4,14 +4,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/gotid/god/rpc/internal/balancer/p2c"
 	"github.com/gotid/god/rpc/internal/clientinterceptors"
 	"github.com/gotid/god/rpc/resolver"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
-	"strings"
-	"time"
 )
 
 const (

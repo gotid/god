@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	call     = "call"
+	client   = "client"
 	wd       = "wd"
 	etc      = "etc"
 	internal = "internal"
@@ -34,7 +34,7 @@ type (
 
 	// DirContext 接口定义一个 rpc 服务目录的上下文。
 	DirContext interface {
-		GetCall() Dir
+		GetClient() Dir
 		GetEtc() Dir
 		GetInternal() Dir
 		GetConfig() Dir
@@ -44,7 +44,7 @@ type (
 		GetPb() Dir
 		GetProtoGo() Dir
 		GetMain() Dir
-		GetServiceName() stringx.String
+		GetServiceName() stringx.String // 获取服务名
 		SetPbDir(pbDir, grpcDir string)
 	}
 
@@ -60,8 +60,8 @@ func (d *Dir) Valid() bool {
 	return len(d.Filename) > 0 && len(d.Package) > 0
 }
 
-func (d *defaultDirContext) GetCall() Dir {
-	return d.inner[call]
+func (d *defaultDirContext) GetClient() Dir {
+	return d.inner[client]
 }
 
 func (d *defaultDirContext) GetEtc() Dir {
@@ -153,7 +153,7 @@ func mkdir(ctx *ctx.ProjectContext, proto parser.Proto, _ *conf.Config, rpcCtx *
 		if strings.EqualFold(svcName, filepath.Base(proto.GoPackage)) {
 			callDir = filepath.Join(ctx.WorkDir, strings.ToLower(stringx.From(svcName+"_client").ToCamel()))
 		}
-		inner[call] = Dir{
+		inner[client] = Dir{
 			Filename: callDir,
 			Package:  filepath.ToSlash(filepath.Join(ctx.Path, strings.TrimPrefix(callDir, ctx.Dir))),
 			Base:     filepath.Base(callDir),
@@ -162,7 +162,7 @@ func mkdir(ctx *ctx.ProjectContext, proto parser.Proto, _ *conf.Config, rpcCtx *
 			},
 		}
 	} else {
-		inner[call] = Dir{
+		inner[client] = Dir{
 			Filename: clientDir,
 			Package:  filepath.ToSlash(filepath.Join(ctx.Path, strings.TrimPrefix(clientDir, ctx.Dir))),
 			Base:     filepath.Base(clientDir),

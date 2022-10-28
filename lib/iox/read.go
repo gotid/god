@@ -85,21 +85,21 @@ func ReadTextLines(filename string, opts ...TextReadOption) ([]string, error) {
 	return lines, scanner.Err()
 }
 
-// KeepSpace 保留首尾空白的自定义读取函数以。
+// KeepSpace 保留首尾空白选项。
 func KeepSpace() TextReadOption {
 	return func(o *textReadOptions) {
 		o.keepSpace = true
 	}
 }
 
-// WithoutBlank 忽略空白行的自定义读取函数。
+// WithoutBlank 忽略空白行选项。
 func WithoutBlank() TextReadOption {
 	return func(o *textReadOptions) {
 		o.withoutBlanks = true
 	}
 }
 
-// OmitWithPrefix 忽略给定前缀的文本行的自定义读取函数。
+// OmitWithPrefix 忽略给定前缀选项。
 func OmitWithPrefix(prefix string) TextReadOption {
 	return func(o *textReadOptions) {
 		o.omitPrefix = prefix

@@ -15,16 +15,16 @@ type (
 		Etcd          discov.EtcdConfig `json:",optional"`
 		Auth          bool              `json:",optional"`
 		Redis         redis.KeyConfig   `json:",optional"`
-		StrictControl bool
-		Timeout       int64 `json:",default=2000"`               // 连接超时阈值
-		CpuThreshold  int64 `json:",default=900,range=[0,1000]"` // CPU泄流阈值
-		Health        bool  `json:",default=true"`               // 服务是否健康
+		StrictControl bool              `json:",optional"`
+		Timeout       int64             `json:",default=2000"`               // 连接超时阈值
+		CpuThreshold  int64             `json:",default=900,range=[0:1000]"` // CPU泄流阈值
+		Health        bool              `json:",default=true"`               // 服务是否健康
 	}
 
 	// ClientConfig 是一个 RPC 客户端配置。
 	ClientConfig struct {
 		Etcd      discov.EtcdConfig `json:",optional"`
-		Endpoints []string          `json:",optional"` // 服务端地址
+		Endpoints []string          `json:",optional"`
 		Target    string            `json:",optional"`
 		App       string            `json:",optional"`
 		Token     string            `json:",optional"`

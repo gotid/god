@@ -95,10 +95,19 @@ func (g *Generator) Generate(rpcCtx *RpcContext) error {
 	}
 
 	// 生成服务器
+	err = g.GenServer(dirCtx, proto, g.cfg, rpcCtx)
+	if err != nil {
+		return err
+	}
 
 	// 生成主入口
+	err = g.GenMain(dirCtx, proto, g.cfg, rpcCtx)
+	if err != nil {
+		return err
+	}
 
-	// 生成调用
+	// 生成客户端
+	err = g.GenClient(dirCtx, proto, g.cfg, rpcCtx)
 
 	console.NewColorConsole().MarkDone()
 

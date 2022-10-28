@@ -8,7 +8,7 @@ import (
 
 type directBuilder struct{}
 
-func (b *directBuilder) Build(target resolver.Target, conn resolver.ClientConn, _ resolver.BuildOptions) (resolver.Resolver, error) {
+func (b *directBuilder) Build(target resolver.Target, cc resolver.ClientConn, _ resolver.BuildOptions) (resolver.Resolver, error) {
 	endpoints := strings.FieldsFunc(targets.GetEndpoints(target), func(r rune) bool {
 		return r == EndpointSepChar
 	})
@@ -20,13 +20,13 @@ func (b *directBuilder) Build(target resolver.Target, conn resolver.ClientConn, 
 			Addr: val,
 		})
 	}
-	if err := conn.UpdateState(resolver.State{
+	if err := cc.UpdateState(resolver.State{
 		Addresses: addrs,
 	}); err != nil {
 		return nil, err
 	}
 
-	return &nopResolver{conn}, nil
+	return &nopResolver{cc: cc}, nil
 }
 
 func (b *directBuilder) Scheme() string {

@@ -60,14 +60,16 @@ func (s *server) Start(register RegisterFn) error {
 	unaryInterceptors = append(unaryInterceptors, s.unaryInterceptors...)
 
 	streamInterceptors := []grpc.StreamServerInterceptor{
-		serverinterceptors.StreamCrashInterceptor,
+		serverinterceptors.StreamTracingInterceptor,
 		serverinterceptors.StreamCrashInterceptor,
 		serverinterceptors.StreamBreakerInterceptor, // 自动熔断
 	}
 	streamInterceptors = append(streamInterceptors, s.streamInterceptors...)
 
-	options := append(s.options, WithUnaryServerInterceptors(unaryInterceptors...),
-		WithStreamServerInterceptors(streamInterceptors...))
+	options := append(s.options,
+		WithUnaryServerInterceptors(unaryInterceptors...),
+		WithStreamServerInterceptors(streamInterceptors...),
+	)
 	svr := grpc.NewServer(options...)
 	register(svr)
 
@@ -86,7 +88,8 @@ func (s *server) Start(register RegisterFn) error {
 	})
 	defer waitForCalled()
 
-	return svr.Serve(listen)
+	err = svr.Serve(listen)
+	return err
 }
 
 // WithMetrics 设置 grpc 服务器 Server 的统计指标。

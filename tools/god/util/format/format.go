@@ -32,9 +32,9 @@ type (
 
 var ErrNamingFormat = errors.New("不支持的命名样式")
 
-// FileNamingFormat 用于格式化文件名。
-// 你可以通过 go 和 d 这两个格式化字符串来定义命名样式，如蛇式：go_d，驼峰式: goD。
-// 理论上甚至可以使用分隔符如 go#D，但还是要遵循操作系统的文件命名规范。
+// FileNamingFormat 返回格式化后的文件名。
+// 可通过 go 和 designer 这两个格式化字符串来定义命名样式，如蛇式：go_design，驼峰式: goDesign。
+// 理论上甚至可以使用分隔符如 go#Designer，但还是要遵循操作系统的文件命名规范。
 // 注意：FileNamingFormat 基于蛇式或驼峰。
 func FileNamingFormat(format, content string) (string, error) {
 	upperFormat := strings.ToUpper(format)

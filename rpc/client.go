@@ -52,24 +52,23 @@ func MustNewClient(config ClientConfig, options ...ClientOption) Client {
 }
 
 // NewClient 返回一个 rpc 客户端 Client。
-func NewClient(config ClientConfig, options ...ClientOption) (Client, error) {
+func NewClient(c ClientConfig, options ...ClientOption) (Client, error) {
 	var opts []ClientOption
-	if config.HasCredential() {
+	if c.HasCredential() {
 		opts = append(opts, WithDialOption(grpc.WithPerRPCCredentials(&auth.Credential{
-			App:   config.App,
-			Token: config.Token,
+			App:   c.App,
+			Token: c.Token,
 		})))
 	}
-	if config.NonBlock {
+	if c.NonBlock {
 		opts = append(opts, WithNonBlock())
 	}
-	if config.Timeout > 0 {
-		duration := time.Duration(config.Timeout) * time.Millisecond
-		opts = append(opts, WithTimeout(duration))
+	if c.Timeout > 0 {
+		opts = append(opts, WithTimeout(time.Duration(c.Timeout)*time.Millisecond))
 	}
 	opts = append(opts, options...)
 
-	target, err := config.BuildTarget()
+	target, err := c.BuildTarget()
 	if err != nil {
 		return nil, err
 	}

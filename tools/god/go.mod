@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/emicklei/proto v1.11.0
-	github.com/gotid/god v1.4.2
+	//github.com/gotid/god v1.4.2
 	github.com/logrusorgru/aurora v2.0.3+incompatible
 	github.com/spf13/cobra v1.6.0
 	github.com/stretchr/testify v1.8.0

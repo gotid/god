@@ -11,21 +11,21 @@ import (
 )
 
 const (
-	DevMode  = "dev"       // 开发模式
-	TestMode = "redistest" // 测试模式
-	RtMode   = "rt"        // 回归测试模式
-	PreMode  = "pre"       // 预发布模式
-	ProMode  = "pro"       // 生产模式
+	DevMode  = "dev"  // 开发模式
+	TestMode = "test" // 测试模式
+	RtMode   = "rt"   // 回归测试模式
+	PreMode  = "pre"  // 预发布模式
+	ProMode  = "pro"  // 生产模式
 )
 
 // Config 是一个服务配置。
 type Config struct {
 	Name       string
-	Mode       string `json:",default=pro,options=[dev,redistest,rt,pre,pro]"`
 	Log        logx.Config
+	Mode       string            `json:",default=pro,options=[dev,tet,rt,pre,pro]"`
+	MetricsUrl string            `json:",optional"`
 	Prometheus prometheus.Config `json:",optional"`
 	Telemetry  trace.Config      `json:",optional"`
-	MetricsUrl string            `json:",optional"`
 }
 
 // MustSetup 设置服务，出错退出。

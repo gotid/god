@@ -10,7 +10,7 @@ import (
 
 type discovBuilder struct{}
 
-func (d *discovBuilder) Build(target resolver.Target, conn resolver.ClientConn, opts resolver.BuildOptions) (resolver.Resolver, error) {
+func (d *discovBuilder) Build(target resolver.Target, cc resolver.ClientConn, _ resolver.BuildOptions) (resolver.Resolver, error) {
 	hosts := strings.FieldsFunc(targets.GetAuthority(target), func(r rune) bool {
 		return r == EndpointSepChar
 	})
@@ -21,17 +21,17 @@ func (d *discovBuilder) Build(target resolver.Target, conn resolver.ClientConn, 
 
 	update := func() {
 		var addrs []resolver.Address
-		for _, val := range subset(sub.Values(), subsetSize) {
-			addrs = append(addrs, resolver.Address{Addr: val})
+		for _, addr := range subset(sub.Values(), subsetSize) {
+			addrs = append(addrs, resolver.Address{Addr: addr})
 		}
-		if err := conn.UpdateState(resolver.State{Addresses: addrs}); err != nil {
+		if err := cc.UpdateState(resolver.State{Addresses: addrs}); err != nil {
 			logx.Error(err)
 		}
 	}
 	sub.AddListener(update)
 	update()
 
-	return &nopResolver{conn: conn}, nil
+	return &nopResolver{cc: cc}, nil
 }
 
 func (d *discovBuilder) Scheme() string {

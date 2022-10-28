@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
+	"strings"
 )
 
 // Marshal 编排 v 至字节切片。
@@ -26,6 +28,28 @@ func Unmarshal(data []byte, v interface{}) error {
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	if err := unmarshalUseNumber(decoder, v); err != nil {
 		return formatError(string(data), err)
+	}
+
+	return nil
+}
+
+// UnmarshalFromString 从字符串解组至 v。
+func UnmarshalFromString(str string, v interface{}) error {
+	decoder := json.NewDecoder(strings.NewReader(str))
+	if err := unmarshalUseNumber(decoder, v); err != nil {
+		return formatError(str, err)
+	}
+
+	return nil
+}
+
+// UnmarshalFromReader 从 io.Reader 解组至 v。
+func UnmarshalFromReader(reader io.Reader, v interface{}) error {
+	var buf strings.Builder
+	teeReader := io.TeeReader(reader, &buf)
+	decoder := json.NewDecoder(teeReader)
+	if err := unmarshalUseNumber(decoder, v); err != nil {
+		return formatError(buf.String(), err)
 	}
 
 	return nil
