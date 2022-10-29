@@ -866,7 +866,7 @@ func WithStringValues() UnmarshalOption {
 	}
 }
 
-// WithCanonicalKeyFunc customizes a Unmarshaler with Canonical Key func
+// WithCanonicalKeyFunc 定义规范键函数
 func WithCanonicalKeyFunc(f func(string) string) UnmarshalOption {
 	return func(opt *unmarshalOptions) {
 		opt.canonicalKey = f
