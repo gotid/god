@@ -22,11 +22,11 @@ type (
 		AddTask(task interface{}) bool
 		// Execute 在刷新时处理容器收集的任务。
 		Execute(tasks interface{})
-		// RemoveAll 移除容器中的所有任务并返回他们。
+		// RemoveAll 移除容器中的所有任务并返回它们。
 		RemoveAll() interface{}
 	}
 
-	// PeriodicalExecutor 是一个定期执行任务的执行器。
+	// PeriodicalExecutor 是一个定期执行器。
 	PeriodicalExecutor struct {
 		commander chan interface{}
 		interval  time.Duration
@@ -79,7 +79,7 @@ func (pe *PeriodicalExecutor) Flush() bool {
 	}())
 }
 
-// Sync 允许调用者使用 pe 执行现成安全的 fn 调用，尤其是底层容器。
+// Sync 允许调用者使用 pe 执行线程安全的 fn 调用，尤其是底层容器。
 func (pe *PeriodicalExecutor) Sync(fn func()) {
 	pe.lock.Lock()
 	defer pe.lock.Unlock()

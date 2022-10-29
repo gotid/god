@@ -32,7 +32,7 @@ type (
 		Reject(reason string)
 	}
 
-	// Breaker 表示一个断路器。
+	// Breaker 表示一个可自动熔断的断路器。
 	Breaker interface {
 		// Name 返回断路器的名称。
 		Name() string

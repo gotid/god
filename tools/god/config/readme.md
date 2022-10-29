@@ -41,7 +41,7 @@
 # 使用方法
 目前可在生成 rpc、model、api时，通过 `-style` 指定格式，如：
 ```shell
-god rpc proto -src test.proto -dir . -style go_designer
+god rpc proto -src hi.proto -dir . -style go_designer
 ```
 
 ```shell
@@ -49,7 +49,7 @@ god model mysql datasource -url="" -table="*" -dir . -style GoDesigner
 ```
 
 ```shell
-god api go test.api -dir . -style godesigner
+god api go hi.api -dir . -style godesigner
 ```
 
 # 默认值 `godesigner`

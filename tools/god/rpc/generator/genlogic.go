@@ -16,7 +16,7 @@ import (
 
 const logicFunctionTemplate = `{{if .hasComment}}{{.comment}}{{end}}
 func (l *{{.logicName}}) {{.method}} ({{if .hasReq}}in {{.request}}{{if .stream}},stream {{.streamBody}}{{end}}{{else}}stream {{.streamBody}}{{end}}) ({{if .hasReply}}{{.response}},{{end}} error) {
-	// todo: 此处添加你的逻辑并删除该行
+	//TODO 此处添加你的逻辑并删除该行
 
 	return {{if .hasReply}}&{{.responseType}}{},{{end}} nil
 }

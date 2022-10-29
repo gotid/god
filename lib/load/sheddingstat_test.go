@@ -28,7 +28,7 @@ func TestLoopTrue(t *testing.T) {
 	ch <- time.Now()
 	close(ch)
 	st := new(SheddingStat)
-	st.name = "test"
+	st.name = "hi"
 	logEnabled.Set(true)
 	st.loop(ch)
 }

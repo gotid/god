@@ -8,7 +8,7 @@ import (
 )
 
 func TestProperties(t *testing.T) {
-	text := `app.name = test
+	text := `app.name = hi
 
     app.program=app
 
@@ -20,7 +20,7 @@ func TestProperties(t *testing.T) {
 
 	props, err := LoadProperties(tmpfile)
 	assert.Nil(t, err)
-	assert.Equal(t, "test", props.GetString("app.name"))
+	assert.Equal(t, "hi", props.GetString("app.name"))
 	assert.Equal(t, "app", props.GetString("app.program"))
 	assert.Equal(t, 5, props.GetInt("app.threads"))
 
@@ -31,7 +31,7 @@ func TestProperties(t *testing.T) {
 }
 
 func TestPropertiesEnv(t *testing.T) {
-	text := `app.name = test
+	text := `app.name = hi
 
     app.program=app
 
@@ -49,7 +49,7 @@ func TestPropertiesEnv(t *testing.T) {
 
 	props, err := LoadProperties(tmpfile, UseEnv())
 	assert.Nil(t, err)
-	assert.Equal(t, "test", props.GetString("app.name"))
+	assert.Equal(t, "hi", props.GetString("app.name"))
 	assert.Equal(t, "app", props.GetString("app.program"))
 	assert.Equal(t, 5, props.GetInt("app.threads"))
 	assert.Equal(t, "2", props.GetString("app.env1"))

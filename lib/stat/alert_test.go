@@ -12,7 +12,7 @@ import (
 )
 
 func TestReport(t *testing.T) {
-	os.Setenv(clusterNameKey, "test-cluster")
+	os.Setenv(clusterNameKey, "hi-cluster")
 	defer os.Unsetenv(clusterNameKey)
 
 	var count int32

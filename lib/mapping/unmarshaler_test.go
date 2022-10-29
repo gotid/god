@@ -13,7 +13,7 @@ import (
 )
 
 // because json.Number doesn't support strconv.ParseUint(...),
-// so we only can test to 62 bits.
+// so we only can hi to 62 bits.
 const maxUintBitsToTest = 62
 
 func TestUnmarshalWithFullNameNotStruct(t *testing.T) {

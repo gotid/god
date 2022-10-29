@@ -11,11 +11,11 @@ import (
 )
 
 const (
-	DevMode  = "dev"  // 开发模式
-	TestMode = "test" // 测试模式
-	RtMode   = "rt"   // 回归测试模式
-	PreMode  = "pre"  // 预发布模式
-	ProMode  = "pro"  // 生产模式
+	DevMode  = "dev" // 开发模式
+	TestMode = "hi"  // 测试模式
+	RtMode   = "rt"  // 回归测试模式
+	PreMode  = "pre" // 预发布模式
+	ProMode  = "pro" // 生产模式
 )
 
 // Config 是一个服务配置。

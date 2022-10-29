@@ -189,7 +189,7 @@ type (
 		SetNXCtx(ctx context.Context, key, value string) (val bool, err error)
 		// SetNXEx 当 key 不存时，设置键值对及其存活秒数，过期会自动删除。
 		SetNXEx(key, value string, seconds int) (bool, error)
-		// SetnxExCtx 当 key 不存时，设置键值对及其存活秒数，过期会自动删除。
+		// SetNXExCtx 当 key 不存时，设置键值对及其存活秒数，过期会自动删除。
 		SetNXExCtx(ctx context.Context, key, value string, seconds int) (val bool, err error)
 		// SIsMember 判断 member 是否为集合 key 的成员。
 		SIsMember(key string, member interface{}) (bool, error)
@@ -257,7 +257,7 @@ type (
 		ZRemRangeByScoreCtx(ctx context.Context, key string, start, stop int64) (val int, err error)
 		// ZRemRangeByRank 移除有序集合中给定排名区间的所有成员。
 		ZRemRangeByRank(key string, start, stop int64) (int, error)
-		// ZremrangebyrankCtx 移除有序集合中给定排名区间的所有成员。
+		// ZRemRangeByRankCtx 移除有序集合中给定排名区间的所有成员。
 		ZRemRangeByRankCtx(ctx context.Context, key string, start, stop int64) (val int, err error)
 		// ZRange 获取有序集合中在索引区间内的所有成员。
 		ZRange(key string, start, stop int64) ([]string, error)

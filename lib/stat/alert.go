@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	testEnv        = "test.v"
+	testEnv        = "hi.v"
 	clusterNameKey = "CLUSTER_NAME"
 	timeFormat     = "2006-01-02 15:04:05"
 )

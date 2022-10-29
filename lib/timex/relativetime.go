@@ -12,6 +12,6 @@ func Now() time.Duration {
 }
 
 // Since 返回距离 duration 以来的差异。
-func Since(d time.Duration) time.Duration {
-	return time.Since(initTime) - d
+func Since(t time.Duration) time.Duration {
+	return time.Since(initTime) - t
 }

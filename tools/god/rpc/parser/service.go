@@ -30,7 +30,7 @@ func (s Services) validate(filename string, multipleOpt ...bool) error {
 	}
 
 	if !multiple && len(s) > 1 {
-		return errors.New("只需要一个服务")
+		return errors.New("单服务模式下，proto 文件只能有一个 service。\n多服务请使用参数 -m")
 	}
 
 	name := filepath.Base(filename)

@@ -17,7 +17,7 @@ import (
 
 func TestOpenTracingInterceptor(t *testing.T) {
 	trace.StartAgent(trace.Config{
-		Name:     "god-test",
+		Name:     "god-hi",
 		Endpoint: "http://localhost:14268/api/traces",
 		Batcher:  "jaeger",
 		Sampler:  1.0,

@@ -1,5 +1,5 @@
 // 代码由 god 生成，不要修改。
-// 源文件: test.proto
+// 源文件: hi.proto
 
 package server
 

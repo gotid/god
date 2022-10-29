@@ -26,7 +26,7 @@ func TestUnaryOpenTracingInterceptor_Disable(t *testing.T) {
 
 func TestUnaryOpenTracingInterceptor_Enabled(t *testing.T) {
 	trace.StartAgent(trace.Config{
-		Name:     "go-zero-test",
+		Name:     "go-zero-hi",
 		Endpoint: "http://localhost:14268/api/traces",
 		Batcher:  "jaeger",
 		Sampler:  1.0,
