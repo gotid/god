@@ -7,7 +7,7 @@
 
 # Unignore all dirs
 !*/
-!api
+!rest
 
 .idea
 .idea/*.*
