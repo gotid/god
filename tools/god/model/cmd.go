@@ -6,13 +6,8 @@ import (
 )
 
 var (
-	// Cmd 描述了一个 model 命令。
+	// Cmd 描述了一个 mysql model 命令。
 	Cmd = &cobra.Command{
-		Use:   "model",
-		Short: "生成 model 模型",
-	}
-
-	mysqlCmd = &cobra.Command{
 		Use:   "mysql",
 		Short: "生成 mysql 模型",
 	}
@@ -51,8 +46,6 @@ func init() {
 	dsnCmd.Flags().StringVar(&command.VarStringRemote, "remote", "", "远程 git 模板仓库，优先级高于 home\n\t模板目录要与 https://github.com/gotid/god-template 保持一致")
 	dsnCmd.Flags().StringVar(&command.VarStringBranch, "branch", "", "远程仓库分值，与 --remote 配合使用")
 
-	mysqlCmd.AddCommand(ddlCmd)
-	mysqlCmd.AddCommand(dsnCmd)
-
-	Cmd.AddCommand(mysqlCmd)
+	Cmd.AddCommand(ddlCmd)
+	Cmd.AddCommand(dsnCmd)
 }
