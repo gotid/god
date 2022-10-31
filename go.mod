@@ -3,9 +3,11 @@ module github.com/gotid/god
 go 1.19
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/alicebob/miniredis/v2 v2.23.0
 	github.com/fatih/color v1.13.0
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang/mock v1.4.4
 	github.com/google/uuid v1.1.2
 	github.com/prometheus/client_golang v1.13.0
@@ -27,7 +29,6 @@ require (
 )
 
 require (
-	github.com/DATA-DOG/go-sqlmock v1.5.0 // indirect
 	github.com/alicebob/gopher-json v0.0.0-20200520072559-a9ecdc9d1d3a // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
@@ -38,7 +39,6 @@ require (
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
-	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.0 // indirect

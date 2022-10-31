@@ -19,7 +19,8 @@ import (
 const (
 	// 设置过期公差值以防大量缓存项同时过期造成雪崩
 	// 设为不固定的缓存描述为区间 [0.95, 1.05] * 秒
-	expireDeviation     = 0.05
+	expireDeviation = 0.05
+	// 未缓存项的占位符
 	notFoundPlaceholder = "*"
 )
 
@@ -28,8 +29,8 @@ var errPlaceholder = errors.New("缓存占位符")
 
 type node struct {
 	rds            *redis.Redis
-	expire         time.Duration
-	notFoundExpire time.Duration
+	expire         time.Duration // 缓存项的过期时间
+	notFoundExpire time.Duration // 未缓存项的过期时间
 	barrier        syncx.SingleFlight
 	r              *rand.Rand
 	lock           *sync.Mutex
@@ -194,6 +195,10 @@ func (n node) doTake(ctx context.Context, val interface{}, key string,
 		if err := n.doGetCache(ctx, key, val); err != nil {
 			if err == errPlaceholder {
 				return nil, n.errNotFound
+			} else if err != n.errNotFound {
+				// 为何我们马上返回错误而不是继续从db查询，因为我们不允许灾难传递到db。
+				// 有错即返，以防拖垮db。
+				return nil, err
 			}
 
 			if err = query(val); err == n.errNotFound {

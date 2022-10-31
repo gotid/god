@@ -46,8 +46,6 @@ var (
 
 // RPCTemplate 用于生成 rpc 示例模板。
 func RPCTemplate(_ *cobra.Command, _ []string) error {
-	//console.Warning("废弃：god rpc template -o 已废弃，请使用 god rpc -o")
-
 	protoFile := VarStringOutput
 	home := VarStringHome
 	remote := VarStringRemote

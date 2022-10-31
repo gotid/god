@@ -3,6 +3,7 @@ package pathx
 import (
 	"github.com/gotid/god/tools/god/internal/version"
 	"io"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -40,6 +41,16 @@ func LoadTemplate(category, file, builtin string) (string, error) {
 	}
 
 	return string(content), nil
+}
+
+// MustTempDir 创建一个临时文件夹。
+func MustTempDir() string {
+	dir, err := os.MkdirTemp("", "")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	return dir
 }
 
 // FileExists 判断给定的文件是否存在。

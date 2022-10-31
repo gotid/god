@@ -46,7 +46,7 @@ func init() {
 	protocCmd.Flags().StringVar(&cli.VarStringRPCOut, "rpc_out", "", "rpc 代码输出目录")
 	protocCmd.Flags().StringVar(&cli.VarStringStyle, "style", "godesigner", "文件命名样式，详见 [https://github.com/gotid/god/blob/master/tools/god/config/readme.md]")
 	protocCmd.Flags().StringVar(&cli.VarStringHome, "home", "", "god 模板主目录，--remote 优先级高于 --home")
-	protocCmd.Flags().StringVar(&cli.VarStringRemote, "remote", "", "远程 git 模板仓库，优先级高于 home\n\t模板目录要与 https://github.com/zeromicro/go-zero-template 保持一致")
+	protocCmd.Flags().StringVar(&cli.VarStringRemote, "remote", "", "远程 git 模板仓库，优先级高于 home\n\t模板目录要与 https://github.com/gotid/god-template 保持一致")
 	protocCmd.Flags().StringVar(&cli.VarStringBranch, "branch", "", "远程仓库分值，与 --remote 配合使用")
 	protocCmd.Flags().BoolVarP(&cli.VarBoolVerbose, "verbose", "v", false, "启用日志输出")
 	_ = protocCmd.Flags().MarkHidden("go_out")

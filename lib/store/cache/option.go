@@ -10,8 +10,8 @@ const (
 type (
 	// Options 用于存储缓存选项。
 	Options struct {
-		Expire         time.Duration
-		NotFoundExpire time.Duration
+		Expire         time.Duration // 缓存项的过期时间
+		NotFoundExpire time.Duration // 未命中缓存项的缓存过期时间
 	}
 
 	// Option 自定义缓存选项 Options。
@@ -34,14 +34,14 @@ func newOptions(opts ...Option) Options {
 	return o
 }
 
-// WithExpire 返回一个自定义缓存选项有效期的函数。
+// WithExpire 设置缓存项过期时间。
 func WithExpire(expire time.Duration) Option {
 	return func(o *Options) {
 		o.Expire = expire
 	}
 }
 
-// WithNotFoundExpire 返回一个自定义缓存选项未找到记录的有效期的函数。
+// WithNotFoundExpire 设置未命中缓存项的缓存过期时间。
 func WithNotFoundExpire(expire time.Duration) Option {
 	return func(o *Options) {
 		o.NotFoundExpire = expire
