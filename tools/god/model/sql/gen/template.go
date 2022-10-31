@@ -1,0 +1,27 @@
+package gen
+
+const (
+	category                              = "model"
+	importsTemplateFile                   = "import.tpl"
+	importsWithNoCacheTemplateFile        = "import-no-cache.tpl"
+	modelGenTemplateFile                  = "model-gen.tpl"
+	modelCustomTemplateFile               = "model.tpl"
+	errTemplateFile                       = "err.tpl"
+	varTemplateFile                       = "var.tpl"
+	insertTemplateFile                    = "insert.tpl"
+	insertTemplateMethodFile              = "interface-insert.tpl"
+	findOneTemplateFile                   = "find-one.tpl"
+	findOneMethodTemplateFile             = "interface-find-one.tpl"
+	findOneByFieldTemplateFile            = "find-one-by-field.tpl"
+	findOneByFieldMethodTemplateFile      = "interface-find-one-by-field.tpl"
+	findOneByFieldExtraMethodTemplateFile = "find-one-by-field-extra-method.tpl"
+	updateTemplateFile                    = "update.tpl"
+	updateMethodTemplateFile              = "interface-update.tpl"
+	deleteTemplateFile                    = "delete.tpl"
+	deleteMethodTemplateFile              = "interface-delete.tpl"
+	tagTemplateFile                       = "tag.tpl"
+	fieldTemplateFile                     = "field.tpl"
+	typesTemplateFile                     = "types.tpl"
+	modelNewTemplateFile                  = "model-new.tpl"
+	tableNameTemplateFile                 = "table-name.tpl"
+)
