@@ -13,7 +13,7 @@ type Limit struct {
 	pool chan lang.PlaceholderType
 }
 
-// NewLimit 返回一个可并发借用n个资源的限制。
+// NewLimit 返回一个给定大小的并发限制 Limit。
 func NewLimit(n int) Limit {
 	return Limit{
 		pool: make(chan lang.PlaceholderType, n),

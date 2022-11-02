@@ -44,11 +44,12 @@ type ContentSecurityHeader struct {
 	Signature   string
 }
 
+// Encrypted 判断是否为加密请求。
 func (h *ContentSecurityHeader) Encrypted() bool {
 	return h.ContentType == httpx.EncryptionType
 }
 
-// ParseContentSecurity 解析给定 http 请求的内容安全设置。
+// ParseContentSecurity 解析给定 http 请求的内容安全设置，并返回 ContentSecurityHeader。
 func ParseContentSecurity(decryptors map[string]codec.RsaDecryptor, r *http.Request) (*ContentSecurityHeader, error) {
 	contentSecurity := r.Header.Get(httpx.ContentSecurity)
 	attrs := httpx.ParseHeader(contentSecurity)
