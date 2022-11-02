@@ -24,7 +24,7 @@ func Error(w http.ResponseWriter, err error, fns ...func(w http.ResponseWriter, 
 		if len(fns) > 0 {
 			fns[0](w, err)
 		} else if errcode.IsGrpcError(err) {
-			// 不要对错误进行解包，也不要获取 status.Message()，
+			// 不要对错误进行解包，也不要获取 status.Messages()，
 			// 因为错误中包含了 rpc 的错误标头。
 			http.Error(w, err.Error(), errcode.CodeFromGrpcError(err))
 		} else {

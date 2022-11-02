@@ -33,7 +33,7 @@ func (x *ecbEncryptor) BlockSize() int {
 
 func (x *ecbEncryptor) CryptBlocks(dst, src []byte) {
 	if len(src)%x.blockSize != 0 {
-		logx.Error("crypto/cipher: 输入不是完整的块")
+		logx.Error("crypto/cipher: 输入块不完整")
 		return
 	}
 	if len(dst) < len(src) {
@@ -61,7 +61,7 @@ func (x *ecbDecryptor) BlockSize() int {
 
 func (x *ecbDecryptor) CryptBlocks(dst, src []byte) {
 	if len(src)%x.blockSize != 0 {
-		logx.Error("crypto/cipher: 输入不是完整的块")
+		logx.Error("crypto/cipher: 输入块不完整")
 		return
 	}
 	if len(dst) < len(src) {

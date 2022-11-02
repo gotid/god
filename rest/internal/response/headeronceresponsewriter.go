@@ -7,8 +7,7 @@ import (
 	"net/http"
 )
 
-// HeaderOnceResponseWriter 是一个响应编写器 http.ResponseWriter。
-// 其特点是：只有第一此 WriterHeader 写入的标头会生效。
+// HeaderOnceResponseWriter 是一个只响应第一次写入标头的响应编写器 http.ResponseWriter。
 type HeaderOnceResponseWriter struct {
 	w           http.ResponseWriter
 	wroteHeader bool
