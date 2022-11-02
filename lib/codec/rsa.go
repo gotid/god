@@ -15,8 +15,8 @@ var (
 	ErrPrivateKey = errors.New("私钥错误")
 	// ErrPublicKey 表示一个公钥无效的错误。
 	ErrPublicKey = errors.New("公钥错误")
-	// ErrNotRsaKey 表示无效的 RSA 密钥。
-	ErrNotRsaKey = errors.New("密钥类型不是 RSA")
+	// ErrNotRsaKey 表示无效的 RSA 秘钥。
+	ErrNotRsaKey = errors.New("秘钥类型不是 RSA")
 )
 
 type (

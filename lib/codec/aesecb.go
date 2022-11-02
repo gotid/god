@@ -81,11 +81,11 @@ func NewECBDecryptor(b cipher.Block) cipher.BlockMode {
 	return (*ecbDecryptor)(newECB(b))
 }
 
-// EcbEncrypt 使用给定的密钥加密 src。
+// EcbEncrypt 使用给定的秘钥加密 src。
 func EcbEncrypt(key, src []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		logx.Errorf("加密密钥错误：% x", key)
+		logx.Errorf("加密秘钥错误：% x", key)
 		return nil, err
 	}
 
@@ -97,7 +97,7 @@ func EcbEncrypt(key, src []byte) ([]byte, error) {
 	return encrypted, nil
 }
 
-// EcbEncryptBase64 使用给定的 base64 编码后的密钥加密 base64 编码后的 src。
+// EcbEncryptBase64 使用给定的 base64 编码后的秘钥加密 base64 编码后的 src。
 // 返回的字符串也是 base64 编码的。
 func EcbEncryptBase64(key, src string) (string, error) {
 	keyBytes, err := getKeyBytes(key)
@@ -118,11 +118,11 @@ func EcbEncryptBase64(key, src string) (string, error) {
 	return base64.StdEncoding.EncodeToString(encryptedBytes), nil
 }
 
-// EcbDecrypt 使用给定的密钥解密 src。
+// EcbDecrypt 使用给定的秘钥解密 src。
 func EcbDecrypt(key, src []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		logx.Errorf("解密密钥错误：% x", key)
+		logx.Errorf("解密秘钥错误：% x", key)
 		return nil, err
 	}
 
@@ -133,7 +133,7 @@ func EcbDecrypt(key, src []byte) ([]byte, error) {
 	return pkcs5UnPadding(decrypted, decryptor.BlockSize())
 }
 
-// EcbDecryptBase64 使用给定的 base64 编码后的密钥解密 base64 编码后的 src。
+// EcbDecryptBase64 使用给定的 base64 编码后的秘钥解密 base64 编码后的 src。
 // 返回的字符串也是 base64 编码的。
 func EcbDecryptBase64(key, src string) (string, error) {
 	keyBytes, err := getKeyBytes(key)

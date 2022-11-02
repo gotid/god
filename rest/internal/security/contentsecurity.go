@@ -28,8 +28,8 @@ var (
 	ErrInvalidHeader = errors.New("无效的 X-Content-Security 请求头")
 	// ErrInvalidPublicKey 表示公钥无效的错误。
 	ErrInvalidPublicKey = errors.New("无效的公钥")
-	// ErrInvalidSecret 表示密钥无效。
-	ErrInvalidSecret = errors.New("无效的密钥")
+	// ErrInvalidSecret 表示秘钥无效。
+	ErrInvalidSecret = errors.New("无效的秘钥")
 	// ErrInvalidKey 表示解析后的键无效。
 	ErrInvalidKey = errors.New("无效的键")
 	// ErrInvalidContentType 表示内容类型无效。

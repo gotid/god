@@ -13,7 +13,7 @@ const (
 	JsonContentType = header.JsonContentType
 	// KeyField 意为键字段。
 	KeyField = "key"
-	// SecretField 意为内容密钥字段。
+	// SecretField 意为内容秘钥字段。
 	SecretField = "secret"
 	// TypeField 意为内容类型字段，一般为整数。
 	TypeField = "type"

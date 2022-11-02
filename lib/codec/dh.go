@@ -6,7 +6,7 @@ import (
 	"math/big"
 )
 
-// DhKey 定义了迪菲赫尔曼 Diffie Hellman 密钥。
+// DhKey 定义了迪菲赫尔曼 Diffie Hellman 秘钥。
 type DhKey struct {
 	PriKey *big.Int
 	PubKey *big.Int
@@ -46,7 +46,7 @@ func copyWithLeftPad(dst, src []byte) {
 	copy(dst[padBytes:], src)
 }
 
-// ComputeKey 从公钥和私钥返回一个密钥。
+// ComputeKey 从公钥和私钥返回一个秘钥。
 func ComputeKey(pubKey, priKey *big.Int) (*big.Int, error) {
 	if pubKey == nil {
 		return nil, ErrInvalidPubKey
@@ -63,7 +63,7 @@ func ComputeKey(pubKey, priKey *big.Int) (*big.Int, error) {
 	return new(big.Int).Exp(pubKey, priKey, p), nil
 }
 
-// GenerateKey 返回一个迪菲赫尔曼密钥。
+// GenerateKey 返回一个迪菲赫尔曼秘钥。
 func GenerateKey() (*DhKey, error) {
 	var err error
 	var x *big.Int

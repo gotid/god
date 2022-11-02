@@ -83,7 +83,7 @@ func Authorize(secret string, opts ...AuthorizeOption) func(handler http.Handler
 	}
 }
 
-// WithPrevSecret 自定义上一次使用的密钥
+// WithPrevSecret 自定义上一次使用的秘钥
 func WithPrevSecret(secret string) AuthorizeOption {
 	return func(opts *AuthorizeOptions) {
 		opts.PrevSecret = secret

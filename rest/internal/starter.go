@@ -21,7 +21,7 @@ func StartHttp(host string, port int, handler http.Handler, opts ...StartOption)
 // StartHttps 启动一个 https 服务器。
 func StartHttps(host string, port int, certFile, keyFile string, handler http.Handler, opts ...StartOption) error {
 	return start(host, port, handler, func(svr *http.Server) error {
-		// certFile 证书文件和 keyFile 密钥文件在 buildHttpsServer 中设置
+		// certFile 证书文件和 keyFile 秘钥文件在 buildHttpsServer 中设置
 		return svr.ListenAndServeTLS(certFile, keyFile)
 	}, opts...)
 }
