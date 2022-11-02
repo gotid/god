@@ -35,8 +35,8 @@ func DoWithFallbackAcceptable(name string, req func() error, fallback func(err e
 	})
 }
 
-// GetBreaker 返回给定名称的断路器。
-func GetBreaker(name string) Breaker {
+// Get 返回给定名称的断路器。
+func Get(name string) Breaker {
 	lock.RLock()
 	b, ok := breakers[name]
 	lock.RUnlock()
@@ -63,5 +63,5 @@ func NoBreakerFor(name string) {
 }
 
 func do(name string, execute func(b Breaker) error) error {
-	return execute(GetBreaker(name))
+	return execute(Get(name))
 }

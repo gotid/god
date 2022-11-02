@@ -859,14 +859,14 @@ func UnmarshalKey(m map[string]interface{}, v interface{}) error {
 	return keyUnmarshaler.Unmarshal(m, v)
 }
 
-// WithStringValues 使用字符串数值。
+// WithStringValues 使用字符串形式的数值。
 func WithStringValues() UnmarshalOption {
 	return func(opt *unmarshalOptions) {
 		opt.fromString = true
 	}
 }
 
-// WithCanonicalKeyFunc 定义规范键函数
+// WithCanonicalKeyFunc 定义键的规范函数
 func WithCanonicalKeyFunc(f func(string) string) UnmarshalOption {
 	return func(opt *unmarshalOptions) {
 		opt.canonicalKey = f
