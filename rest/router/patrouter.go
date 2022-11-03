@@ -63,7 +63,7 @@ func (pr *patRouter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (pr *patRouter) Mount(method, reqPath string, handler http.Handler) error {
+func (pr *patRouter) Handle(method, reqPath string, handler http.Handler) error {
 	if !validMethod(method) {
 		return ErrInvalidMethod
 	}

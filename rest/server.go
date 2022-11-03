@@ -16,19 +16,19 @@ import (
 )
 
 type (
-	// RunOption 自定义 Server 的方法。
-	RunOption func(*Server)
-
 	// Server 是一个 http 服务器。
 	Server struct {
 		ng     *engine
 		router httpx.Router
 	}
+
+	// Option 自定义 Server 的方法。
+	Option func(*Server)
 )
 
 // MustNewServer 返回一个给定配置和运行选项的服务器，遇错退出。
-// 注意，后面的 RunOption 会覆盖前面的。
-func MustNewServer(c Config, opts ...RunOption) *Server {
+// 注意，后面的 Option 会覆盖前面的。
+func MustNewServer(c Config, opts ...Option) *Server {
 	server, err := NewServer(c, opts...)
 	if err != nil {
 		log.Fatal(err)
@@ -38,8 +38,8 @@ func MustNewServer(c Config, opts ...RunOption) *Server {
 }
 
 // NewServer 返回一个给定配置和运行选项的服务器。
-// 注意，后面的 RunOption 会覆盖前面的。
-func NewServer(c Config, opts ...RunOption) (*Server, error) {
+// 注意，后面的 Option 会覆盖前面的。
+func NewServer(c Config, opts ...Option) (*Server, error) {
 	if err := c.Setup(); err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func NewServer(c Config, opts ...RunOption) (*Server, error) {
 		router: router.NewRouter(),
 	}
 
-	opts = append([]RunOption{WithNotFoundHandler(nil)}, opts...)
+	opts = append([]Option{WithNotFoundHandler(nil)}, opts...)
 	for _, opt := range opts {
 		opt(server)
 	}
@@ -115,14 +115,14 @@ func ToMiddleware(handler func(next http.Handler) http.Handler) Middleware {
 
 // WithChain 使用给定的中间件链 chain.Chain 代替默认的。
 // JWT 鉴权中间件和通过 srv.Use 添加的中间件将被附带过去。
-func WithChain(chn chain.Chain) RunOption {
+func WithChain(chn chain.Chain) Option {
 	return func(svr *Server) {
 		svr.ng.chain = chn
 	}
 }
 
 // WithCors 启用给定来源的 CORS，默认允许所有来源（*）。
-func WithCors(origin ...string) RunOption {
+func WithCors(origin ...string) Option {
 	return func(server *Server) {
 		server.router.SetNotAllowedHandler(cors.NotAllowedHandler(nil, origin...))
 		server.router = newCorsRouter(server.router, nil, origin...)
@@ -132,14 +132,14 @@ func WithCors(origin ...string) RunOption {
 // WithCustomCors 启用给定来源的 CORS，默认允许所有来源（*）。
 // fn 允许调用者自定义响应。
 func WithCustomCors(middlewareFn func(header http.Header), notAllowedFn func(http.ResponseWriter),
-	origin ...string) RunOption {
+	origin ...string) Option {
 	return func(server *Server) {
 		server.router.SetNotAllowedHandler(cors.NotAllowedHandler(notAllowedFn, origin...))
 		server.router = newCorsRouter(server.router, middlewareFn, origin...)
 	}
 }
 
-// WithJwt 使用给定的秘钥进行 Jwt 鉴权。
+// WithJwt 使用给定的秘钥进行 Jwt 身份鉴权。
 func WithJwt(secret string) RouteOption {
 	return func(r *featuredRoutes) {
 		validateSecret(secret)
@@ -148,7 +148,7 @@ func WithJwt(secret string) RouteOption {
 	}
 }
 
-// WithJwtTransition 启用新老秘钥过度的 Jwt 鉴权。
+// WithJwtTransition 启用新老秘钥过度的 Jwt 身份鉴权。
 // 这意味着新旧秘钥会在一段时间内协同工作。
 func WithJwtTransition(secret, prevSecret string) RouteOption {
 	return func(r *featuredRoutes) {
@@ -192,7 +192,7 @@ func WithMiddleware(middleware Middleware, rs ...Route) []Route {
 }
 
 // WithNotFoundHandler 自定义未找到处理器。
-func WithNotFoundHandler(handler http.Handler) RunOption {
+func WithNotFoundHandler(handler http.Handler) Option {
 	return func(server *Server) {
 		notFoundHandler := server.ng.notFoundHandler(handler)
 		server.router.SetNotFoundHandler(notFoundHandler)
@@ -200,7 +200,7 @@ func WithNotFoundHandler(handler http.Handler) RunOption {
 }
 
 // WithNotAllowedHandler 自定义不允许访问处理器。
-func WithNotAllowedHandler(handler http.Handler) RunOption {
+func WithNotAllowedHandler(handler http.Handler) Option {
 	return func(server *Server) {
 		server.router.SetNotAllowedHandler(handler)
 	}
@@ -230,7 +230,7 @@ func WithPriority() RouteOption {
 }
 
 // WithRouter 自定义服务器的路由器。
-func WithRouter(router httpx.Router) RunOption {
+func WithRouter(router httpx.Router) Option {
 	return func(server *Server) {
 		server.router = router
 	}
@@ -254,21 +254,21 @@ func WithTimeout(timeout time.Duration) RouteOption {
 }
 
 // WithTLSConfig 设置 https 配置。
-func WithTLSConfig(cfg *tls.Config) RunOption {
+func WithTLSConfig(cfg *tls.Config) Option {
 	return func(svr *Server) {
 		svr.ng.setTlsConfig(cfg)
 	}
 }
 
 // WithUnauthorizedCallback 设置未授权回调函数。
-func WithUnauthorizedCallback(callback handler.UnauthorizedCallback) RunOption {
+func WithUnauthorizedCallback(callback handler.UnauthorizedCallback) Option {
 	return func(svr *Server) {
 		svr.ng.setUnauthorizedCallback(callback)
 	}
 }
 
 // WithUnsignedCallback 设置签名失败回调函数。
-func WithUnsignedCallback(callback handler.UnsignedCallback) RunOption {
+func WithUnsignedCallback(callback handler.UnsignedCallback) Option {
 	return func(svr *Server) {
 		svr.ng.setUnsignedCallback(callback)
 	}

@@ -45,7 +45,7 @@ func TestPatRouterHandleErrors(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.method, func(t *testing.T) {
 			router := NewRouter()
-			err := router.Mount(test.method, test.path, nil)
+			err := router.Handle(test.method, test.path, nil)
 			assert.Equal(t, test.err, err)
 		})
 	}
@@ -57,7 +57,7 @@ func TestPatRouterNotFound(t *testing.T) {
 	router.SetNotFoundHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		notFound = true
 	}))
-	err := router.Mount(http.MethodGet, "/a/b",
+	err := router.Handle(http.MethodGet, "/a/b",
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
 	assert.Nil(t, err)
 	r, _ := http.NewRequest(http.MethodGet, "/b/c", nil)
@@ -72,7 +72,7 @@ func TestPatRouterNotAllowed(t *testing.T) {
 	router.SetNotAllowedHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		notAllowed = true
 	}))
-	err := router.Mount(http.MethodGet, "/a/b",
+	err := router.Handle(http.MethodGet, "/a/b",
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
 	assert.Nil(t, err)
 	r, _ := http.NewRequest(http.MethodPost, "/a/b", nil)
@@ -102,19 +102,19 @@ func TestPatRouter(t *testing.T) {
 		t.Run(test.method+":"+test.path, func(t *testing.T) {
 			routed := false
 			router := NewRouter()
-			err := router.Mount(test.method, "/a/:b", http.HandlerFunc(
+			err := router.Handle(test.method, "/a/:b", http.HandlerFunc(
 				func(w http.ResponseWriter, r *http.Request) {
 					routed = true
 					assert.Equal(t, 1, len(pathvar.Vars(r)))
 				}))
 			assert.Nil(t, err)
-			err = router.Mount(test.method, "/a/b/c", http.HandlerFunc(
+			err = router.Handle(test.method, "/a/b/c", http.HandlerFunc(
 				func(w http.ResponseWriter, r *http.Request) {
 					routed = true
 					assert.Nil(t, pathvar.Vars(r))
 				}))
 			assert.Nil(t, err)
-			err = router.Mount(test.method, "/b/c", http.HandlerFunc(
+			err = router.Handle(test.method, "/b/c", http.HandlerFunc(
 				func(w http.ResponseWriter, r *http.Request) {
 					routed = true
 				}))
@@ -143,7 +143,7 @@ func TestParseSlice(t *testing.T) {
 	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	rt := NewRouter()
-	err = rt.Mount(http.MethodPost, "/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	err = rt.Handle(http.MethodPost, "/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		v := struct {
 			Names []string `form:"names"`
 		}{}
@@ -167,7 +167,7 @@ func TestParseJsonPost(t *testing.T) {
 	r.Header.Set(httpx.ContentType, httpx.JsonContentType)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/:name/:year", http.HandlerFunc(func(
+	err = router.Handle(http.MethodPost, "/:name/:year", http.HandlerFunc(func(
 		w http.ResponseWriter, r *http.Request) {
 		v := struct {
 			Name     string `path:"name"`
@@ -199,7 +199,7 @@ func TestParseJsonPostWithIntSlice(t *testing.T) {
 	r.Header.Set(httpx.ContentType, httpx.JsonContentType)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/:name/:year", http.HandlerFunc(func(
+	err = router.Handle(http.MethodPost, "/:name/:year", http.HandlerFunc(func(
 		w http.ResponseWriter, r *http.Request) {
 		v := struct {
 			Name  string  `path:"name"`
@@ -227,7 +227,7 @@ func TestParseJsonPostError(t *testing.T) {
 	r.Header.Set(httpx.ContentType, httpx.JsonContentType)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodPost, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Name     string `path:"name"`
@@ -255,7 +255,7 @@ func TestParseJsonPostInvalidRequest(t *testing.T) {
 	r.Header.Set(httpx.ContentType, httpx.JsonContentType)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/", http.HandlerFunc(
+	err = router.Handle(http.MethodPost, "/", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Ages []int `json:"ages"`
@@ -277,7 +277,7 @@ func TestParseJsonPostRequired(t *testing.T) {
 	r.Header.Set(httpx.ContentType, httpx.JsonContentType)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodPost, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Name     string `path:"name"`
@@ -300,7 +300,7 @@ func TestParsePath(t *testing.T) {
 	assert.Nil(t, err)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodGet, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodGet, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Name string `path:"name"`
@@ -325,7 +325,7 @@ func TestParsePathRequired(t *testing.T) {
 	assert.Nil(t, err)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodGet, "/:name/", http.HandlerFunc(
+	err = router.Handle(http.MethodGet, "/:name/", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Name string `path:"name"`
@@ -346,7 +346,7 @@ func TestParseQuery(t *testing.T) {
 	assert.Nil(t, err)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodGet, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodGet, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Nickname string `form:"nickname"`
@@ -371,7 +371,7 @@ func TestParseQueryRequired(t *testing.T) {
 	assert.Nil(t, err)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/:name/:year", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	err = router.Handle(http.MethodPost, "/:name/:year", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		v := struct {
 			Nickname string `form:"nickname"`
 			Zipcode  int64  `form:"zipcode"`
@@ -391,7 +391,7 @@ func TestParseOptional(t *testing.T) {
 	assert.Nil(t, err)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodGet, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodGet, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Nickname string `form:"nickname"`
@@ -432,7 +432,7 @@ func TestParseNestedInRequestEmpty(t *testing.T) {
 	)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodPost, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			var v WrappedRequest
 			err = httpx.Parse(r, &v)
@@ -471,7 +471,7 @@ func TestParsePtrInRequest(t *testing.T) {
 	)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodPost, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			var v WrappedRequest
 			err = httpx.Parse(r, &v)
@@ -502,7 +502,7 @@ func TestParsePtrInRequestEmpty(t *testing.T) {
 	)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/mike", http.HandlerFunc(
+	err = router.Handle(http.MethodPost, "/mike", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			var v WrappedRequest
 			err = httpx.Parse(r, &v)
@@ -519,7 +519,7 @@ func TestParseQueryOptional(t *testing.T) {
 	assert.Nil(t, err)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodGet, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodGet, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Nickname string `form:"nickname"`
@@ -544,7 +544,7 @@ func TestParse(t *testing.T) {
 	assert.Nil(t, err)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodGet, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodGet, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Name     string `path:"name"`
@@ -582,7 +582,7 @@ func TestParseWrappedRequest(t *testing.T) {
 	)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodGet, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodGet, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			var v WrappedRequest
 			err = httpx.Parse(r, &v)
@@ -614,7 +614,7 @@ func TestParseWrappedGetRequestWithJsonHeader(t *testing.T) {
 	)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodGet, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodGet, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			var v WrappedRequest
 			err = httpx.Parse(r, &v)
@@ -647,7 +647,7 @@ func TestParseWrappedHeadRequestWithJsonHeader(t *testing.T) {
 	)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodHead, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodHead, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			var v WrappedRequest
 			err = httpx.Parse(r, &v)
@@ -679,7 +679,7 @@ func TestParseWrappedRequestPtr(t *testing.T) {
 	)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodGet, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodGet, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			var v WrappedRequest
 			err = httpx.Parse(r, &v)
@@ -702,7 +702,7 @@ func TestParseWithAll(t *testing.T) {
 	r.Header.Set(httpx.ContentType, httpx.JsonContentType)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/:name/:year", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	err = router.Handle(http.MethodPost, "/:name/:year", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		v := struct {
 			Name     string `path:"name"`
 			Year     int    `path:"year"`
@@ -733,7 +733,7 @@ func TestParseWithAllUtf8(t *testing.T) {
 	r.Header.Set(httpx.ContentType, header.JsonContentType)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodPost, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Name     string `path:"name"`
@@ -764,7 +764,7 @@ func TestParseWithMissingForm(t *testing.T) {
 	assert.Nil(t, err)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodPost, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Name     string `path:"name"`
@@ -791,7 +791,7 @@ func TestParseWithMissingAllForms(t *testing.T) {
 	assert.Nil(t, err)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodPost, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Name     string `path:"name"`
@@ -817,7 +817,7 @@ func TestParseWithMissingJson(t *testing.T) {
 	assert.Nil(t, err)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodPost, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Name     string `path:"name"`
@@ -843,7 +843,7 @@ func TestParseWithMissingAllJsons(t *testing.T) {
 	assert.Nil(t, err)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodGet, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodGet, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Name     string `path:"name"`
@@ -870,7 +870,7 @@ func TestParseWithMissingPath(t *testing.T) {
 	assert.Nil(t, err)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodPost, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Name     string `path:"name"`
@@ -897,7 +897,7 @@ func TestParseWithMissingAllPaths(t *testing.T) {
 	assert.Nil(t, err)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodPost, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Name     string `path:"name"`
@@ -924,7 +924,7 @@ func TestParseGetWithContentLengthHeader(t *testing.T) {
 	r.Header.Set(contentLength, "1024")
 
 	router := NewRouter()
-	err = router.Mount(http.MethodGet, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodGet, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Name     string `path:"name"`
@@ -951,7 +951,7 @@ func TestParseJsonPostWithTypeMismatch(t *testing.T) {
 	r.Header.Set(httpx.ContentType, header.JsonContentType)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodPost, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Name     string `path:"name"`
@@ -977,7 +977,7 @@ func TestParseJsonPostWithInt2String(t *testing.T) {
 	r.Header.Set(httpx.ContentType, header.JsonContentType)
 
 	router := NewRouter()
-	err = router.Mount(http.MethodPost, "/:name/:year", http.HandlerFunc(
+	err = router.Handle(http.MethodPost, "/:name/:year", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			v := struct {
 				Name string `path:"name"`
@@ -998,7 +998,7 @@ func BenchmarkPatRouter(b *testing.B) {
 	b.ReportAllocs()
 
 	router := NewRouter()
-	router.Mount(http.MethodGet, "/api/:user/:name", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	router.Handle(http.MethodGet, "/api/:user/:name", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	}))
 	w := &mockedResponseWriter{}
 	r, _ := http.NewRequest(http.MethodGet, "/api/a/b", nil)

@@ -65,7 +65,7 @@ func TestDo(t *testing.T) {
 	}
 
 	rt := router.NewRouter()
-	err := rt.Mount(http.MethodPost, "/nodes/:key",
+	err := rt.Handle(http.MethodPost, "/nodes/:key",
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			var req Data
 			assert.Nil(t, httpx.Parse(r, &req))
@@ -95,7 +95,7 @@ func TestDo_Ptr(t *testing.T) {
 	}
 
 	rt := router.NewRouter()
-	err := rt.Mount(http.MethodPost, "/nodes/:key",
+	err := rt.Handle(http.MethodPost, "/nodes/:key",
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			var req Data
 			assert.Nil(t, httpx.Parse(r, &req))
@@ -180,7 +180,7 @@ func TestDo_Json(t *testing.T) {
 	}
 
 	rt := router.NewRouter()
-	err := rt.Mount(http.MethodPost, "/nodes/:key",
+	err := rt.Handle(http.MethodPost, "/nodes/:key",
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			var req Data
 			assert.Nil(t, httpx.Parse(r, &req))

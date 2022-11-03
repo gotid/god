@@ -34,32 +34,32 @@ Port: 54321
 
 	tests := []struct {
 		c    Config
-		opts []RunOption
+		opts []Option
 		fail bool
 	}{
 		{
 			c:    Config{},
-			opts: []RunOption{WithRouter(mockedRouter{}), WithCors()},
+			opts: []Option{WithRouter(mockedRouter{}), WithCors()},
 		},
 		{
 			c:    cnf,
-			opts: []RunOption{WithRouter(mockedRouter{})},
+			opts: []Option{WithRouter(mockedRouter{})},
 		},
 		{
 			c:    cnf,
-			opts: []RunOption{WithRouter(mockedRouter{}), WithNotAllowedHandler(nil)},
+			opts: []Option{WithRouter(mockedRouter{}), WithNotAllowedHandler(nil)},
 		},
 		{
 			c:    cnf,
-			opts: []RunOption{WithNotFoundHandler(nil), WithRouter(mockedRouter{})},
+			opts: []Option{WithNotFoundHandler(nil), WithRouter(mockedRouter{})},
 		},
 		{
 			c:    cnf,
-			opts: []RunOption{WithUnauthorizedCallback(nil), WithRouter(mockedRouter{})},
+			opts: []Option{WithUnauthorizedCallback(nil), WithRouter(mockedRouter{})},
 		},
 		{
 			c:    cnf,
-			opts: []RunOption{WithUnsignedCallback(nil), WithRouter(mockedRouter{})},
+			opts: []Option{WithUnsignedCallback(nil), WithRouter(mockedRouter{})},
 		},
 	}
 
@@ -79,12 +79,16 @@ Port: 54321
 				next.ServeHTTP(w, r)
 			})
 		}))
-		svr.AddRoute(Route{
-			Method:  http.MethodGet,
-			Path:    "/",
-			Handler: nil,
-		}, WithJwt("thesecret"), WithSignature(SignatureConfig{}),
-			WithJwtTransition("preivous", "thenewone"))
+		svr.AddRoute(
+			Route{
+				Method:  http.MethodGet,
+				Path:    "/",
+				Handler: nil,
+			},
+			WithJwt("thesecret"),
+			WithSignature(SignatureConfig{}),
+			WithJwtTransition("preivous", "thenewone"),
+		)
 
 		func() {
 			defer func() {
@@ -149,7 +153,7 @@ func TestWithMiddleware(t *testing.T) {
 		"http://hello.com/second/wan/2020?nickname=whatever&zipcode=200000",
 	}
 	for _, route := range rs {
-		assert.Nil(t, rt.Mount(route.Method, route.Path, route.Handler))
+		assert.Nil(t, rt.Handle(route.Method, route.Path, route.Handler))
 	}
 	for _, url := range urls {
 		r, err := http.NewRequest(http.MethodGet, url, nil)
@@ -223,7 +227,7 @@ func TestMultiMiddlewares(t *testing.T) {
 		"http://hello.com/second/wan/2020?nickname=whatever&zipcode=200000",
 	}
 	for _, route := range rs {
-		assert.Nil(t, rt.Mount(route.Method, route.Path, route.Handler))
+		assert.Nil(t, rt.Handle(route.Method, route.Path, route.Handler))
 	}
 	for _, url := range urls {
 		r, err := http.NewRequest(http.MethodGet, url, nil)
@@ -289,17 +293,17 @@ Port: 54321
 
 	testCases := []struct {
 		c    Config
-		opts []RunOption
+		opts []Option
 		res  *tls.Config
 	}{
 		{
 			c:    cnf,
-			opts: []RunOption{WithTLSConfig(testConfig)},
+			opts: []Option{WithTLSConfig(testConfig)},
 			res:  testConfig,
 		},
 		{
 			c:    cnf,
-			opts: []RunOption{WithUnsignedCallback(nil)},
+			opts: []Option{WithUnsignedCallback(nil)},
 			res:  nil,
 		},
 	}
@@ -524,7 +528,7 @@ func TestServer_WithCors(t *testing.T) {
 		})
 	}
 	r := router.NewRouter()
-	assert.Nil(t, r.Mount(http.MethodOptions, "/", middleware(http.NotFoundHandler())))
+	assert.Nil(t, r.Handle(http.MethodOptions, "/", middleware(http.NotFoundHandler())))
 
 	cr := &corsRouter{
 		Router:     r,
