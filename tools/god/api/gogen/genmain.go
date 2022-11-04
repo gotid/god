@@ -1,0 +1,52 @@
+package gogen
+
+import (
+	_ "embed"
+	"fmt"
+	"github.com/gotid/god/tools/god/api/spec"
+	"github.com/gotid/god/tools/god/config"
+	"github.com/gotid/god/tools/god/util/format"
+	"github.com/gotid/god/tools/god/util/pathx"
+	"github.com/gotid/god/tools/god/vars"
+	"strings"
+)
+
+//go:embed main.tpl
+var mainTemplate string
+
+func genMain(dir, rootPkg string, cfg *config.Config, api *spec.ApiSpec) error {
+	name := strings.ToLower(api.Service.Name)
+	filename, err := format.FileNamingFormat(cfg.NamingFormat, name)
+	if err != nil {
+		return err
+	}
+
+	configName := filename
+	if strings.HasSuffix(filename, "-api") {
+		filename = strings.ReplaceAll(filename, "-api", "")
+	}
+
+	return genFile(fileGenConfig{
+		dir:             dir,
+		subDir:          "",
+		filename:        filename + ".go",
+		templateName:    "mainTemplate",
+		category:        category,
+		templateFile:    mainTemplateFile,
+		builtinTemplate: mainTemplate,
+		data: map[string]string{
+			"importPackages": genMainImports(rootPkg),
+			"serviceName":    configName,
+		},
+	})
+}
+
+func genMainImports(parentPkg string) string {
+	var imports []string
+	imports = append(imports, fmt.Sprintf("\"%s\"", pathx.JoinPackages(parentPkg, configDir)))
+	imports = append(imports, fmt.Sprintf("\"%s\"", pathx.JoinPackages(parentPkg, handlerDir)))
+	imports = append(imports, fmt.Sprintf("\"%s\"\n", pathx.JoinPackages(parentPkg, contextDir)))
+	imports = append(imports, fmt.Sprintf("\"%s/lib/conf\"", vars.ProjectOpenSourceURL))
+	imports = append(imports, fmt.Sprintf("\"%s/api\"", vars.ProjectOpenSourceURL))
+	return strings.Join(imports, "\n\t")
+}
