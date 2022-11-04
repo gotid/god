@@ -13,7 +13,8 @@ require (
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
-	github.com/golang-jwt/jwt/v4 v4.4.2 // indirect
+	github.com/fatih/structtag v1.2.0 // indirect
+	github.com/gotid/antlr v0.0.0-20221103053916-29bff99c97c7 // indirect
 	github.com/gotid/ddl-parser v0.0.0-20221029075150-b53a75dd4846 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/mattn/go-colorable v0.1.9 // indirect

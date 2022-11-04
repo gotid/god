@@ -3,6 +3,7 @@ package cmd
 import (
 	_ "embed"
 	"fmt"
+	"github.com/gotid/god/tools/god/api"
 	"os"
 	"runtime"
 	"strings"
@@ -13,7 +14,7 @@ import (
 	"github.com/gotid/god/tools/god/rpc"
 	"github.com/logrusorgru/aurora"
 	"github.com/spf13/cobra"
-	"github.com/withfig/autocomplete-tools/integrations/cobra"
+	//"github.com/withfig/autocomplete-tools/integrations/cobra"
 )
 
 const (
@@ -109,5 +110,6 @@ func init() {
 	rootCmd.SetUsageTemplate(usageTpl)
 	rootCmd.AddCommand(rpc.Cmd)
 	rootCmd.AddCommand(model.Cmd)
-	rootCmd.AddCommand(cobracompletefig.CreateCompletionSpecCommand())
+	rootCmd.AddCommand(api.Cmd)
+	//rootCmd.AddCommand(cobracompletefig.CreateCompletionSpecCommand())
 }

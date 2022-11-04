@@ -1,11 +1,13 @@
 package pathx
 
 import (
+	"fmt"
 	"github.com/gotid/god/tools/god/internal/version"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 const (
@@ -41,36 +43,6 @@ func LoadTemplate(category, file, builtin string) (string, error) {
 	}
 
 	return string(content), nil
-}
-
-// MustTempDir 创建一个临时文件夹。
-func MustTempDir() string {
-	dir, err := os.MkdirTemp("", "")
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	return dir
-}
-
-// FileExists 判断给定的文件是否存在。
-func FileExists(file string) bool {
-	_, err := os.Stat(file)
-	return err == nil
-}
-
-// GetTemplateDir 通过 GetGodHome 获取给定的类别路径。
-func GetTemplateDir(category string) (string, error) {
-	home, err := GetGodHome()
-	if err != nil {
-		return "", err
-	}
-
-	if home == godHome {
-		return filepath.Join(home, category), nil
-	}
-
-	return filepath.Join(home, version.GetGodVersion(), category), nil
 }
 
 // GetGodHome 返回 god 代码生成器的路径，默认路径是 ~/.god。
@@ -125,6 +97,66 @@ func GetCacheDir() (string, error) {
 	}
 
 	return filepath.Join(homeDir, cacheDir), nil
+}
+
+// FileExists 判断给定的文件是否存在。
+func FileExists(file string) bool {
+	_, err := os.Stat(file)
+	return err == nil
+}
+
+// FilenameWithoutExt 返回一个没有扩展名的文件名。
+func FilenameWithoutExt(file string) string {
+	return strings.TrimSuffix(file, filepath.Ext(file))
+}
+
+// SameFile 比较两个路径是否为相同路径。 如：/Users/god 与 /Users/God
+func SameFile(path1, path2 string) (bool, error) {
+	stat1, err := os.Stat(path1)
+	if err != nil {
+		return false, err
+	}
+
+	stat2, err := os.Stat(path2)
+	if err != nil {
+		return false, err
+	}
+
+	return os.SameFile(stat1, stat2), nil
+}
+
+// CreateIfNotExist 文件如不存在则创建。
+func CreateIfNotExist(file string) (*os.File, error) {
+	_, err := os.Stat(file)
+	if !os.IsNotExist(err) {
+		return nil, fmt.Errorf("文件 %s 已经存在", file)
+	}
+
+	return os.Create(file)
+}
+
+// MustTempDir 创建一个临时文件夹。
+func MustTempDir() string {
+	dir, err := os.MkdirTemp("", "")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	return dir
+}
+
+// GetTemplateDir 通过 GetGodHome 获取给定的类别路径。
+func GetTemplateDir(category string) (string, error) {
+	home, err := GetGodHome()
+	if err != nil {
+		return "", err
+	}
+
+	if home == godHome {
+		return filepath.Join(home, category), nil
+	}
+
+	return filepath.Join(home, version.GetGodVersion(), category), nil
 }
 
 func Copy(src, dest string) error {

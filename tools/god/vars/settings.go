@@ -3,6 +3,8 @@ package vars
 const (
 	// ProjectName god 项目名称
 	ProjectName = "god"
+	// ProjectOpenSourceURL god的github地址
+	ProjectOpenSourceURL = "github.com/gotid/god"
 	// OsWindows 表示 windows 系统
 	OsWindows = "windows"
 	// OsMac 表示 mac 系统

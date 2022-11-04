@@ -1,6 +1,19 @@
 package pathx
 
-import "os"
+import (
+	"os"
+	"strings"
+)
+
+const (
+	pkgSep           = "/"
+	goModeIdentifier = "go.mod"
+)
+
+// JoinPackages 调用 strings.Join 并返回
+func JoinPackages(pkgs ...string) string {
+	return strings.Join(pkgs, pkgSep)
+}
 
 // MkdirIfNotExist 若目录不存在则创建。
 func MkdirIfNotExist(dir string) error {

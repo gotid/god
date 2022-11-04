@@ -9,7 +9,7 @@ var (
 	// Cmd 描述了一个 rpc 命令。
 	Cmd = &cobra.Command{
 		Use:   "rpc",
-		Short: "生成 proto 模板文件",
+		Short: "生成 proto 协议模板",
 		RunE:  cli.RPCTemplate,
 	}
 
@@ -30,11 +30,8 @@ var (
 )
 
 func init() {
-	Cmd.Flags().StringVar(&cli.VarStringOutput, "o", "", "输出一个示例 proto 文件")
+	Cmd.Flags().StringVar(&cli.VarStringOutput, "o", "", "输出一个 proto 协议模板")
 	Cmd.Flags().StringVar(&cli.VarStringHome, "home", "", "god 模板主目录，--remote 优先级高于 --home")
-
-	newCmd.Flags().StringVar(&cli.VarStringStyle, "style", "godesigner", "文件命名样式")
-	newCmd.Flags().BoolVarP(&cli.VarBoolVerbose, "verbose", "v", false, "启用日志输出")
 
 	protocCmd.Flags().BoolVarP(&cli.VarBoolMultiple, "multiple", "m", false, "生成多个rpc服务")
 	protocCmd.Flags().StringSliceVar(&cli.VarStringSliceGoOut, "go_out", nil, "go 输出目录")
@@ -56,6 +53,9 @@ func init() {
 	_ = protocCmd.Flags().MarkHidden("plugin")
 	_ = protocCmd.Flags().MarkHidden("proto_path")
 
-	Cmd.AddCommand(newCmd)
+	newCmd.Flags().StringVar(&cli.VarStringStyle, "style", "godesigner", "文件命名样式")
+	newCmd.Flags().BoolVarP(&cli.VarBoolVerbose, "verbose", "v", false, "启用日志输出")
+
 	Cmd.AddCommand(protocCmd)
+	Cmd.AddCommand(newCmd)
 }
