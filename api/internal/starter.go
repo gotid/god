@@ -26,6 +26,7 @@ func StartHttps(host string, port int, certFile, keyFile string, handler http.Ha
 	}, opts...)
 }
 
+// 创建一个带有自定义选项 http.Server 实例，并记录关闭结果。
 func start(host string, port int, handler http.Handler, run func(svr *http.Server) error, opts ...StartOption) (err error) {
 	server := &http.Server{
 		Addr:    fmt.Sprintf("%s:%d", host, port),

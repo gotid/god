@@ -38,6 +38,7 @@ func CryptoHandler(key []byte) func(handler http.Handler) http.Handler {
 	}
 }
 
+// 对客户端请求体进行解密
 func decryptBody(key []byte, r *http.Request) error {
 	if r.ContentLength > maxBytes {
 		return errContentLengthExceeded
@@ -72,6 +73,7 @@ func decryptBody(key []byte, r *http.Request) error {
 	return nil
 }
 
+// 响应编写器
 type cryptoResponseWriter struct {
 	http.ResponseWriter
 	buf *bytes.Buffer
@@ -113,6 +115,7 @@ func (w *cryptoResponseWriter) Flush() {
 	}
 }
 
+// 对服务端的响应进行加密
 func (w *cryptoResponseWriter) flush(key []byte) {
 	if w.buf.Len() == 0 {
 		return
@@ -126,7 +129,7 @@ func (w *cryptoResponseWriter) flush(key []byte) {
 
 	body := base64.StdEncoding.EncodeToString(content)
 	if n, err := io.WriteString(w.ResponseWriter, body); err != nil {
-		logx.Errorf("写入响应失败，错误：%s", err)
+		logx.Errorf("解密内容写入响应失败，错误：%s", err)
 	} else if n < len(content) {
 		logx.Errorf("实际字节数：%d，已写入字节数：%d", len(content), n)
 	}

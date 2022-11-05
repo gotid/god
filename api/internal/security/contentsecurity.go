@@ -18,8 +18,18 @@ import (
 )
 
 const (
-	signatureField   = "signature"
-	timeField        = "time"
+	// 客户端请求体字段
+	fingerprintField = "fingerprint" // 指纹
+	secretField      = "secret"      // 密钥信息
+	signatureField   = "signature"   // 签名
+
+	// 密钥信息
+	typeField = "type" // 类型，意为是否加密
+	keyField  = "key"  // 密钥，意为客户端与服务端加解密的钥匙
+	timeField = "time" // 时间，意为加密时间
+
+	EncryptionType = 1 // 类型为加密
+
 	requestUriHeader = "X-Request-Uri"
 )
 
@@ -28,12 +38,12 @@ var (
 	ErrInvalidHeader = errors.New("无效的 X-Content-Security 请求头")
 	// ErrInvalidPublicKey 表示公钥无效的错误。
 	ErrInvalidPublicKey = errors.New("无效的公钥")
-	// ErrInvalidSecret 表示秘钥无效。
+	// ErrInvalidSecret 表示密文无效。
 	ErrInvalidSecret = errors.New("无效的秘钥")
 	// ErrInvalidKey 表示解析后的键无效。
-	ErrInvalidKey = errors.New("无效的键")
+	ErrInvalidKey = errors.New("无效的指纹")
 	// ErrInvalidContentType 表示内容类型无效。
-	ErrInvalidContentType = errors.New("无效的内容类型")
+	ErrInvalidContentType = errors.New("无效的加密类型")
 )
 
 // ContentSecurityHeader 是一个内容安全的标头。
@@ -46,15 +56,15 @@ type ContentSecurityHeader struct {
 
 // Encrypted 判断是否为加密请求。
 func (h *ContentSecurityHeader) Encrypted() bool {
-	return h.ContentType == httpx.EncryptionType
+	return h.ContentType == EncryptionType
 }
 
 // ParseContentSecurity 解析给定 http 请求的内容安全设置，并返回 ContentSecurityHeader。
 func ParseContentSecurity(decryptors map[string]codec.RsaDecryptor, r *http.Request) (*ContentSecurityHeader, error) {
 	contentSecurity := r.Header.Get(httpx.ContentSecurity)
 	attrs := httpx.ParseHeader(contentSecurity)
-	fingerprint := attrs[httpx.KeyField]
-	secret := attrs[httpx.SecretField]
+	fingerprint := attrs[fingerprintField]
+	secret := attrs[secretField]
 	signature := attrs[signatureField]
 
 	if len(fingerprint) == 0 || len(secret) == 0 || len(signature) == 0 {
@@ -72,9 +82,9 @@ func ParseContentSecurity(decryptors map[string]codec.RsaDecryptor, r *http.Requ
 	}
 
 	attrs = httpx.ParseHeader(string(decryptedSecret))
-	base64Key := attrs[httpx.KeyField]
+	base64Key := attrs[keyField]
 	timestamp := attrs[timeField]
-	contentType := attrs[httpx.TypeField]
+	contentType := attrs[typeField]
 
 	key, err := base64.StdEncoding.DecodeString(base64Key)
 	if err != nil {
@@ -126,6 +136,7 @@ func VerifySignature(r *http.Request, securityHeader *ContentSecurityHeader, tol
 	return httpx.CodeSignatureInvalidToken
 }
 
+// 计算正文签名
 func computeBodySignature(r *http.Request) string {
 	var dup io.ReadCloser
 	r.Body, dup = iox.DupReadCloser(r.Body)

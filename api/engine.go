@@ -76,7 +76,7 @@ func (ng *engine) bindFeaturedRoutes(router httpx.Router, fr featuredRoutes, met
 	}
 
 	for _, route := range fr.routes {
-		if err := ng.bindRoute(fr, router, metrics, route, verifier); err != nil {
+		if err = ng.bindRoute(fr, router, metrics, route, verifier); err != nil {
 			return err
 		}
 	}
@@ -108,9 +108,9 @@ func (ng *engine) bindRoute(fr featuredRoutes, router httpx.Router, metrics *sta
 	for _, middleware := range ng.middlewares {
 		chn = chn.Append(convertMiddleware(middleware))
 	}
-	handle := chn.ThenFunc(route.Handler)
+	finalHandler := chn.ThenFunc(route.Handler)
 
-	return router.Handle(route.Method, route.Path, handle)
+	return router.Handle(route.Method, route.Path, finalHandler)
 }
 
 func (ng *engine) bindRoutes(router httpx.Router) error {
@@ -169,7 +169,7 @@ func (ng *engine) getShedder(priority bool) load.Shedder {
 	return ng.shedder
 }
 
-// notFoundHandler returns a middleware that handles 404 not found requests.
+// notFoundHandler 返回一个处理 400 未找到请求的中间件。
 func (ng *engine) notFoundHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		chn := chain.New(
@@ -219,6 +219,7 @@ func (ng *engine) setUnsignedCallback(callback handler.UnsignedCallback) {
 	ng.unsignedCallback = callback
 }
 
+// 返回一个带有内容签名验证器的中间链 chain.Chain。
 func (ng *engine) signatureVerifier(signature signatureSetting) (func(chain.Chain) chain.Chain, error) {
 	if !signature.enabled {
 		return func(chn chain.Chain) chain.Chain {
@@ -239,6 +240,7 @@ func (ng *engine) signatureVerifier(signature signatureSetting) (func(chain.Chai
 	decryptors := make(map[string]codec.RsaDecryptor)
 	for _, key := range signature.PrivateKeys {
 		fingerprint := key.Fingerprint
+
 		file := key.KeyFile
 		decryptor, err := codec.NewRsaDecryptor(file)
 		if err != nil {
@@ -250,8 +252,7 @@ func (ng *engine) signatureVerifier(signature signatureSetting) (func(chain.Chai
 
 	return func(chn chain.Chain) chain.Chain {
 		if ng.unsignedCallback != nil {
-			return chn.Append(handler.ContentSecurityHandler(
-				decryptors, signature.Expire, signature.Strict, ng.unsignedCallback))
+			return chn.Append(handler.ContentSecurityHandler(decryptors, signature.Expire, signature.Strict, ng.unsignedCallback))
 		}
 
 		return chn.Append(handler.ContentSecurityHandler(decryptors, signature.Expire, signature.Strict))

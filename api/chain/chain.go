@@ -11,6 +11,7 @@ type (
 		Prepend(middlewares ...Middleware) Chain
 		// Then 将中间件按顺序应用到处理器 h 上，并返回最终的处理器。
 		Then(h http.Handler) http.Handler
+		// ThenFunc 将中间件按顺序应用到处理函数 fn 上，并返回最终的处理器。
 		ThenFunc(fn http.HandlerFunc) http.Handler
 	}
 
@@ -51,7 +52,6 @@ func (c chain) Then(h http.Handler) http.Handler {
 	return h
 }
 
-// ThenFunc 将中间件按顺序应用到处理函数 fn 上，并返回中的处理器。
 func (c chain) ThenFunc(fn http.HandlerFunc) http.Handler {
 	// 该 nil 检测不能去掉，因为 Go 中存在 "nil is not nil" 的问题。
 	// Required due to: https://stackoverflow.com/questions/33426977/how-to-golang-check-a-variable-is-nil

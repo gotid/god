@@ -24,12 +24,10 @@ func ContentSecurityHandler(decryptors map[string]codec.RsaDecryptor, tolerance 
 			case http.MethodDelete, http.MethodGet, http.MethodPost, http.MethodPut:
 				header, err := security.ParseContentSecurity(decryptors, r)
 				if err != nil {
-					logx.Errorf("内容安全标头解析失败，X-Content-Security：%s，错误：%s",
-						r.Header.Get(httpx.ContentSecurity), err.Error())
+					logx.Errorf("签名解析失败，X-Content-Security：%s，错误：%s", r.Header.Get(httpx.ContentSecurity), err.Error())
 					executeCallbacks(w, r, next, strict, httpx.CodeSignatureInvalidHeader, callbacks)
 				} else if code := security.VerifySignature(r, header, tolerance); code != httpx.CodeSignaturePass {
-					logx.Errorf("内容安全签名校验不通过，X-Content-Security：%s",
-						r.Header.Get(httpx.ContentSecurity))
+					logx.Errorf("签名校验不通过，X-Content-Security：%s", r.Header.Get(httpx.ContentSecurity))
 					executeCallbacks(w, r, next, strict, code, callbacks)
 				} else if r.ContentLength > 0 && header.Encrypted() {
 					CryptoHandler(header.Key)(next).ServeHTTP(w, r)
@@ -52,6 +50,11 @@ func executeCallbacks(w http.ResponseWriter, r *http.Request, next http.Handler,
 
 func handleVerificationFailure(w http.ResponseWriter, r *http.Request, next http.Handler, strict bool, code int) {
 	if strict {
+		if code == httpx.CodeSignatureWrongTime {
+			w.Header().Set("Signature", "wrong-time")
+		} else if code == httpx.CodeSignatureInvalidHeader {
+			w.Header().Set("Signature", "invalid")
+		}
 		w.WriteHeader(http.StatusForbidden)
 	} else {
 		next.ServeHTTP(w, r)

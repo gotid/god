@@ -114,9 +114,9 @@ func TestUnmarshalDurationPtr(t *testing.T) {
 
 func TestUnmarshalDurationPtrDefault(t *testing.T) {
 	type inner struct {
-		Int      int            `key:"int"`
-		Value    *int           `key:",default=5"`
-		Duration *time.Duration `key:"duration,default=5s"`
+		Int      int           `key:"int"`
+		Value    *int          `key:",default=5"`
+		Duration time.Duration `key:"duration,default=5s"`
 	}
 	m := map[string]interface{}{
 		"int": 5,
@@ -125,7 +125,7 @@ func TestUnmarshalDurationPtrDefault(t *testing.T) {
 	assert.Nil(t, UnmarshalKey(m, &in))
 	assert.Equal(t, 5, in.Int)
 	assert.Equal(t, 5, *in.Value)
-	assert.Equal(t, time.Second*5, *in.Duration)
+	assert.Equal(t, time.Second*5, in.Duration)
 }
 
 func TestUnmarshalInt(t *testing.T) {

@@ -21,16 +21,18 @@ type (
 		Signature    SignatureConfig `json:",optional"`
 	}
 
-	// SignatureConfig 是一个签名配置。
+	// SignatureConfig 用于服务端签名校验的配置。
 	SignatureConfig struct {
 		Strict      bool          `json:",default=false"`
 		Expire      time.Duration `json:",default=1h"`
 		PrivateKeys []PrivateKeyConfig
 	}
 
-	// PrivateKeyConfig 是一个私钥配置。
+	// PrivateKeyConfig 用于服务端解密的私钥配置。
 	PrivateKeyConfig struct {
+		// 信息指纹（与客户端匹配）
 		Fingerprint string
-		KeyFile     string
+		// 指纹对应的私钥文件路径
+		KeyFile string
 	}
 )

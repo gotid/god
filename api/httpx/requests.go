@@ -40,7 +40,7 @@ func Parse(r *http.Request, v interface{}) error {
 	return ParseJsonBody(r, v)
 }
 
-// ParseJsonBody 解析 post 请求的 json 内容体中的键值对参数到 v。
+// ParseJsonBody 解析 post 请求的 json 正文中的键值对参数到 v。
 // 默认只读取前 maxBodyLen 个字节。
 func ParseJsonBody(r *http.Request, v interface{}) error {
 	if withJsonBody(r) {
