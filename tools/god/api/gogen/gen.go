@@ -33,7 +33,7 @@ var (
 	VarStringDir string
 	// VarStringAPI API。
 	VarStringAPI string
-	// VarStringHome go 主目录。
+	// VarStringHome god 主目录。
 	VarStringHome string
 	// VarStringRemote 表示 god 远程 git 仓库。
 	VarStringRemote string
