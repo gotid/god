@@ -129,7 +129,7 @@ func TestContentSecurity(t *testing.T) {
 			}
 
 			encryptedContent := base64.StdEncoding.EncodeToString(output)
-			r.Header.Set("X-Content-Security", strings.Join([]string{
+			r.Header.Set(httpx.ContentSecurity, strings.Join([]string{
 				fmt.Sprintf("key=%s", fingerprint(pubKey)),
 				"secret=" + encryptedContent + test.extraSecret,
 				"signature=" + sign,

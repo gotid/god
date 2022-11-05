@@ -9,6 +9,7 @@ import (
 	"github.com/gotid/god/lib/fs"
 	"github.com/gotid/god/lib/logx"
 	"github.com/gotid/god/lib/service"
+	"io"
 	"net/http"
 	"os"
 	"time"
@@ -67,6 +68,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//io.Copy(w, r.Body)
-	w.Write([]byte("hello world!"))
+	io.Copy(w, r.Body)
+	//w.Write([]byte("hello world!"))
 }

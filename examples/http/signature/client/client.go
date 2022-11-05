@@ -34,6 +34,7 @@ func main() {
 		}
 		body = base64.StdEncoding.EncodeToString(bodyBytes)
 	}
+	fmt.Println("密文", body)
 
 	// 构建给定密文的 POST 请求
 	req, err := http.NewRequest(http.MethodPost, "http://localhost:3333/a/b?c=first&d=second", strings.NewReader(body))
@@ -77,11 +78,13 @@ func main() {
 	secret := base64.StdEncoding.EncodeToString(output)
 
 	// 设置内容安全标头（fingerprint=?; secret=?; signature=?）
-	req.Header.Set(httpx.ContentSecurity, strings.Join([]string{
+	contentSecurity := strings.Join([]string{
 		fmt.Sprintf("fingerprint=%s", internal.Fingerprint),
 		"secret=" + secret,
 		"signature=" + sign,
-	}, "; "))
+	}, "; ")
+	req.Header.Set(httpx.ContentSecurity, contentSecurity)
+	fmt.Println(httpx.ContentSecurity, contentSecurity)
 
 	// 发起请求
 	client := &http.Client{}
