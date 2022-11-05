@@ -284,6 +284,7 @@ func handleError(err error) {
 	panic(err)
 }
 
+// 检查秘钥长度不能小于8位
 func validateSecret(secret string) {
 	if len(secret) < 8 {
 		panic("秘钥长度不能小于 8 位")

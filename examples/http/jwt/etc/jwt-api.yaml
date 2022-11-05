@@ -1,0 +1,8 @@
+Name: jwt-api
+Host: 0.0.0.0
+Port: 8888
+Log:
+  Encoding: plain
+JwtAuth:
+  AccessSecret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  AccessExpire: 604800 # 7天

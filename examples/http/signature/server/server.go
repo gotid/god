@@ -47,17 +47,17 @@ func main() {
 		},
 	}
 
-	engine := api.MustNewServer(c)
-	defer engine.Stop()
+	server := api.MustNewServer(c)
+	defer server.Stop()
 
-	engine.AddRoute(api.Route{
+	server.AddRoute(api.Route{
 		Method:  http.MethodPost,
 		Path:    "/a/b",
 		Handler: handler,
 	}, api.WithSignature(c.Signature))
 
 	fmt.Println("启动服务器...")
-	engine.Start()
+	server.Start()
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
