@@ -34,7 +34,7 @@ func main() {
 		}
 		body = base64.StdEncoding.EncodeToString(bodyBytes)
 	}
-	fmt.Println("密文", body)
+	fmt.Println("请求体密文", body)
 
 	// 构建给定密文的 POST 请求
 	req, err := http.NewRequest(http.MethodPost, "http://localhost:3333/a/b?c=first&d=second", strings.NewReader(body))
@@ -84,7 +84,11 @@ func main() {
 		"signature=" + sign,
 	}, "; ")
 	req.Header.Set(httpx.ContentSecurity, contentSecurity)
-	fmt.Println(httpx.ContentSecurity, contentSecurity)
+	req.Header.Set("Content-Type", "application/json")
+	fmt.Println("请求体签名", httpx.ContentSecurity, ":")
+	fmt.Println(fmt.Sprintf("fingerprint=%s", internal.Fingerprint))
+	fmt.Println(fmt.Sprintf("secret=%s", secret))
+	fmt.Println(fmt.Sprintf("signature=%s", sign))
 
 	// 发起请求
 	client := &http.Client{}

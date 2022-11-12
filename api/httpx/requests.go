@@ -99,6 +99,7 @@ func ParsePath(r *http.Request, v interface{}) error {
 	return pathUnmarshaler.Unmarshal(m, v)
 }
 
+// 根据请求头判断请求体是否为 json 格式
 func withJsonBody(r *http.Request) bool {
 	return r.ContentLength > 0 && strings.Contains(r.Header.Get(header.ContentType), header.ApplicationJson)
 }
