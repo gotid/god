@@ -45,7 +45,7 @@ func (c chain) Then(handler http.Handler) http.Handler {
 		handler = http.DefaultServeMux
 	}
 
-	// 按中间件/拦截器加入的反向顺序，应用至处理器
+	// 按中间件/拦截器加入的反向顺序，向洋葱一样从内到外应用至处理器
 	for i := range c.middlewares {
 		middle := c.middlewares[len(c.middlewares)-1-i]
 		handler = middle(handler)

@@ -36,6 +36,7 @@ func main() {
 		Verbose:      true,
 		Port:         3333,
 		CpuThreshold: 100,
+		Timeout:      3000,
 		Signature: api.SignatureConfig{
 			Strict: true,
 			Expire: 10 * time.Minute,

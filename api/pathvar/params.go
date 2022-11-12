@@ -17,7 +17,7 @@ func Vars(r *http.Request) map[string]string {
 	return nil
 }
 
-// WithVars 写入参数至给定的请求并返回一个新的 httpRequest。
+// WithVars 写入参数至给定的请求并返回一个新的 *http.Request。
 func WithVars(r *http.Request, params map[string]string) *http.Request {
 	return r.WithContext(context.WithValue(r.Context(), pathVars, params))
 }
