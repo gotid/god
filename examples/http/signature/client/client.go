@@ -84,7 +84,6 @@ func main() {
 		"signature=" + sign,
 	}, "; ")
 	req.Header.Set(httpx.ContentSecurity, contentSecurity)
-	req.Header.Set("Content-Type", "application/json")
 	fmt.Println("请求体签名", httpx.ContentSecurity, ":")
 	fmt.Println(fmt.Sprintf("fingerprint=%s", internal.Fingerprint))
 	fmt.Println(fmt.Sprintf("secret=%s", secret))

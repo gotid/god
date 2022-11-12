@@ -33,8 +33,9 @@ func main() {
 				Mode: "console",
 			},
 		},
-		Verbose: true,
-		Port:    3333,
+		Verbose:      true,
+		Port:         3333,
+		CpuThreshold: 100,
 		Signature: api.SignatureConfig{
 			Strict: true,
 			Expire: 10 * time.Minute,
@@ -54,7 +55,7 @@ func main() {
 		Method:  http.MethodPost,
 		Path:    "/a/b",
 		Handler: handler,
-	}, api.WithSignature(c.Signature))
+	}, api.WithSignature(c.Signature), api.WithPriority())
 
 	fmt.Println("启动服务器...")
 	server.Start()

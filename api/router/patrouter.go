@@ -37,6 +37,7 @@ func NewRouter() httpx.Router {
 	}
 }
 
+// 提供 http 客户端请求处理服务
 func (pr *patRouter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	reqPath := path.Clean(r.URL.Path)
 	if tree, ok := pr.trees[r.Method]; ok {

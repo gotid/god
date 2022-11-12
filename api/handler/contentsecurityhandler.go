@@ -27,7 +27,7 @@ func ContentSecurityHandler(decryptors map[string]codec.RsaDecryptor, tolerance 
 					logx.Errorf("签名解析失败，X-Content-Security：%s，错误：%s", r.Header.Get(httpx.ContentSecurity), err.Error())
 					executeCallbacks(w, r, next, strict, httpx.CodeSignatureInvalidHeader, callbacks)
 				} else if code := security.VerifySignature(r, header, tolerance); code != httpx.CodeSignaturePass {
-					logx.Errorf("签名校验不通过，X-Content-Security：%s", r.Header.Get(httpx.ContentSecurity))
+					logx.Errorf("签名校验未通过，X-Content-Security：%s", r.Header.Get(httpx.ContentSecurity))
 					executeCallbacks(w, r, next, strict, code, callbacks)
 				} else if r.ContentLength > 0 && header.Encrypted() {
 					CryptoHandler(header.Key)(next).ServeHTTP(w, r)

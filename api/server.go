@@ -222,7 +222,8 @@ func WithPrefix(group string) RouteOption {
 	}
 }
 
-// WithPriority 区分路由优先级。
+// WithPriority 置为高优先级路由。
+// 在 linux 配合 CpuThreshold 自动降载。
 func WithPriority() RouteOption {
 	return func(r *featuredRoutes) {
 		r.priority = true

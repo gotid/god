@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// MaxBytesHandler 返回一个限制请求体读取的中间件。
+// MaxBytesHandler 返回一个限制请求体字节数的中间件。
 func MaxBytesHandler(n int64) func(http.Handler) http.Handler {
 	if n <= 0 {
 		return func(next http.Handler) http.Handler {

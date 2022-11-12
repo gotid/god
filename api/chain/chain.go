@@ -40,26 +40,28 @@ func (c chain) Prepend(middlewares ...Middleware) Chain {
 	return chain{middlewares: join(middlewares, c.middlewares)}
 }
 
-func (c chain) Then(h http.Handler) http.Handler {
-	if h == nil {
-		h = http.DefaultServeMux
+func (c chain) Then(handler http.Handler) http.Handler {
+	if handler == nil {
+		handler = http.DefaultServeMux
 	}
 
+	// 按中间件/拦截器加入的反向顺序，应用至处理器
 	for i := range c.middlewares {
-		h = c.middlewares[len(c.middlewares)-1-i](h)
+		middle := c.middlewares[len(c.middlewares)-1-i]
+		handler = middle(handler)
 	}
 
-	return h
+	return handler
 }
 
-func (c chain) ThenFunc(fn http.HandlerFunc) http.Handler {
+func (c chain) ThenFunc(handler http.HandlerFunc) http.Handler {
 	// 该 nil 检测不能去掉，因为 Go 中存在 "nil is not nil" 的问题。
 	// Required due to: https://stackoverflow.com/questions/33426977/how-to-golang-check-a-variable-is-nil
-	if fn == nil {
+	if handler == nil {
 		return c.Then(nil)
 	}
 
-	return c.Then(fn)
+	return c.Then(handler)
 }
 
 func join(a, b []Middleware) []Middleware {
