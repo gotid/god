@@ -24,7 +24,7 @@ func PeerFromCtx(ctx context.Context) string {
 
 // SpanInfo 返回 span 跨度信息。
 func SpanInfo(fullMethod, peerAddress string) (string, []attribute.KeyValue) {
-	attrs := []attribute.KeyValue{RPCSystemGRPC}
+	attrs := []attribute.KeyValue{RpcSystemGrpc}
 	name, mAttrs := ParseFullMethod(fullMethod)
 	attrs = append(attrs, mAttrs...)
 	attrs = append(attrs, PeerAttr(peerAddress)...)

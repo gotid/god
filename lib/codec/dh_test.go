@@ -52,7 +52,7 @@ func TestDiffieHellmanMiddleManAttack(t *testing.T) {
 	const aesByteLen = 32
 	pubKey1, err := ComputeKey(keyMiddle.PubKey, key1.PriKey)
 	assert.Nil(t, err)
-	src := []byte(`hello, world!`)
+	src := []byte(`hellox, world!`)
 	encryptedSrc, err := EcbEncrypt(pubKey1.Bytes()[:aesByteLen], src)
 	assert.Nil(t, err)
 	pubKeyMiddle, err := ComputeKey(key1.PubKey, keyMiddle.PriKey)

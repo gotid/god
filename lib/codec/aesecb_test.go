@@ -12,7 +12,7 @@ func TestAesEcb(t *testing.T) {
 		// 16的倍数
 		key = []byte("aaaaaaaaaaaaaaaa")
 		// 明文
-		val = []byte("hello")
+		val = []byte("hellox")
 		// 不足16位
 		badKey1 = []byte("aaaaaa")
 		// 超过32位字符
@@ -44,7 +44,7 @@ func TestAesEcb(t *testing.T) {
 
 func TestAesEcbBase64(t *testing.T) {
 	const (
-		val     = "hello"
+		val     = "hellox"
 		badKey1 = "aaaaaaaaa"
 		// more than 32 chars
 		badKey2 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"

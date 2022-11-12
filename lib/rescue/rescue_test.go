@@ -15,7 +15,7 @@ func TestRescue(t *testing.T) {
 			atomic.AddInt32(&count, 3)
 		})
 
-		panic("hello")
+		panic("hellox")
 	})
 	assert.Equal(t, int32(5), atomic.LoadInt32(&count))
 }

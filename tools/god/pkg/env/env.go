@@ -24,7 +24,7 @@ const (
 
 	ProtocVersion          = "PROTOC_VERSION"
 	ProtocGenGoVersion     = "PROTOC_GEN_GO_VERSION"
-	ProtocGenGoGRPCVersion = "PROTOC_GEN_GO_GRPC_VERSION"
+	ProtocGenGoGrpcVersion = "PROTOC_GEN_GO_GRPC_VERSION"
 
 	envFileDir = "env"
 )
@@ -78,7 +78,7 @@ func init() {
 	godEnv.SetKV(ProtocGenGoVersion, protocGenGoVer)
 
 	protocGenGoGrpcVer, _ := protocgengogrpc.Version()
-	godEnv.SetKV(ProtocGenGoGRPCVersion, protocGenGoGrpcVer)
+	godEnv.SetKV(ProtocGenGoGrpcVersion, protocGenGoGrpcVer)
 
 }
 

@@ -14,7 +14,7 @@ import (
 )
 
 func TestGunzipHandler(t *testing.T) {
-	const message = "hello world"
+	const message = "hellox world"
 	var wg sync.WaitGroup
 	wg.Add(1)
 	handler := GunzipHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -34,7 +34,7 @@ func TestGunzipHandler(t *testing.T) {
 }
 
 func TestGunzipHandler_NoGzip(t *testing.T) {
-	const message = "hello world"
+	const message = "hellox world"
 	var wg sync.WaitGroup
 	wg.Add(1)
 	handler := GunzipHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -53,7 +53,7 @@ func TestGunzipHandler_NoGzip(t *testing.T) {
 }
 
 func TestGunzipHandler_NoGzipButTelling(t *testing.T) {
-	const message = "hello world"
+	const message = "hellox world"
 	handler := GunzipHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
 	req := httptest.NewRequest(http.MethodPost, "http://localhost",
 		strings.NewReader(message))

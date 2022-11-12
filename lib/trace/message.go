@@ -24,13 +24,13 @@ func (m messageType) Event(ctx context.Context, id int, message interface{}) {
 	if p, ok := message.(proto.Message); ok {
 		span.AddEvent(messageEvent, trace.WithAttributes(
 			attribute.KeyValue(m),
-			RPCMessageIDKey.Int(id),
-			RPCMessageUncompressedSizeKey.Int(proto.Size(p)),
+			RpcMessageIDKey.Int(id),
+			RpcMessageUncompressedSizeKey.Int(proto.Size(p)),
 		))
 	} else {
 		span.AddEvent(messageEvent, trace.WithAttributes(
 			attribute.KeyValue(m),
-			RPCMessageIDKey.Int(id),
+			RpcMessageIDKey.Int(id),
 		))
 	}
 }

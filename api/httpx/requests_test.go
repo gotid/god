@@ -21,7 +21,7 @@ func TestParseForm(t *testing.T) {
 	r, err := http.NewRequest(http.MethodGet, "/a?name=hello&age=18&percent=3.4", http.NoBody)
 	assert.Nil(t, err)
 	assert.Nil(t, Parse(r, &v))
-	assert.Equal(t, "hello", v.Name)
+	assert.Equal(t, "hellox", v.Name)
 	assert.Equal(t, 18, v.Age)
 	assert.Equal(t, 3.4, v.Percent)
 }
@@ -32,7 +32,7 @@ func TestParseForm_Error(t *testing.T) {
 		Age  int    `form:"age"`
 	}
 
-	r := httptest.NewRequest(http.MethodGet, "/a?name=hello;", http.NoBody)
+	r := httptest.NewRequest(http.MethodGet, "/a?name=hellox;", http.NoBody)
 	assert.NotNil(t, ParseForm(r, &v))
 }
 

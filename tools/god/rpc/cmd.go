@@ -35,9 +35,9 @@ func init() {
 
 	protocCmd.Flags().BoolVarP(&cli.VarBoolMultiple, "multiple", "m", false, "生成多个rpc服务")
 	protocCmd.Flags().StringSliceVar(&cli.VarStringSliceGoOut, "go_out", nil, "go 输出目录")
-	protocCmd.Flags().StringSliceVar(&cli.VarStringSliceGoGRPCOut, "go-grpc_out", nil, "grpc 输出目录")
+	protocCmd.Flags().StringSliceVar(&cli.VarStringSliceGoGrpcOut, "go-grpc_out", nil, "grpc 输出目录")
 	protocCmd.Flags().StringSliceVar(&cli.VarStringSliceGoOpt, "go_opt", nil, "go 选项")
-	protocCmd.Flags().StringSliceVar(&cli.VarStringSliceGoGRPCOpt, "go-grpc_opt", nil, "grpc 选项")
+	protocCmd.Flags().StringSliceVar(&cli.VarStringSliceGoGrpcOpt, "go-grpc_opt", nil, "grpc 选项")
 	protocCmd.Flags().StringSliceVar(&cli.VarStringSlicePlugin, "plugin", nil, "grpc 插件")
 	protocCmd.Flags().StringSliceVarP(&cli.VarStringSliceProtoPath, "proto_path", "I", nil, "proto 路径")
 	protocCmd.Flags().StringVar(&cli.VarStringRPCOut, "rpc_out", "", "rpc 代码输出目录")

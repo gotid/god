@@ -94,7 +94,7 @@ func TestTimeoutWebsocket(t *testing.T) {
 func TestTimeoutWroteHeaderTwice(t *testing.T) {
 	timeoutHandler := TimeoutHandler(time.Minute)
 	handler := timeoutHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(`hello`))
+		w.Write([]byte(`hellox`))
 		w.Header().Set("foo", "bar")
 		w.WriteHeader(http.StatusOK)
 	}))

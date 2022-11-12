@@ -21,16 +21,16 @@ var (
 	// VarStringBranch 表示 god 远程 git 分支。
 	VarStringBranch string
 
-	// VarStringSliceGoGRPCOpt 表示 grpc 选项。
-	VarStringSliceGoGRPCOpt []string
+	// VarStringSliceGoGrpcOpt 表示 grpc 选项。
+	VarStringSliceGoGrpcOpt []string
 	// VarStringSliceGoOpt 表示 go 选项。
 	VarStringSliceGoOpt []string
 	// VarStringSliceProtoPath 表示 proto 路径。
 	VarStringSliceProtoPath []string
 	// VarStringSliceGoOut 表示 go 输出目录。
 	VarStringSliceGoOut []string
-	// VarStringSliceGoGRPCOut 表示 grpc 输出目录。
-	VarStringSliceGoGRPCOut []string
+	// VarStringSliceGoGrpcOut 表示 grpc 输出目录。
+	VarStringSliceGoGrpcOut []string
 	// VarStringSlicePlugin 表示 grpc 插件。
 	VarStringSlicePlugin []string
 	// VarStringRPCOut 表示 rpc 代码输出目录。
@@ -112,7 +112,7 @@ func RPCNew(_ *cobra.Command, args []string) error {
 			filepath.Dir(src), filepath.Base(src), filepath.Dir(src), filepath.Dir(src)),
 	}
 
-	grpcOptList := VarStringSliceGoGRPCOpt
+	grpcOptList := VarStringSliceGoGrpcOpt
 	if len(grpcOptList) > 0 {
 		ctx.ProtocCmd += " --go-grpc_opt=" + strings.Join(grpcOptList, ",")
 	}

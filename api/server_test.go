@@ -250,7 +250,7 @@ func TestWithPrefix(t *testing.T) {
 	fr := featuredRoutes{
 		routes: []Route{
 			{
-				Path: "/hello",
+				Path: "/hellox",
 			},
 			{
 				Path: "/world",
@@ -262,7 +262,7 @@ func TestWithPrefix(t *testing.T) {
 	for _, r := range fr.routes {
 		vals = append(vals, r.Path)
 	}
-	assert.EqualValues(t, []string{"/api/hello", "/api/world"}, vals)
+	assert.EqualValues(t, []string{"/api/hellox", "/api/world"}, vals)
 }
 
 func TestWithPriority(t *testing.T) {

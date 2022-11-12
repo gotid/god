@@ -10,7 +10,7 @@ import (
 func TestWithPanic(t *testing.T) {
 	assert.Panics(t, func() {
 		_ = DoWithTimeout(func() error {
-			panic("hello")
+			panic("hellox")
 		}, time.Millisecond*50)
 	})
 }

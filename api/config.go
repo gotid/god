@@ -15,8 +15,8 @@ type (
 		KeyFile      string          `json:",optional"`
 		Verbose      bool            `json:",optional"`
 		MaxConns     int             `json:",default=10000"`
-		MaxBytes     int64           `json:",default=1048576"` // 默认1MB
-		Timeout      int64           `json:",default=3000"`
+		MaxBytes     int64           `json:",default=1048576"`            // 默认1MB
+		Timeout      int64           `json:",default=3000"`               // 默认3000毫秒
 		CpuThreshold int64           `json:",default=900,range=[0:1000]"` // linux下的CPU降载阈值，配合WithPriority自动降载
 		Signature    SignatureConfig `json:",optional"`
 	}

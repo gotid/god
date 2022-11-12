@@ -15,7 +15,7 @@ func TestLoadConfig_notExists(t *testing.T) {
 }
 
 func TestLoadConfig_notRecogFile(t *testing.T) {
-	filename, err := fs.TempFilenameWithText("hello")
+	filename, err := fs.TempFilenameWithText("hellox")
 	assert.Nil(t, err)
 	defer os.Remove(filename)
 	err = Load(filename, nil)

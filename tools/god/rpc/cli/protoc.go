@@ -26,7 +26,7 @@ func RPCProtoc(_ *cobra.Command, args []string) error {
 	}
 
 	source := args[0]
-	grpcOutList := VarStringSliceGoGRPCOut
+	grpcOutList := VarStringSliceGoGrpcOut
 	goOutList := VarStringSliceGoOut
 	rpcOut := VarStringRPCOut
 	style := VarStringStyle
@@ -116,13 +116,13 @@ func wrapProtocCmd(name string, args []string) []string {
 	for _, path := range VarStringSliceGoOpt {
 		ret = append(ret, "--go_opt", path)
 	}
-	for _, path := range VarStringSliceGoGRPCOpt {
+	for _, path := range VarStringSliceGoGrpcOpt {
 		ret = append(ret, "--go-grpc_opt", path)
 	}
 	for _, path := range VarStringSliceGoOut {
 		ret = append(ret, "--go_out", path)
 	}
-	for _, path := range VarStringSliceGoGRPCOut {
+	for _, path := range VarStringSliceGoGrpcOut {
 		ret = append(ret, "--go-grpc_out", path)
 	}
 	for _, plugin := range VarStringSlicePlugin {

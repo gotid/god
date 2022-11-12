@@ -88,7 +88,7 @@ func TestContentSecurityHandler(t *testing.T) {
 		{
 			method: http.MethodPost,
 			url:    "http://localhost/a/b?c=d&e=f",
-			body:   "hello",
+			body:   "hellox",
 			strict: true,
 			crypt:  false,
 		},
@@ -101,7 +101,7 @@ func TestContentSecurityHandler(t *testing.T) {
 		{
 			method: http.MethodPost,
 			url:    "http://localhost/a/b?c=d&e=f",
-			body:   "hello",
+			body:   "hellox",
 			strict: true,
 			crypt:  true,
 		},
@@ -116,7 +116,7 @@ func TestContentSecurityHandler(t *testing.T) {
 		{
 			method:     http.MethodPost,
 			url:        "http://localhost/a/b?c=d&e=f",
-			body:       "hello",
+			body:       "hellox",
 			strict:     true,
 			crypt:      true,
 			timestamp:  time.Now().Add(-timeDiff).Unix(),
@@ -125,7 +125,7 @@ func TestContentSecurityHandler(t *testing.T) {
 		{
 			method:     http.MethodPost,
 			url:        "http://remotehost/",
-			body:       "hello",
+			body:       "hellox",
 			strict:     true,
 			crypt:      true,
 			requestUri: "http://localhost/a/b?c=d&e=f",
@@ -133,7 +133,7 @@ func TestContentSecurityHandler(t *testing.T) {
 		{
 			method:      http.MethodPost,
 			url:         "http://localhost/a/b?c=d&e=f",
-			body:        "hello",
+			body:        "hellox",
 			strict:      false,
 			crypt:       true,
 			fingerprint: "badone",
@@ -141,7 +141,7 @@ func TestContentSecurityHandler(t *testing.T) {
 		{
 			method:      http.MethodPost,
 			url:         "http://localhost/a/b?c=d&e=f",
-			body:        "hello",
+			body:        "hellox",
 			strict:      true,
 			crypt:       true,
 			timestamp:   time.Now().Add(-timeDiff).Unix(),
@@ -151,7 +151,7 @@ func TestContentSecurityHandler(t *testing.T) {
 		{
 			method:     http.MethodPost,
 			url:        "http://localhost/a/b?c=d&e=f",
-			body:       "hello",
+			body:       "hellox",
 			strict:     true,
 			crypt:      true,
 			missHeader: true,
@@ -273,7 +273,7 @@ func TestContentSecurityHandler_UnsignedCallback_WrongTime(t *testing.T) {
 		})
 	handler := contentSecurityHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
 
-	reader := strings.NewReader("hello")
+	reader := strings.NewReader("hellox")
 	setting := requestSettings{
 		method:      http.MethodPost,
 		url:         "http://localhost/a/b?c=d&e=f",

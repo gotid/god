@@ -7,5 +7,5 @@ import (
 )
 
 func TestStatusCodeAttr(t *testing.T) {
-	assert.Equal(t, GRPCStatusCodeKey.Int(int(gcodes.DataLoss)), StatusCodeAttr(gcodes.DataLoss))
+	assert.Equal(t, GrpcStatusCodeKey.Int(int(gcodes.DataLoss)), StatusCodeAttr(gcodes.DataLoss))
 }

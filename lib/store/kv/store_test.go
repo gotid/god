@@ -426,20 +426,20 @@ func TestRedis_Set(t *testing.T) {
 
 func TestRedis_SetGetDel(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	err := store.Set("hello", "world")
+	err := store.Set("hellox", "world")
 	assert.NotNil(t, err)
-	_, err = store.Get("hello")
+	_, err = store.Get("hellox")
 	assert.NotNil(t, err)
-	_, err = store.Del("hello")
+	_, err = store.Del("hellox")
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		err := client.Set("hello", "world")
+		err := client.Set("hellox", "world")
 		assert.Nil(t, err)
-		val, err := client.Get("hello")
+		val, err := client.Get("hellox")
 		assert.Nil(t, err)
 		assert.Equal(t, "world", val)
-		ret, err := client.Del("hello")
+		ret, err := client.Del("hellox")
 		assert.Nil(t, err)
 		assert.Equal(t, 1, ret)
 	})
@@ -447,31 +447,31 @@ func TestRedis_SetGetDel(t *testing.T) {
 
 func TestRedis_SetExNx(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	err := store.SetEx("hello", "world", 5)
+	err := store.SetEx("hellox", "world", 5)
 	assert.NotNil(t, err)
 	_, err = store.SetNX("newhello", "newworld")
 	assert.NotNil(t, err)
-	_, err = store.TTL("hello")
+	_, err = store.TTL("hellox")
 	assert.NotNil(t, err)
 	_, err = store.SetNXEx("newhello", "newworld", 5)
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		err := client.SetEx("hello", "world", 5)
+		err := client.SetEx("hellox", "world", 5)
 		assert.Nil(t, err)
-		ok, err := client.SetNX("hello", "newworld")
+		ok, err := client.SetNX("hellox", "newworld")
 		assert.Nil(t, err)
 		assert.False(t, ok)
 		ok, err = client.SetNX("newhello", "newworld")
 		assert.Nil(t, err)
 		assert.True(t, ok)
-		val, err := client.Get("hello")
+		val, err := client.Get("hellox")
 		assert.Nil(t, err)
 		assert.Equal(t, "world", val)
 		val, err = client.Get("newhello")
 		assert.Nil(t, err)
 		assert.Equal(t, "newworld", val)
-		ttl, err := client.TTL("hello")
+		ttl, err := client.TTL("hellox")
 		assert.Nil(t, err)
 		assert.True(t, ttl > 0)
 		ok, err = client.SetNXEx("newhello", "newworld", 5)
@@ -491,23 +491,23 @@ func TestRedis_SetExNx(t *testing.T) {
 
 func TestRedis_Getset(t *testing.T) {
 	store := kvStore{dispatcher: hash.NewConsistentHash()}
-	_, err := store.GetSet("hello", "world")
+	_, err := store.GetSet("hellox", "world")
 	assert.NotNil(t, err)
 
 	runOnCluster(func(client Store) {
-		val, err := client.GetSet("hello", "world")
+		val, err := client.GetSet("hellox", "world")
 		assert.Nil(t, err)
 		assert.Equal(t, "", val)
-		val, err = client.Get("hello")
+		val, err = client.Get("hellox")
 		assert.Nil(t, err)
 		assert.Equal(t, "world", val)
-		val, err = client.GetSet("hello", "newworld")
+		val, err = client.GetSet("hellox", "newworld")
 		assert.Nil(t, err)
 		assert.Equal(t, "world", val)
-		val, err = client.Get("hello")
+		val, err = client.Get("hellox")
 		assert.Nil(t, err)
 		assert.Equal(t, "newworld", val)
-		_, err = client.Del("hello")
+		_, err = client.Del("hellox")
 		assert.Nil(t, err)
 	})
 }

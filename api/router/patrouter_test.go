@@ -220,7 +220,7 @@ func TestParseJsonPostWithIntSlice(t *testing.T) {
 }
 
 func TestParseJsonPostError(t *testing.T) {
-	payload := `[{"hello": "world"}]`
+	payload := `[{"hellox": "world"}]`
 	r, err := http.NewRequest(http.MethodPost, "http://hello.com/mike/2017?nickname=whatever&zipcode=200000",
 		bytes.NewBufferString(payload))
 	assert.Nil(t, err)

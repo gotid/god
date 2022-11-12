@@ -1,0 +1,19 @@
+Name: demo-gateway
+Host: localhost
+Port: 8888
+
+Upstreams:
+  - Grpc:
+      Endpoints:
+        - localhost:8080
+    # protoset mode
+    ProtoSets:
+      - hello.pb
+    # Mappings can also be written in proto options
+    Mappings:
+      - Method: get
+        Path: /pingHello/:ping
+        RpcPath: hello.Hello/Ping
+  - Grpc:
+      Endpoints:
+        - localhost:8080

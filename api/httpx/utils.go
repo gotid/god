@@ -4,7 +4,7 @@ import "net/http"
 
 const xForwardedFor = "X-Forwarded-For"
 
-// GetFormValues 以字典形式返回 http 请求中的表单值。
+// GetFormValues 解析表单变量并以字典形式返回。
 func GetFormValues(r *http.Request) (map[string]interface{}, error) {
 	if err := r.ParseForm(); err != nil {
 		return nil, err

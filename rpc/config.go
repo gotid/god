@@ -68,7 +68,7 @@ func (c ServerConfig) Validate() error {
 	return c.Redis.Validate()
 }
 
-// BuildTarget 从给定的客户端配置构建 RPC 目标。
+// BuildTarget 从给定的客户端配置构建 rpc 目标。
 func (c ClientConfig) BuildTarget() (string, error) {
 	if len(c.Endpoints) > 0 {
 		return resolver.BuildDirectTarget(c.Endpoints), nil

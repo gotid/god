@@ -435,7 +435,7 @@ func TestUnmarshalString(t *testing.T) {
 		NameStr           string `key:"namestr,string"`
 		NotPresent        string `key:",optional"`
 		NotPresentWithTag string `key:"notpresent,optional"`
-		DefaultString     string `key:"defaultstring,default=hello"`
+		DefaultString     string `key:"defaultstring,default=hellox"`
 		Optional          string `key:",optional"`
 	}
 	m := map[string]interface{}{
@@ -450,7 +450,7 @@ func TestUnmarshalString(t *testing.T) {
 	ast.Equal("namewithstring", in.NameStr)
 	ast.Empty(in.NotPresent)
 	ast.Empty(in.NotPresentWithTag)
-	ast.Equal("hello", in.DefaultString)
+	ast.Equal("hellox", in.DefaultString)
 }
 
 func TestUnmarshalStringWithMissing(t *testing.T) {
@@ -637,7 +637,7 @@ func TestUnmarshalStruct(t *testing.T) {
 	type address struct {
 		City          string `key:"city"`
 		ZipCode       int    `key:"zipcode,string"`
-		DefaultString string `key:"defaultstring,default=hello"`
+		DefaultString string `key:"defaultstring,default=hellox"`
 		Optional      string `key:",optional"`
 	}
 	type inner struct {
@@ -658,7 +658,7 @@ func TestUnmarshalStruct(t *testing.T) {
 	ast.Equal("kevin", in.Name)
 	ast.Equal("shanghai", in.Address.City)
 	ast.Equal(200000, in.Address.ZipCode)
-	ast.Equal("hello", in.Address.DefaultString)
+	ast.Equal("hellox", in.Address.DefaultString)
 }
 
 func TestUnmarshalStructOptionalDepends(t *testing.T) {
@@ -946,7 +946,7 @@ func TestUnmarshalStructPtr(t *testing.T) {
 	type address struct {
 		City          string `key:"city"`
 		ZipCode       int    `key:"zipcode,string"`
-		DefaultString string `key:"defaultstring,default=hello"`
+		DefaultString string `key:"defaultstring,default=hellox"`
 		Optional      string `key:",optional"`
 	}
 	type inner struct {
@@ -967,7 +967,7 @@ func TestUnmarshalStructPtr(t *testing.T) {
 	ast.Equal("kevin", in.Name)
 	ast.Equal("shanghai", in.Address.City)
 	ast.Equal(200000, in.Address.ZipCode)
-	ast.Equal("hello", in.Address.DefaultString)
+	ast.Equal("hellox", in.Address.DefaultString)
 }
 
 func TestUnmarshalWithStringIgnored(t *testing.T) {
