@@ -8,10 +8,12 @@ type (
 	// 用上下文和 OptionalDep 选项来决定 Optional 的值
 	// 对于 context.Context 则什么都不做
 	fieldOptionsWithContext struct {
+		Inherit    bool
 		FromString bool
 		Optional   bool
 		Options    []string
 		Default    string
+		EnvVar     string
 		Range      *numberRange
 	}
 
@@ -38,6 +40,10 @@ func (o *fieldOptionsWithContext) getDefault() (string, bool) {
 	}
 
 	return o.Default, len(o.Default) > 0
+}
+
+func (o *fieldOptionsWithContext) inherit() bool {
+	return o != nil && o.Inherit
 }
 
 func (o *fieldOptionsWithContext) optional() bool {

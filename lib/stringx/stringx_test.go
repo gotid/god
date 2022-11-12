@@ -7,6 +7,41 @@ import (
 	"testing"
 )
 
+func TestJoin(t *testing.T) {
+	tests := []struct {
+		name   string
+		input  []string
+		expect string
+	}{
+		{
+			name:   "所有元素均为空",
+			input:  []string{"", ""},
+			expect: "",
+		},
+		{
+			name:   "两个元素",
+			input:  []string{"abc", "012"},
+			expect: "abc.012",
+		},
+		{
+			name:   "最后一个元素为空",
+			input:  []string{"abc", ""},
+			expect: "abc",
+		},
+		{
+			name:   "第一个元素为空",
+			input:  []string{"", "abc"},
+			expect: "abc",
+		},
+	}
+
+	for _, test := range tests {
+		test := test
+		t.Run(test.name, func(t *testing.T) {
+			assert.Equal(t, test.expect, Join('.', test.input...))
+		})
+	}
+}
 func TestRand2(t *testing.T) {
 	a, b := Rand(), RandId()
 	fmt.Println(a)

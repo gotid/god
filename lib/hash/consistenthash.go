@@ -3,7 +3,6 @@ package hash
 import (
 	"fmt"
 	"github.com/gotid/god/lib/lang"
-	"github.com/gotid/god/lib/mapping"
 	"sort"
 	"strconv"
 	"sync"
@@ -172,7 +171,7 @@ func (h *ConsistentHash) removeRingNode(hash uint64, nodeRepr string) {
 }
 
 func repr(node interface{}) string {
-	return mapping.Repr(node)
+	return lang.Repr(node)
 }
 
 func innerRepr(node interface{}) string {

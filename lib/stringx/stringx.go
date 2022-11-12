@@ -12,6 +12,31 @@ var (
 	ErrInvalidStopPosition = errors.New("结束位置无效")
 )
 
+// Join 使用给定的分隔符连接任意数量的元素为一个字符串。
+func Join(sep byte, elem ...string) string {
+	var size int
+	for _, e := range elem {
+		size += len(e)
+	}
+	if size == 0 {
+		return ""
+	}
+
+	buf := make([]byte, 0, size+len(elem)-1)
+	for _, e := range elem {
+		if len(e) == 0 {
+			continue
+		}
+
+		if len(buf) > 0 {
+			buf = append(buf, sep)
+		}
+		buf = append(buf, e...)
+	}
+
+	return string(buf)
+}
+
 // Contains 判断 list 中是否包含 str。
 func Contains(list []string, str string) bool {
 	for _, each := range list {

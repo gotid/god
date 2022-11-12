@@ -12,7 +12,7 @@ type (
 	ServerConfig struct {
 		service.Config
 		ListenOn      string
-		Etcd          discov.EtcdConfig `json:",optional"`
+		Etcd          discov.EtcdConfig `json:",optional,inherit"` // 支持从父级集成 etcd 配置
 		Auth          bool              `json:",optional"`
 		Redis         redis.KeyConfig   `json:",optional"`
 		StrictControl bool              `json:",optional"`
@@ -23,7 +23,7 @@ type (
 
 	// ClientConfig 是一个 RPC 客户端配置。
 	ClientConfig struct {
-		Etcd      discov.EtcdConfig `json:",optional"`
+		Etcd      discov.EtcdConfig `json:",optional,inherit"`
 		Endpoints []string          `json:",optional"`
 		Target    string            `json:",optional"`
 		App       string            `json:",optional"`

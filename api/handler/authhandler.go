@@ -41,7 +41,7 @@ type (
 	AuthorizeOption func(opts *AuthorizeOptions)
 )
 
-// Authorize 返回一个鉴权中间件。
+// Authorize 返回一个 jwt 鉴权中间件。
 func Authorize(secret string, opts ...AuthorizeOption) func(handler http.Handler) http.Handler {
 	parser := token.NewParser()
 	var authOpts AuthorizeOptions
