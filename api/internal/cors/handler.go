@@ -48,6 +48,7 @@ func Middleware(fn func(w http.Header), origins ...string) func(http.HandlerFunc
 	return func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
 			checkAndSetHeaders(w, r, origins)
+
 			if fn != nil {
 				fn(w.Header())
 			}
@@ -75,7 +76,7 @@ func checkAndSetHeaders(w http.ResponseWriter, r *http.Request, origins []string
 	}
 }
 
-// 看允许的来源 allows 是否有 *，或允许来源 allows 有请求来源 origin 的后缀
+// 看允许的来源 allows 是否有 *，或请求来源 origin 是否以允许来源 allows 为后缀
 func isOriginAllowed(allows []string, origin string) bool {
 	for _, o := range allows {
 		if o == allOrigins {
