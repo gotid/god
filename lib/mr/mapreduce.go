@@ -239,7 +239,7 @@ func mapReduceWithPanicChan(source <-chan any, panicChan *onceChan, mapper Mappe
 		cancel(context.DeadlineExceeded)
 		return nil, context.DeadlineExceeded
 	case v := <-panicChan.channel:
-		// 在此抽干输出通道，否则会引发 defer 中的 panic 死循环
+		// 在此排出输出通道，否则会引发 defer 中的 panic 死循环
 		drain(output)
 		panic(v)
 	case v, ok := <-output:
@@ -295,7 +295,7 @@ func executeMappers(mCtx mapperContext) {
 	}
 }
 
-// drain 抽干通道。
+// drain 排干给定的通道。
 func drain(channel <-chan any) {
 	for range channel {
 	}

@@ -32,15 +32,15 @@ Upstreams:
       Etcd:
         Hosts:
           - localhost:2379
-        Key: hellox.rpc
+        Key: hello.rpc
     # protoset 模式
     ProtoSets:
-      - hellox.pb
+      - hello.pb
     # Mappings 也可以在 proto 选项中进行覆盖
     Mappings:
       - Method: get
         Path: /pingHello/:ping
-        RpcPath: hellox.Hello/Ping
+        RpcPath: hello.Hello/Ping
   - Grpc:
       Endpoints:
         - localhost:8081
@@ -56,12 +56,12 @@ Upstreams:
 - 没有外部导入的示例命令
 
 ```shell
-protoc --descriptor_set_out=hellox.pb hellox.proto
+protoc --descriptor_set_out=hello.pb hello.proto
 ```
 
 - 有外部导入的示例命令
 
 ```shell
-protoc --include_imports --proto_path=. --descriptor_set_out=hellox.pb hellox.proto
+protoc --include_imports --proto_path=. --descriptor_set_out=hello.pb hello.proto
 ```
 

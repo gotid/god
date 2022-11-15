@@ -96,6 +96,13 @@ func New(opts ...Option) Breaker {
 	return &b
 }
 
+// WithName 返回自定义断路器名称的可选项函数。
+func WithName(name string) Option {
+	return func(breaker *circuitBreaker) {
+		breaker.name = name
+	}
+}
+
 func (cb *circuitBreaker) Name() string {
 	return cb.name
 }
@@ -120,12 +127,6 @@ func (cb *circuitBreaker) DoWithFallbackAcceptable(req func() error, fallback fu
 	return cb.throttle.doReq(req, fallback, acceptable)
 }
 
-// WithName 返回自定义断路器名称的可选项函数。
-func WithName(name string) Option {
-	return func(breaker *circuitBreaker) {
-		breaker.name = name
-	}
-}
 func defaultAcceptable(err error) bool {
 	return err == nil
 }

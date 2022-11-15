@@ -2,6 +2,7 @@ package discov
 
 import (
 	"github.com/gotid/god/lib/discov/internal"
+	"github.com/gotid/god/lib/logx"
 	"github.com/gotid/god/lib/syncx"
 	"sync"
 	"sync/atomic"
@@ -47,6 +48,27 @@ func (s *Subscriber) AddListener(listener func()) {
 // Values 返回所有订阅值。
 func (s *Subscriber) Values() []string {
 	return s.items.getValues()
+}
+
+// Exclusive 意为键值必须1比1，也就是后续关联的值会替换之前的值。
+func Exclusive() SubOption {
+	return func(sub *Subscriber) {
+		sub.exclusive = true
+	}
+}
+
+// WithSubEtcdAccount 提供 etcd 用户名/密码。
+func WithSubEtcdAccount(user, pass string) SubOption {
+	return func(sub *Subscriber) {
+		RegisterAccount(sub.endpoints, user, pass)
+	}
+}
+
+// WithSubEtcdTLS 提供 etcd CertFile/CertKeyFile/CACertFile.
+func WithSubEtcdTLS(certFile, certKeyFile, caFile string, insecureSkipVerify bool) SubOption {
+	return func(sub *Subscriber) {
+		logx.Must(RegisterTLS(sub.endpoints, certFile, certKeyFile, caFile, insecureSkipVerify))
+	}
 }
 
 type container struct {

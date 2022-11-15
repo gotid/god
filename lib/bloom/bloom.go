@@ -42,7 +42,7 @@ type (
 	}
 )
 
-// New 创建一个布隆过滤器。
+// New 创建一个布隆过滤器。性能和准确度的可控性不如 bloomv3
 // store 作为后端存储，key 是布隆过滤器的过滤键，bits 是将使用的位数。
 // maps 是每次添加的哈稀数。
 // elements - means how many actual elements
