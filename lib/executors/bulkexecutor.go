@@ -57,7 +57,7 @@ func (be *BulkExecutor) Wait() {
 	be.executor.Wait()
 }
 
-// WithBulkTasks 自定义批量任务的数量。
+// WithBulkTasks 自定义一批任务的数量。
 func WithBulkTasks(tasks int) BulkOption {
 	return func(options *bulkOptions) {
 		options.cachedTasks = tasks

@@ -50,7 +50,7 @@ func (rw *RollingWindow) Add(v float64) {
 	rw.win.add(rw.offset, v)
 }
 
-// Reduce 在所有桶上执行 fn，如果设置了 ignoreCurrent 则忽略当前桶。
+// Reduce 使用 fn 聚合 Bucket，如果设置了 ignoreCurrent 则忽略当前桶。
 func (rw *RollingWindow) Reduce(fn func(b *Bucket)) {
 	rw.lock.Lock()
 	defer rw.lock.Unlock()
@@ -96,9 +96,10 @@ func (rw *RollingWindow) span() int {
 	return rw.size
 }
 
+// Bucket 定义了保存总数和次数的桶。
 type Bucket struct {
-	Sum   float64
-	Count int64
+	Sum   float64 // 总数
+	Count int64   // 次数
 }
 
 func (b *Bucket) add(v float64) {

@@ -35,13 +35,6 @@ type (
 		valueFormat string
 		suffix      string
 	}
-
-	dbInserter struct {
-		conn          Conn
-		stmt          bulkStmt
-		values        []string
-		resultHandler ResultHandler
-	}
 )
 
 // NewBulkInserter 返回一个批量插入器 BulkInserter。
@@ -69,7 +62,7 @@ func (bi *BulkInserter) Flush() {
 }
 
 // Insert 插入给定的参数。
-func (bi *BulkInserter) Insert(args ...interface{}) error {
+func (bi *BulkInserter) Insert(args ...any) error {
 	value, err := format(bi.stmt.valueFormat, args...)
 	if err != nil {
 		return err
@@ -108,12 +101,20 @@ func (bi *BulkInserter) UpdateStmt(stmt string) error {
 	return nil
 }
 
-func (in *dbInserter) AddTask(task interface{}) bool {
+// db 插入器的任务容器
+type dbInserter struct {
+	conn          Conn
+	stmt          bulkStmt
+	values        []string
+	resultHandler ResultHandler
+}
+
+func (in *dbInserter) AddTask(task any) bool {
 	in.values = append(in.values, task.(string))
 	return len(in.values) >= maxBulkRows
 }
 
-func (in *dbInserter) Execute(tasks interface{}) {
+func (in *dbInserter) Execute(tasks any) {
 	values := tasks.([]string)
 	if len(values) == 0 {
 		return
@@ -133,7 +134,7 @@ func (in *dbInserter) Execute(tasks interface{}) {
 	}
 }
 
-func (in *dbInserter) RemoveAll() interface{} {
+func (in *dbInserter) RemoveAll() any {
 	values := in.values
 	in.values = nil
 	return values

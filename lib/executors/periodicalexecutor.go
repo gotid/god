@@ -19,16 +19,16 @@ type (
 	TaskContainer interface {
 		// AddTask 添加任务值容器。
 		// 如果添加后需要刷新则返回真。
-		AddTask(task interface{}) bool
+		AddTask(task any) bool
 		// Execute 在刷新时处理容器收集的任务。
-		Execute(tasks interface{})
+		Execute(tasks any)
 		// RemoveAll 移除容器中的所有任务并返回它们。
-		RemoveAll() interface{}
+		RemoveAll() any
 	}
 
 	// PeriodicalExecutor 是一个定期执行器。
 	PeriodicalExecutor struct {
-		commander chan interface{}
+		commander chan any
 		interval  time.Duration
 		container TaskContainer
 		waitGroup sync.WaitGroup
@@ -46,7 +46,7 @@ type (
 func NewPeriodicalExecutor(interval time.Duration, container TaskContainer) *PeriodicalExecutor {
 	executor := &PeriodicalExecutor{
 		// 缓冲为1以提高调用速度
-		commander:   make(chan interface{}, 1),
+		commander:   make(chan any, 1),
 		interval:    interval,
 		container:   container,
 		confirmChan: make(chan lang.PlaceholderType),
@@ -62,7 +62,7 @@ func NewPeriodicalExecutor(interval time.Duration, container TaskContainer) *Per
 }
 
 // Add 添加任务到 pe。
-func (pe *PeriodicalExecutor) Add(task interface{}) {
+func (pe *PeriodicalExecutor) Add(task any) {
 	if values, ok := pe.addAndCheck(task); ok {
 		pe.commander <- values
 		<-pe.confirmChan
@@ -72,7 +72,7 @@ func (pe *PeriodicalExecutor) Add(task interface{}) {
 // Flush 强制 pe 执行任务。
 func (pe *PeriodicalExecutor) Flush() bool {
 	pe.enterExecution()
-	return pe.executeTasks(func() interface{} {
+	return pe.executeTasks(func() any {
 		pe.lock.Lock()
 		defer pe.lock.Unlock()
 		return pe.container.RemoveAll()
@@ -100,7 +100,7 @@ func (pe *PeriodicalExecutor) enterExecution() {
 	})
 }
 
-func (pe *PeriodicalExecutor) executeTasks(tasks interface{}) bool {
+func (pe *PeriodicalExecutor) executeTasks(tasks any) bool {
 	defer pe.doneExecution()
 
 	ok := pe.hasTasks(tasks)
@@ -115,7 +115,7 @@ func (pe *PeriodicalExecutor) doneExecution() {
 	pe.waitGroup.Done()
 }
 
-func (pe *PeriodicalExecutor) hasTasks(tasks interface{}) bool {
+func (pe *PeriodicalExecutor) hasTasks(tasks any) bool {
 	if tasks == nil {
 		return false
 	}
@@ -130,7 +130,7 @@ func (pe *PeriodicalExecutor) hasTasks(tasks interface{}) bool {
 	}
 }
 
-func (pe *PeriodicalExecutor) addAndCheck(task interface{}) (interface{}, bool) {
+func (pe *PeriodicalExecutor) addAndCheck(task any) (any, bool) {
 	pe.lock.Lock()
 	defer func() {
 		if !pe.guarded {

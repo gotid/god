@@ -13,7 +13,10 @@ import (
 	"time"
 )
 
-const seconds = 5
+const (
+	seconds = 5
+	quota   = 5
+)
 
 var (
 	rds     = flag.String("redis", "localhost:6379", "redis 地址，默认 localhost:6379")
@@ -29,7 +32,7 @@ func main() {
 	fmt.Println("redis 启动状态：", store.Ping())
 	fmt.Println("cpu 内核数：", runtime.NumCPU())
 
-	lmt := limit.NewPeriodLimit(seconds, 5, store, *rdsKey)
+	lmt := limit.NewPeriodLimit(seconds, quota, store, *rdsKey)
 	timer := time.NewTimer(seconds * time.Second)
 	quit := make(chan struct{})
 	defer timer.Stop()

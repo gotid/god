@@ -95,7 +95,7 @@ func (tl *TokenLimiter) AllowCtx(ctx context.Context) bool {
 	return tl.AllowNCtx(ctx, time.Now(), 1)
 }
 
-// AllowN 判断此时是否会发生 n 个时间。
+// AllowN 判断此时是否会发生 n 个事件。
 // 如果打算丢弃或跳过超速率事件，就使用此法；
 // 否则，使用 Reserve 或 Wait 方法。
 func (tl *TokenLimiter) AllowN(now time.Time, n int) bool {

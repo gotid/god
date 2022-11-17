@@ -44,14 +44,6 @@ type (
 		container *metricsContainer
 	}
 
-	metricsContainer struct {
-		name     string
-		pid      int
-		tasks    []Task
-		duration time.Duration
-		drops    int
-	}
-
 	tasksDurationPair struct {
 		tasks    []Task
 		duration time.Duration
@@ -101,6 +93,15 @@ func (m *Metrics) SetName(name string) {
 	m.executor.Sync(func() {
 		m.container.name = name
 	})
+}
+
+// 指标任务容器
+type metricsContainer struct {
+	name     string
+	pid      int
+	tasks    []Task
+	duration time.Duration
+	drops    int
 }
 
 func (c *metricsContainer) AddTask(v interface{}) bool {

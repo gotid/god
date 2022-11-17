@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gotid/god/lib/limit"
+	"github.com/gotid/god/lib/logx"
 	"github.com/gotid/god/lib/store/redis"
 	"runtime"
 	"sync"
@@ -11,11 +12,11 @@ import (
 	"time"
 )
 
-// 5 秒钟允许 100 + 100 个事件
+// 1秒内，最大速率100，最大突发2
 const (
-	burst   = 100
-	rate    = 100
-	seconds = 5
+	rate    = 100 // 速率
+	burst   = 2   // 突发
+	seconds = 1
 )
 
 var (
@@ -27,6 +28,7 @@ var (
 
 func main() {
 	flag.Parse()
+	logx.Disable()
 
 	store := redis.New(*rds, redis.WithPass(*rdsPass))
 	fmt.Println("redis 启动状态：", store.Ping())
