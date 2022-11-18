@@ -19,7 +19,7 @@ func genTypes(table Table, methods string, withCache bool) (string, error) {
 		return "", err
 	}
 
-	output, err := util.With("types").Parse(text).Execute(map[string]interface{}{
+	output, err := util.With("types").Parse(text).Execute(map[string]any{
 		"withCache":             withCache,
 		"method":                methods,
 		"upperStartCamelObject": table.Name.ToCamel(),

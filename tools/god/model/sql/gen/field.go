@@ -10,6 +10,7 @@ import (
 
 func genFields(table Table, fields []*parser.Field) (string, error) {
 	var list []string
+
 	for _, field := range fields {
 		result, err := genField(table, field)
 		if err != nil {
@@ -33,14 +34,16 @@ func genField(table Table, field *parser.Field) (string, error) {
 		return "", err
 	}
 
-	output, err := util.With("types").Parse(text).Execute(map[string]interface{}{
-		"name":       util.SafeString(field.Name.ToCamel()),
-		"type":       field.DataType,
-		"tag":        tag,
-		"hasComment": field.Comment != "",
-		"comment":    field.Comment,
-		"data":       table,
-	})
+	output, err := util.With("types").
+		Parse(text).
+		Execute(map[string]any{
+			"name":       util.SafeString(field.Name.ToCamel()),
+			"type":       field.DataType,
+			"tag":        tag,
+			"hasComment": field.Comment != "",
+			"comment":    field.Comment,
+			"data":       table,
+		})
 	if err != nil {
 		return "", err
 	}

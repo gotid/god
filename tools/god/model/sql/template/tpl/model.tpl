@@ -23,7 +23,7 @@ type (
 )
 
 // New{{.upperStartCamelObject}}Model 返回数据库表的模型。
-func New{{.upperStartCamelObject}}Model(conn sqlx.SqlConn{{if .withCache}}, c cache.CacheConf{{end}}) {{.upperStartCamelObject}}Model {
+func New{{.upperStartCamelObject}}Model(conn sqlx.Conn{{if .withCache}}, c cache.Config{{end}}) {{.upperStartCamelObject}}Model {
 	return &custom{{.upperStartCamelObject}}Model{
 		default{{.upperStartCamelObject}}Model: new{{.upperStartCamelObject}}Model(conn{{if .withCache}}, c{{end}}),
 	}

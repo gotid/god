@@ -16,7 +16,7 @@ func genTag(table Table, fieldName string) (string, error) {
 		return "", err
 	}
 
-	output, err := util.With("tag").Parse(text).Execute(map[string]interface{}{
+	output, err := util.With("tag").Parse(text).Execute(map[string]any{
 		"field": fieldName,
 		"data":  table,
 	})

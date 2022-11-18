@@ -37,7 +37,7 @@ func (t *DefaultTemplate) GoFmt(format bool) *DefaultTemplate {
 }
 
 // SaveTo 写入代码到给定的目标路径。
-func (t *DefaultTemplate) SaveTo(data interface{}, path string, forceUpdate bool) error {
+func (t *DefaultTemplate) SaveTo(data any, path string, forceUpdate bool) error {
 	if pathx.FileExists(path) && !forceUpdate {
 		return nil
 	}
@@ -51,14 +51,14 @@ func (t *DefaultTemplate) SaveTo(data interface{}, path string, forceUpdate bool
 }
 
 // Execute 返回模板执行后的代码。
-func (t *DefaultTemplate) Execute(data interface{}) (*bytes.Buffer, error) {
-	tem, err := template.New(t.name).Parse(t.text)
+func (t *DefaultTemplate) Execute(data any) (*bytes.Buffer, error) {
+	temp, err := template.New(t.name).Parse(t.text)
 	if err != nil {
 		return nil, errorx.Wrap(err, "模板解析错误：", t.text)
 	}
 
 	buf := new(bytes.Buffer)
-	if err = tem.Execute(buf, data); err != nil {
+	if err = temp.Execute(buf, data); err != nil {
 		return nil, errorx.Wrap(err, "模板执行错误：", t.text)
 	}
 

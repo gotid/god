@@ -7,7 +7,7 @@ import (
 	"github.com/gotid/god/tools/god/model/sql/model"
 	"github.com/gotid/god/tools/god/model/sql/parser"
 	"github.com/gotid/god/tools/god/model/sql/template"
-	util2 "github.com/gotid/god/tools/god/model/sql/util"
+	modelutil "github.com/gotid/god/tools/god/model/sql/util"
 	"github.com/gotid/god/tools/god/util"
 	"github.com/gotid/god/tools/god/util/console"
 	"github.com/gotid/god/tools/god/util/format"
@@ -231,7 +231,7 @@ func (g *DefaultGenerator) genModel(t parser.Table, withCache bool) (string, err
 	var list []string
 	list = append(list, insertCodeMethod, findOneCodeMethod, ret.findOneInterfaceMethod,
 		updateCodeMethod, deleteCodeMethod)
-	typesCode, err := genTypes(table, strings.Join(util2.TrimStringSlice(list), pathx.NL), withCache)
+	typesCode, err := genTypes(table, strings.Join(modelutil.TrimStringSlice(list), pathx.NL), withCache)
 	if err != nil {
 		return "", err
 	}
