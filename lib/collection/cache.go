@@ -20,11 +20,11 @@ const (
 var emptyLruCache = emptyLru{}
 
 type (
-	// Cache 是一个基于内存的缓存。
+	// Cache 是一个基于内存的 LRU 缓存。
 	Cache struct {
 		name           string
 		lock           sync.Mutex
-		data           map[string]interface{}
+		data           map[string]any
 		expire         time.Duration
 		timingWheel    *TimingWheel
 		lruCache       lru
@@ -37,10 +37,10 @@ type (
 	CacheOption func(cache *Cache)
 )
 
-// NewCache 返回一个给定过期时长的内存缓存。
+// NewCache 返回一个给定过期时长的 LRU Cache。
 func NewCache(expire time.Duration, opts ...CacheOption) (*Cache, error) {
 	cache := &Cache{
-		data:           make(map[string]interface{}),
+		data:           make(map[string]any),
 		expire:         expire,
 		lruCache:       emptyLruCache,
 		barrier:        syncx.NewSingleFlight(),
@@ -56,7 +56,7 @@ func NewCache(expire time.Duration, opts ...CacheOption) (*Cache, error) {
 	}
 	cache.stats = newCacheStat(cache.name, cache.size)
 
-	timingWheel, err := NewTimingWheel(time.Second, slots, func(key, val interface{}) {
+	timingWheel, err := NewTimingWheel(time.Second, slots, func(key, val any) {
 		k, ok := key.(string)
 		if !ok {
 			return
@@ -82,7 +82,7 @@ func (c *Cache) Del(key string) {
 }
 
 // Get 获取给定键的缓存。
-func (c *Cache) Get(key string) (interface{}, bool) {
+func (c *Cache) Get(key string) (any, bool) {
 	value, ok := c.doGet(key)
 	if ok {
 		c.stats.IncrHit()
@@ -94,12 +94,12 @@ func (c *Cache) Get(key string) (interface{}, bool) {
 }
 
 // Set 设置键值对至缓存。
-func (c *Cache) Set(key string, value interface{}) {
+func (c *Cache) Set(key string, value any) {
 	c.SetWithExpire(key, value, c.expire)
 }
 
 // SetWithExpire 设置给定存活时长的键值对至缓存。
-func (c *Cache) SetWithExpire(key string, value interface{}, expire time.Duration) {
+func (c *Cache) SetWithExpire(key string, value any, expire time.Duration) {
 	c.lock.Lock()
 	_, ok := c.data[key]
 	c.data[key] = value
@@ -117,14 +117,14 @@ func (c *Cache) SetWithExpire(key string, value interface{}, expire time.Duratio
 // Take 返回给定键的条目。
 // 如果条目在缓存中，则直接返回。
 // 如果条目不在缓存中，使用获取方法获取后加入缓存并返回。
-func (c *Cache) Take(key string, fetch func() (interface{}, error)) (interface{}, error) {
+func (c *Cache) Take(key string, fetch func() (any, error)) (any, error) {
 	if val, ok := c.doGet(key); ok {
 		c.stats.IncrHit()
 		return val, nil
 	}
 
 	var fresh bool
-	val, err := c.barrier.Do(key, func() (interface{}, error) {
+	val, err := c.barrier.Do(key, func() (any, error) {
 		if val, ok := c.doGet(key); ok {
 			return val, nil
 		}
@@ -158,7 +158,7 @@ func (c *Cache) size() int {
 	return len(c.data)
 }
 
-func (c *Cache) doGet(key string) (interface{}, bool) {
+func (c *Cache) doGet(key string) (any, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 
@@ -175,7 +175,7 @@ func (c *Cache) onEvict(key string) {
 	c.timingWheel.RemoveTimer(key)
 }
 
-// WithLimit 自定义缓存条目数量上限。
+// WithLimit 限制缓存数量，符合 LRU 原则。
 func WithLimit(limit int) CacheOption {
 	return func(cache *Cache) {
 		if limit > 0 {

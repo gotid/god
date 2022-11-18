@@ -19,7 +19,7 @@ var (
 
 type (
 	// Execute 定义执行任务的方法。
-	Execute func(key, val interface{})
+	Execute func(key, val any)
 
 	// TimingWheel 是一个基于时间轮的任务调度器。
 	TimingWheel struct {
@@ -32,14 +32,14 @@ type (
 		execute       Execute
 		setChannel    chan timingEntry
 		moveChannel   chan baseEntry
-		removeChannel chan interface{}
-		drainChannel  chan func(key, value interface{})
+		removeChannel chan any
+		drainChannel  chan func(key, value any)
 		stopChannel   chan lang.PlaceholderType
 	}
 
 	timingEntry struct {
 		baseEntry
-		value   interface{}
+		value   any
 		circle  int
 		diff    int
 		removed bool
@@ -47,7 +47,7 @@ type (
 
 	baseEntry struct {
 		delay time.Duration
-		key   interface{}
+		key   any
 	}
 
 	positionEntry struct {
@@ -56,12 +56,12 @@ type (
 	}
 
 	timingTask struct {
-		key   interface{}
-		value interface{}
+		key   any
+		value any
 	}
 )
 
-// NewTimingWheel 返回一个时间轮 TimingWheel。
+// NewTimingWheel 返回一个 TimingWheel。
 func NewTimingWheel(interval time.Duration, numSlots int, execute Execute) (*TimingWheel, error) {
 	if interval <= 0 || numSlots <= 0 || execute == nil {
 		return nil, fmt.Errorf("间隔：%v，槽位：%d，执行函数：%p",
@@ -72,7 +72,7 @@ func NewTimingWheel(interval time.Duration, numSlots int, execute Execute) (*Tim
 }
 
 // Drain 排干所有项目并执行它们。
-func (w *TimingWheel) Drain(fn func(key, value interface{})) error {
+func (w *TimingWheel) Drain(fn func(key, value any)) error {
 	select {
 	case w.drainChannel <- fn:
 		return nil
@@ -82,7 +82,7 @@ func (w *TimingWheel) Drain(fn func(key, value interface{})) error {
 }
 
 // MoveTimer 将给定键的任务移动到给定延迟。
-func (w *TimingWheel) MoveTimer(key interface{}, delay time.Duration) error {
+func (w *TimingWheel) MoveTimer(key any, delay time.Duration) error {
 	if delay <= 0 || key == nil {
 		return ErrArgument
 	}
@@ -99,7 +99,7 @@ func (w *TimingWheel) MoveTimer(key interface{}, delay time.Duration) error {
 }
 
 // RemoveTimer 移除给定键的任务。
-func (w *TimingWheel) RemoveTimer(key interface{}) error {
+func (w *TimingWheel) RemoveTimer(key any) error {
 	if key == nil {
 		return ErrArgument
 	}
@@ -112,8 +112,8 @@ func (w *TimingWheel) RemoveTimer(key interface{}) error {
 	}
 }
 
-// SetTimer 设置键值及其延迟执行时间。
-func (w *TimingWheel) SetTimer(key, value interface{}, delay time.Duration) error {
+// SetTimer 设置键值及存活时间。
+func (w *TimingWheel) SetTimer(key, value any, delay time.Duration) error {
 	if delay <= 0 || key == nil {
 		return ErrArgument
 	}
@@ -148,8 +148,8 @@ func newTimingWheelWithClock(interval time.Duration, numSlots int, execute Execu
 		execute:       execute,
 		setChannel:    make(chan timingEntry),
 		moveChannel:   make(chan baseEntry),
-		removeChannel: make(chan interface{}),
-		drainChannel:  make(chan func(key, value interface{})),
+		removeChannel: make(chan any),
+		drainChannel:  make(chan func(key, value any)),
 		stopChannel:   make(chan lang.PlaceholderType),
 	}
 
@@ -314,7 +314,7 @@ func (w *TimingWheel) getPositionAndCircle(d time.Duration) (pos, circle int) {
 	return
 }
 
-func (w *TimingWheel) removeTask(key interface{}) {
+func (w *TimingWheel) removeTask(key any) {
 	val, ok := w.timers.Get(key)
 	if !ok {
 		return
@@ -325,7 +325,7 @@ func (w *TimingWheel) removeTask(key interface{}) {
 	w.timers.Del(key)
 }
 
-func (w *TimingWheel) drainAll(fn func(key, value interface{})) {
+func (w *TimingWheel) drainAll(fn func(key, value any)) {
 	runner := threading.NewTaskRunner(drainWorkers)
 	for _, slot := range w.slots {
 		for e := slot.Front(); e != nil; {

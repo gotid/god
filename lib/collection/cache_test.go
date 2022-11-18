@@ -22,6 +22,7 @@ func TestCache_Set(t *testing.T) {
 	value, ok := cache.Get("first")
 	assert.True(t, ok)
 	assert.Equal(t, "第一个元素", value)
+
 	value, ok = cache.Get("second")
 	assert.True(t, ok)
 	assert.Equal(t, "第二个元素", value)
@@ -37,6 +38,7 @@ func TestCacheDel(t *testing.T) {
 
 	_, ok := cache.Get("first")
 	assert.False(t, ok)
+
 	value, ok := cache.Get("second")
 	assert.True(t, ok)
 	assert.Equal(t, "second element", value)
@@ -51,7 +53,7 @@ func TestCacheTake(t *testing.T) {
 	for i := 0; i < 100; i++ {
 		wg.Add(1)
 		go func() {
-			cache.Take("first", func() (interface{}, error) {
+			cache.Take("first", func() (any, error) {
 				atomic.AddInt32(&count, 1)
 				time.Sleep(time.Millisecond * 100)
 				return "first element", nil
@@ -75,7 +77,7 @@ func TestCacheTakeExists(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			cache.Set("first", "first element")
-			cache.Take("first", func() (interface{}, error) {
+			cache.Take("first", func() (any, error) {
 				atomic.AddInt32(&count, 1)
 				time.Sleep(time.Millisecond * 100)
 				return "first element", nil
@@ -98,7 +100,7 @@ func TestCacheTakeError(t *testing.T) {
 	for i := 0; i < 100; i++ {
 		wg.Add(1)
 		go func() {
-			_, err := cache.Take("first", func() (interface{}, error) {
+			_, err = cache.Take("first", func() (any, error) {
 				atomic.AddInt32(&count, 1)
 				time.Sleep(time.Millisecond * 100)
 				return "", errDummy
@@ -124,12 +126,15 @@ func TestCacheWithLruEvicts(t *testing.T) {
 
 	_, ok := cache.Get("first")
 	assert.False(t, ok)
+
 	value, ok := cache.Get("second")
 	assert.True(t, ok)
 	assert.Equal(t, "second element", value)
+
 	value, ok = cache.Get("third")
 	assert.True(t, ok)
 	assert.Equal(t, "third element", value)
+
 	value, ok = cache.Get("fourth")
 	assert.True(t, ok)
 	assert.Equal(t, "fourth element", value)
@@ -146,15 +151,18 @@ func TestCacheWithLruEvicted(t *testing.T) {
 
 	_, ok := cache.Get("first")
 	assert.False(t, ok)
+
 	value, ok := cache.Get("second")
 	assert.True(t, ok)
 	assert.Equal(t, "second element", value)
+
 	cache.Set("fifth", "fifth element")
 	cache.Set("sixth", "sixth element")
 	_, ok = cache.Get("third")
 	assert.False(t, ok)
 	_, ok = cache.Get("fourth")
 	assert.False(t, ok)
+
 	value, ok = cache.Get("second")
 	assert.True(t, ok)
 	assert.Equal(t, "second element", value)

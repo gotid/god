@@ -9,13 +9,13 @@ type (
 	// 例如，A 调用 F，在完成前 B 也调用 F，那么 B 的调用不会执行，
 	// 在 A 调用完成后，B 共享 A 的调用结果。
 	SingleFlight interface {
-		Do(key string, fn func() (interface{}, error)) (interface{}, error)
-		DoEx(key string, fn func() (interface{}, error)) (interface{}, bool, error)
+		Do(key string, fn func() (any, error)) (any, error)
+		DoEx(key string, fn func() (any, error)) (any, bool, error)
 	}
 
 	call struct {
 		wg  sync.WaitGroup
-		val interface{}
+		val any
 		err error
 	}
 
@@ -32,7 +32,7 @@ func NewSingleFlight() SingleFlight {
 	}
 }
 
-func (g *flightGroup) Do(key string, fn func() (interface{}, error)) (interface{}, error) {
+func (g *flightGroup) Do(key string, fn func() (any, error)) (any, error) {
 	c, done := g.createCall(key)
 	if done {
 		return c.val, c.err
@@ -42,7 +42,7 @@ func (g *flightGroup) Do(key string, fn func() (interface{}, error)) (interface{
 	return c.val, c.err
 }
 
-func (g *flightGroup) DoEx(key string, fn func() (interface{}, error)) (val interface{}, fresh bool, err error) {
+func (g *flightGroup) DoEx(key string, fn func() (any, error)) (val any, fresh bool, err error) {
 	c, done := g.createCall(key)
 	if done {
 		return c.val, false, c.err
@@ -68,7 +68,7 @@ func (g *flightGroup) createCall(key string) (c *call, done bool) {
 	return c, false
 }
 
-func (g *flightGroup) makeCall(c *call, key string, fn func() (interface{}, error)) {
+func (g *flightGroup) makeCall(c *call, key string, fn func() (any, error)) {
 	defer func() {
 		g.lock.Lock()
 		delete(g.calls, key)
