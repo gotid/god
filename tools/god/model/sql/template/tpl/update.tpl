@@ -1,8 +1,3 @@
-package template
-
-const (
-	// Update 定义一个生成更新代码的模板
-	Update = `
 func (m *default{{.upperStartCamelObject}}Model) Update(ctx context.Context, {{if .containsIndexCache}}newData{{else}}data{{end}} *{{.upperStartCamelObject}}) error {
 	{{if .withCache}}{{if .containsIndexCache}}data, err:=m.FindOne(ctx, newData.{{.upperStartCamelPrimaryKey}})
 	if err!=nil{
@@ -17,8 +12,3 @@ func (m *default{{.upperStartCamelObject}}Model) Update(ctx context.Context, {{i
     _,err:=m.conn.ExecCtx(ctx, query, {{.expressionValues}}){{end}}
 	return err
 }
-`
-
-	// UpdateMethod 定义生成更新代码的接口方法模板
-	UpdateMethod = `Update(ctx context.Context, {{if .containsIndexCache}}newData{{else}}data{{end}} *{{.upperStartCamelObject}}) error`
-)

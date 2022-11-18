@@ -1,8 +1,3 @@
-package template
-
-const (
-	// Delete 定义删除代码的模板
-	Delete = `
 func (m *default{{.upperStartCamelObject}}Model) Delete(ctx context.Context, {{.lowerStartCamelPrimaryKey}} {{.dataType}}) error {
 	{{if .withCache}}{{if .containsIndexCache}}data, err:=m.FindOne(ctx, {{.lowerStartCamelPrimaryKey}})
 	if err!=nil{
@@ -17,8 +12,3 @@ func (m *default{{.upperStartCamelObject}}Model) Delete(ctx context.Context, {{.
 		_,err:=m.conn.ExecCtx(ctx, query, {{.lowerStartCamelPrimaryKey}}){{end}}
 	return err
 }
-`
-
-	// DeleteMethod 定义删除代码的模板方法
-	DeleteMethod = `Delete(ctx context.Context, {{.lowerStartCamelPrimaryKey}} {{.dataType}}) error`
-)

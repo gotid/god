@@ -46,6 +46,9 @@ func init() {
 	dsnCmd.Flags().StringVar(&command.VarStringRemote, "remote", "", "远程 git 模板仓库，优先级高于 home\n\t模板目录要与 https://github.com/gotid/god-template 保持一致")
 	dsnCmd.Flags().StringVar(&command.VarStringBranch, "branch", "", "远程仓库分值，与 --remote 配合使用")
 
+	Cmd.PersistentFlags().BoolVar(&command.VarBoolStrict, "strict", false, "在严格模式下生成模型")
+	Cmd.PersistentFlags().StringSliceVarP(&command.VarStringSliceIgnoreColumns, "ignore-columns", "i", []string{"create_time", "update_time"}, "创建或更新时需要忽略的列")
+
 	Cmd.AddCommand(ddlCmd)
 	Cmd.AddCommand(dsnCmd)
 }

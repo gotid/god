@@ -53,7 +53,7 @@ func RawFieldNames(in interface{}, postgreSql ...bool) []string {
 			if pg {
 				out = append(out, tagValue)
 			} else {
-				out = append(out, fmt.Sprintf("`%s`"), tagValue)
+				out = append(out, fmt.Sprintf("`%s`", tagValue))
 			}
 		}
 	}
