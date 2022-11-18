@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-	"github.com/gotid/god/examples/shorturl/errorx"
 	"github.com/gotid/god/examples/shorturl/rpc/transformer/transformer"
 
 	"github.com/gotid/god/examples/shorturl/api/internal/svc"
@@ -30,7 +29,7 @@ func (l *ShortenLogic) Shorten(req *types.ShortenRequest) (resp *types.ShortenRe
 		Url: req.Url,
 	})
 	if err != nil {
-		return nil, errorx.NewDefaultError(err.Error())
+		return nil, err
 	}
 
 	resp = &types.ShortenResponse{

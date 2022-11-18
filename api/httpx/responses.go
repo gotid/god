@@ -10,9 +10,31 @@ import (
 )
 
 var (
-	errorHandler func(error) (int, interface{})
-	lock         sync.RWMutex
+	errorHandler  func(error) (int, any)
+	okJsonHandler func(body any) any
+	lock          sync.RWMutex
 )
+
+// Message 响应消息
+type Message struct {
+	Code    int    `json:"code"`
+	Message string `json:"message,omitempty"`
+	Data    any    `json:"data,omitempty"`
+}
+
+func (e *Message) Error() string {
+	return e.Message
+}
+
+// NewCodeError 返回一个指定代码和消息的错误。
+func NewCodeError(code int, msg string) error {
+	return &Message{Code: code, Message: msg}
+}
+
+// NewDefaultError 返回一个代码为0的默认错误。
+func NewDefaultError(msg string) error {
+	return NewCodeError(0, msg)
+}
 
 // Error 将错误写入到响应编写器。
 func Error(w http.ResponseWriter, err error, fns ...func(w http.ResponseWriter, err error)) {
@@ -54,7 +76,15 @@ func Ok(w http.ResponseWriter) {
 }
 
 // OkJson 将 json 响应体及成功状态码写入响应编写器。
-func OkJson(w http.ResponseWriter, body interface{}) {
+func OkJson(w http.ResponseWriter, body any) {
+	lock.RLock()
+	handler := okJsonHandler
+	lock.RUnlock()
+
+	if handler != nil {
+		body = handler(body)
+	}
+
 	WriteJson(w, http.StatusOK, body)
 }
 
@@ -85,4 +115,11 @@ func SetErrorHandler(handler func(error) (int, any)) {
 	lock.Lock()
 	defer lock.Unlock()
 	errorHandler = handler
+}
+
+// SetOkJsonHandler 设置自定义成功处理器
+func SetOkJsonHandler(handler func(body any) any) {
+	lock.Lock()
+	defer lock.Unlock()
+	okJsonHandler = handler
 }
