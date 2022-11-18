@@ -36,7 +36,7 @@ func desensitize(dsn string) string {
 }
 
 // 格式化查询语句。
-func format(query string, args ...interface{}) (string, error) {
+func format(query string, args ...any) (string, error) {
 	numArgs := len(args)
 	if numArgs == 0 {
 		return query, nil
@@ -115,7 +115,7 @@ func format(query string, args ...interface{}) (string, error) {
 	return b.String(), nil
 }
 
-func writeValue(b *strings.Builder, arg interface{}) {
+func writeValue(b *strings.Builder, arg any) {
 	switch v := arg.(type) {
 	case bool:
 		if v {

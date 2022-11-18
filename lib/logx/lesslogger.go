@@ -13,14 +13,14 @@ func NewLessLogger(milliseconds int) *LessLogger {
 }
 
 // Error 将 v 记录到错误日志中，如果在给定的持续时间内不止一次，则将其丢弃。
-func (logger *LessLogger) Error(v ...interface{}) {
+func (logger *LessLogger) Error(v ...any) {
 	logger.logOrDiscard(func() {
 		Error(v...)
 	})
 }
 
 // Errorf 将带有格式的 v 记录到错误日志中，如果在给定的持续时间内不止一次，则将其丢弃。
-func (logger *LessLogger) Errorf(format string, v ...interface{}) {
+func (logger *LessLogger) Errorf(format string, v ...any) {
 	logger.logOrDiscard(func() {
 		Errorf(format, v...)
 	})

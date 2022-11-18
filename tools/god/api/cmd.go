@@ -34,7 +34,7 @@ func init() {
 	Cmd.Flags().StringVar(&apigen.VarStringOutput, "o", "", "api 协议文件输出路径")
 	Cmd.Flags().StringVar(&apigen.VarStringHome, "home", "", "god 模板主目录，--remote 优先级高于 --home")
 
-	goCmd.Flags().StringVar(&gogen.VarStringDir, "dir", "", "目标目录")
+	goCmd.Flags().StringVar(&gogen.VarStringDir, "dir", "./", "目标目录")
 	goCmd.Flags().StringVar(&gogen.VarStringAPI, "api", "", "api 协议文件")
 	goCmd.Flags().StringVar(&gogen.VarStringHome, "home", "", "god 模板主目录，--remote 优先级高于 --home")
 	goCmd.Flags().StringVar(&gogen.VarStringRemote, "remote", "", "远程 git 模板仓库，优先级高于 home\n\t模板目录要与 https://github.com/gotid/god-template 保持一致")

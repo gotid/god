@@ -8,13 +8,13 @@ import (
 	"strings"
 )
 
-// Marshal 编排 v 至字节切片。
-func Marshal(v interface{}) ([]byte, error) {
+// Marshal 编组 v 至字节切片。
+func Marshal(v any) ([]byte, error) {
 	return json.Marshal(v)
 }
 
-// MarshalToString 编排 v 至字符串。
-func MarshalToString(v interface{}) (string, error) {
+// MarshalToString 编组 v 至字符串。
+func MarshalToString(v any) (string, error) {
 	data, err := Marshal(v)
 	if err != nil {
 		return "", err
@@ -23,8 +23,8 @@ func MarshalToString(v interface{}) (string, error) {
 	return string(data), nil
 }
 
-// Unmarshal 将 data 解编排至 v。
-func Unmarshal(data []byte, v interface{}) error {
+// Unmarshal 将 data 解编组至 v。
+func Unmarshal(data []byte, v any) error {
 	decoder := json.NewDecoder(bytes.NewReader(data))
 	if err := unmarshalUseNumber(decoder, v); err != nil {
 		return formatError(string(data), err)
@@ -34,7 +34,7 @@ func Unmarshal(data []byte, v interface{}) error {
 }
 
 // UnmarshalFromString 从字符串解组至 v。
-func UnmarshalFromString(str string, v interface{}) error {
+func UnmarshalFromString(str string, v any) error {
 	decoder := json.NewDecoder(strings.NewReader(str))
 	if err := unmarshalUseNumber(decoder, v); err != nil {
 		return formatError(str, err)
@@ -44,7 +44,7 @@ func UnmarshalFromString(str string, v interface{}) error {
 }
 
 // UnmarshalFromReader 从 io.Reader 解组至 v。
-func UnmarshalFromReader(reader io.Reader, v interface{}) error {
+func UnmarshalFromReader(reader io.Reader, v any) error {
 	var buf strings.Builder
 	teeReader := io.TeeReader(reader, &buf)
 	decoder := json.NewDecoder(teeReader)
@@ -55,7 +55,7 @@ func UnmarshalFromReader(reader io.Reader, v interface{}) error {
 	return nil
 }
 
-func unmarshalUseNumber(decoder *json.Decoder, v interface{}) error {
+func unmarshalUseNumber(decoder *json.Decoder, v any) error {
 	decoder.UseNumber()
 	return decoder.Decode(v)
 }

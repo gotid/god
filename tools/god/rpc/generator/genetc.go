@@ -32,7 +32,7 @@ func (g *Generator) GenEtc(ctx DirContext, _ parser.Proto, cfg *conf.Config) err
 
 	filename := filepath.Join(dir.Filename, fmt.Sprintf("%v.yaml", etcFilename))
 
-	return util.With("etc").Parse(text).SaveTo(map[string]interface{}{
+	return util.With("etc").Parse(text).SaveTo(map[string]any{
 		"serviceName": strings.ToLower(stringx.From(ctx.GetServiceName().Source()).ToCamel()),
 	}, filename, false)
 }

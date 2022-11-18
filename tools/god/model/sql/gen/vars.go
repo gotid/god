@@ -23,7 +23,7 @@ func genVars(table Table, withCache, postgreSql bool) (string, error) {
 		return "", err
 	}
 
-	output, err := util.With("vars").Parse(text).GoFmt(true).Execute(map[string]interface{}{
+	output, err := util.With("vars").Parse(text).GoFmt(true).Execute(map[string]any{
 		"lowerStartCamelObject": stringx.From(camel).UnTitle(),
 		"upperStartCamelObject": camel,
 		"cacheKeys":             strings.Join(keys, "\n"),

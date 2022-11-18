@@ -47,7 +47,7 @@ func AddCleanTask(task func() error, keys ...string) {
 	}, time.Second)
 }
 
-func clean(key, val interface{}) {
+func clean(key, val any) {
 	taskRunner.Schedule(func() {
 		dt := val.(delayTask)
 		err := dt.task()

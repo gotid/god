@@ -7,23 +7,23 @@ import (
 	"runtime"
 )
 
-var colorRender = []func(v interface{}) string{
-	func(v interface{}) string {
+var colorRender = []func(v any) string{
+	func(v any) string {
 		return aurora.BrightRed(v).String()
 	},
-	func(v interface{}) string {
+	func(v any) string {
 		return aurora.BrightGreen(v).String()
 	},
-	func(v interface{}) string {
+	func(v any) string {
 		return aurora.BrightYellow(v).String()
 	},
-	func(v interface{}) string {
+	func(v any) string {
 		return aurora.BrightBlue(v).String()
 	},
-	func(v interface{}) string {
+	func(v any) string {
 		return aurora.BrightMagenta(v).String()
 	},
-	func(v interface{}) string {
+	func(v any) string {
 		return aurora.BrightCyan(v).String()
 	},
 }

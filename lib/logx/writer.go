@@ -18,14 +18,14 @@ type (
 	// Writer 编写器接口。
 	Writer interface {
 		Close() error
-		Debug(v interface{}, fields ...LogField)
-		Info(v interface{}, fields ...LogField)
-		Alert(v interface{})
-		Error(v interface{}, fields ...LogField)
-		Severe(v interface{})
-		Slow(v interface{}, fields ...LogField)
-		Stack(v interface{})
-		Stat(v interface{}, fields ...LogField)
+		Debug(v any, fields ...LogField)
+		Info(v any, fields ...LogField)
+		Alert(v any)
+		Error(v any, fields ...LogField)
+		Severe(v any)
+		Slow(v any, fields ...LogField)
+		Stack(v any)
+		Stat(v any, fields ...LogField)
 	}
 
 	// 原子性编写器，会调用具体编写器 concreteWriter。
@@ -102,42 +102,42 @@ func (w *concreteWriter) Close() error {
 }
 
 // Debug 调用具体编写器记录调试。
-func (w *concreteWriter) Debug(v interface{}, fields ...LogField) {
+func (w *concreteWriter) Debug(v any, fields ...LogField) {
 	output(w.infoLog, levelDebug, v, fields...)
 }
 
 // Info 调用具体编写器记录通知。
-func (w *concreteWriter) Info(v interface{}, fields ...LogField) {
+func (w *concreteWriter) Info(v any, fields ...LogField) {
 	output(w.infoLog, levelInfo, v, fields...)
 }
 
 // Alert 调用具体编写器记录警告。
-func (w *concreteWriter) Alert(v interface{}) {
+func (w *concreteWriter) Alert(v any) {
 	output(w.errorLog, levelAlert, v)
 }
 
 // Error 调用具体编写器记录错误告警。
-func (w *concreteWriter) Error(v interface{}, fields ...LogField) {
+func (w *concreteWriter) Error(v any, fields ...LogField) {
 	output(w.errorLog, levelError, v, fields...)
 }
 
 // Severe 调用具体编写器记录严重告警。
-func (w *concreteWriter) Severe(v interface{}) {
+func (w *concreteWriter) Severe(v any) {
 	output(w.severeLog, levelFatal, v)
 }
 
 // Slow 调用具体编写器记录慢执行记录。
-func (w *concreteWriter) Slow(v interface{}, fields ...LogField) {
+func (w *concreteWriter) Slow(v any, fields ...LogField) {
 	output(w.slowLog, levelSlow, v, fields...)
 }
 
 // Stack 调用具体编写器记录错误堆栈记录。
-func (w *concreteWriter) Stack(v interface{}) {
+func (w *concreteWriter) Stack(v any) {
 	output(w.stackLog, levelError, v)
 }
 
 // Stat 调用具体编写器记录统计记录。
-func (w *concreteWriter) Stat(v interface{}, fields ...LogField) {
+func (w *concreteWriter) Stat(v any, fields ...LogField) {
 	output(w.statLog, levelStat, v, fields...)
 }
 
@@ -145,14 +145,14 @@ func (n nopWriter) Close() error {
 	return nil
 }
 
-func (n nopWriter) Debug(_ interface{}, _ ...LogField) {}
-func (n nopWriter) Alert(_ interface{})                {}
-func (n nopWriter) Error(_ interface{}, _ ...LogField) {}
-func (n nopWriter) Info(_ interface{}, _ ...LogField)  {}
-func (n nopWriter) Severe(_ interface{})               {}
-func (n nopWriter) Slow(_ interface{}, _ ...LogField)  {}
-func (n nopWriter) Stack(_ interface{})                {}
-func (n nopWriter) Stat(_ interface{}, _ ...LogField)  {}
+func (n nopWriter) Debug(_ any, _ ...LogField) {}
+func (n nopWriter) Alert(_ any)                {}
+func (n nopWriter) Error(_ any, _ ...LogField) {}
+func (n nopWriter) Info(_ any, _ ...LogField)  {}
+func (n nopWriter) Severe(_ any)               {}
+func (n nopWriter) Slow(_ any, _ ...LogField)  {}
+func (n nopWriter) Stack(_ any)                {}
+func (n nopWriter) Stat(_ any, _ ...LogField)  {}
 
 // NewWriter 创建并返回一个给定的编写器对应的具体编写器。
 func NewWriter(writer io.Writer) Writer {
@@ -252,7 +252,7 @@ func newFileWriter(c Config) (Writer, error) {
 	}, nil
 }
 
-func output(writer io.Writer, level string, val interface{}, fields ...LogField) {
+func output(writer io.Writer, level string, val any, fields ...LogField) {
 	fields = combineGlobalFields(fields)
 
 	switch atomic.LoadUint32(&encoding) {
@@ -270,7 +270,7 @@ func output(writer io.Writer, level string, val interface{}, fields ...LogField)
 	}
 }
 
-func writeJson(writer io.Writer, info interface{}) {
+func writeJson(writer io.Writer, info any) {
 	if content, err := json.Marshal(info); err != nil {
 		log.Println(err.Error())
 	} else if writer == nil {
@@ -280,7 +280,7 @@ func writeJson(writer io.Writer, info interface{}) {
 	}
 }
 
-func writePlainAny(writer io.Writer, level string, val interface{}, fields ...string) {
+func writePlainAny(writer io.Writer, level string, val any, fields ...string) {
 	level = wrapLevelWithColor(level)
 
 	switch v := val.(type) {
@@ -317,7 +317,7 @@ func writePlainText(writer io.Writer, level, msg string, fields ...string) {
 	}
 }
 
-func writePlainValue(writer io.Writer, level string, v interface{}, fields ...string) {
+func writePlainValue(writer io.Writer, level string, v any, fields ...string) {
 	var buf strings.Builder
 	buf.WriteString(getTimestamp())
 	buf.WriteByte(plainEncodingSep)

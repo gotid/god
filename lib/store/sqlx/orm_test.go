@@ -1081,6 +1081,6 @@ func (m *mockedScanner) Next() bool {
 	return false
 }
 
-func (m *mockedScanner) Scan(_ ...interface{}) error {
+func (m *mockedScanner) Scan(_ ...any) error {
 	return m.scanErr
 }

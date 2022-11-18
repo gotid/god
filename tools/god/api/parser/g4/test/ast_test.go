@@ -15,7 +15,7 @@ var testApi string
 var parser = ast.NewParser(ast.WithParserPrefix("test.api"), ast.WithParserDebug())
 
 func TestApi(t *testing.T) {
-	fn := func(p *api.ApiParserParser, visitor *ast.ApiVisitor) interface{} {
+	fn := func(p *api.ApiParserParser, visitor *ast.ApiVisitor) any {
 		return p.Api().Accept(visitor)
 	}
 
@@ -280,7 +280,7 @@ func TestApi(t *testing.T) {
 					},
 					{
 						Name:     ast.NewTextExpr("VInterface"),
-						DataType: &ast.Interface{Literal: ast.NewTextExpr("interface{}")},
+						DataType: &ast.Interface{Literal: ast.NewTextExpr("any")},
 						Tag:      ast.NewTextExpr("`json:\"vInterface\"`"),
 						DocExpr: []ast.Expr{
 							ast.NewTextExpr("// vInterface"),
@@ -445,7 +445,7 @@ func TestApi(t *testing.T) {
 }
 
 func TestApiSyntax(t *testing.T) {
-	fn := func(p *api.ApiParserParser, visitor *ast.ApiVisitor) interface{} {
+	fn := func(p *api.ApiParserParser, visitor *ast.ApiVisitor) any {
 		return p.Api().Accept(visitor)
 	}
 	parser.Accept(fn, `

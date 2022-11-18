@@ -2,9 +2,10 @@ package logic
 
 import (
 	"context"
-
 	"github.com/gotid/god/examples/shorturl/rpc/transformer/internal/svc"
+	"github.com/gotid/god/examples/shorturl/rpc/transformer/model"
 	"github.com/gotid/god/examples/shorturl/rpc/transformer/transformer"
+	"github.com/gotid/god/lib/hash"
 
 	"github.com/gotid/god/lib/logx"
 )
@@ -24,7 +25,16 @@ func NewShortenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShortenLo
 }
 
 func (l *ShortenLogic) Shorten(in *transformer.ShortenRequest) (*transformer.ShortenResponse, error) {
-	//TODO 此处添加你的逻辑并删除该行
+	key := hash.Md5Hex([]byte(in.Url))[:6]
+	_, err := l.svcCtx.Model.Insert(l.ctx, &model.Shorturl{
+		Shorten: key,
+		Url:     in.Url,
+	})
+	if err != nil {
+		return nil, err
+	}
 
-	return &transformer.ShortenResponse{}, nil
+	return &transformer.ShortenResponse{
+		Shorten: key,
+	}, nil
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var infoAccept = func(p *api.ApiParserParser, visitor *ast.ApiVisitor) interface{} {
+var infoAccept = func(p *api.ApiParserParser, visitor *ast.ApiVisitor) any {
 	return p.InfoSpec().Accept(visitor)
 }
 

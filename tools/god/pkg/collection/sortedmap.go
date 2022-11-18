@@ -16,21 +16,21 @@ var (
 // SortedMap 是一个排序后的字典。
 type SortedMap struct {
 	kv   *list.List
-	keys map[interface{}]*list.Element
+	keys map[any]*list.Element
 }
 
-type KV []interface{}
+type KV []any
 
 func (m *SortedMap) Format() []string {
 	format := make([]string, 0)
-	m.Range(func(key, val interface{}) {
+	m.Range(func(key, val any) {
 		format = append(format, fmt.Sprintf("%s=%s", key, val))
 	})
 	return format
 }
 
 // Range 使用给定的迭代函数，遍历有序字典中的每个元素。
-func (m *SortedMap) Range(iterator func(key interface{}, val interface{})) {
+func (m *SortedMap) Range(iterator func(key any, val any)) {
 	next := m.kv.Front()
 	for next != nil {
 		value := next.Value.(KV)
@@ -39,7 +39,7 @@ func (m *SortedMap) Range(iterator func(key interface{}, val interface{})) {
 	}
 }
 
-func (m *SortedMap) SetKV(key, val interface{}) {
+func (m *SortedMap) SetKV(key, val any) {
 	e, ok := m.keys[key]
 	if !ok {
 		e = m.kv.PushBack(KV{key, val})
@@ -50,7 +50,7 @@ func (m *SortedMap) SetKV(key, val interface{}) {
 }
 
 // SetExpression 按照 key-value 结构的表达式，设置一对字典成员。
-func (m *SortedMap) SetExpression(expression string) (key, value interface{}, err error) {
+func (m *SortedMap) SetExpression(expression string) (key, value any, err error) {
 	idx := strings.Index(expression, "=")
 	if idx == -1 {
 		return "", "", ErrInvalidKVExpression
@@ -79,7 +79,7 @@ func (m *SortedMap) SetExpression(expression string) (key, value interface{}, er
 }
 
 // GetString 获取有序字典中给定键的字符串值。
-func (m *SortedMap) GetString(key interface{}) (string, bool) {
+func (m *SortedMap) GetString(key any) (string, bool) {
 	value, ok := m.Get(key)
 	if !ok {
 		return "", false
@@ -89,7 +89,7 @@ func (m *SortedMap) GetString(key interface{}) (string, bool) {
 }
 
 // Get 获取有序字典中给定键的值。
-func (m *SortedMap) Get(key interface{}) (interface{}, bool) {
+func (m *SortedMap) Get(key any) (any, bool) {
 	e, ok := m.keys[key]
 	if !ok {
 		return nil, false
@@ -99,7 +99,7 @@ func (m *SortedMap) Get(key interface{}) (interface{}, bool) {
 }
 
 // GetOr 获取有序字典中给定键的值，若不存在则返回给定的默认值。
-func (m *SortedMap) GetOr(key, dft interface{}) interface{} {
+func (m *SortedMap) GetOr(key, dft any) any {
 	e, ok := m.keys[key]
 	if !ok {
 		return dft
@@ -119,7 +119,7 @@ func (m *SortedMap) GetStringOr(key, dft string) string {
 }
 
 // HasKey 判断字典中是否有给定的键。
-func (m *SortedMap) HasKey(key interface{}) bool {
+func (m *SortedMap) HasKey(key any) bool {
 	_, ok := m.keys[key]
 	return ok
 }
@@ -128,6 +128,6 @@ func (m *SortedMap) HasKey(key interface{}) bool {
 func New() *SortedMap {
 	return &SortedMap{
 		kv:   list.New(),
-		keys: make(map[interface{}]*list.Element),
+		keys: make(map[any]*list.Element),
 	}
 }

@@ -104,7 +104,7 @@ type metricsContainer struct {
 	drops    int
 }
 
-func (c *metricsContainer) AddTask(v interface{}) bool {
+func (c *metricsContainer) AddTask(v any) bool {
 	if task, ok := v.(Task); ok {
 		if task.Drop {
 			c.drops++
@@ -117,7 +117,7 @@ func (c *metricsContainer) AddTask(v interface{}) bool {
 	return false
 }
 
-func (c *metricsContainer) Execute(v interface{}) {
+func (c *metricsContainer) Execute(v any) {
 	pair := v.(tasksDurationPair)
 	tasks := pair.tasks
 	duration := pair.duration
@@ -189,7 +189,7 @@ func getTopDuration(tasks []Task) float32 {
 	return float32(top[0].Duration) / float32(time.Millisecond)
 }
 
-func (c *metricsContainer) RemoveAll() interface{} {
+func (c *metricsContainer) RemoveAll() any {
 	tasks := c.tasks
 	duration := c.duration
 	drops := c.drops
@@ -207,7 +207,7 @@ func (c *metricsContainer) RemoveAll() interface{} {
 func log(report *StatReport) {
 	writeReport(report)
 	if logEnabled.True() {
-		logx.Statf("（%s）指标 [1m] - 请求: %.1f/s, 丢弃：%d, 平均耗时: %.1fms, 中位数: %.1fms, 90th: %.1fms, 99th: %.1fms, 99.9th: %.1fms",
+		logx.Statf("(%s) 指标 [1m] - 请求: %.1f/s, 丢弃: %d, 平均耗时: %.1fms, 中位数: %.1fms, 90th: %.1fms, 99th: %.1fms, 99.9th: %.1fms",
 			report.Name, report.ReqsPerSecond, report.Drops, report.Average, report.Median,
 			report.Top90th, report.Top99th, report.Top99p9th)
 	}

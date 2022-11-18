@@ -10,7 +10,7 @@ import (
 
 func TestImmutableResource(t *testing.T) {
 	var count int
-	ir := NewImmutableResource(func() (interface{}, error) {
+	ir := NewImmutableResource(func() (any, error) {
 		fmt.Println("请求资源")
 		count++
 		return "hellox", nil
@@ -30,7 +30,7 @@ func TestImmutableResource(t *testing.T) {
 
 func TestImmutableResource_Error(t *testing.T) {
 	var count int
-	ir := NewImmutableResource(func() (interface{}, error) {
+	ir := NewImmutableResource(func() (any, error) {
 		count++
 		return nil, errors.New("any")
 	})
@@ -59,7 +59,7 @@ func TestImmutableResource_Error(t *testing.T) {
 
 func TestImmutableResource_ErrorRefreshAlways(t *testing.T) {
 	var count int
-	ir := NewImmutableResource(func() (interface{}, error) {
+	ir := NewImmutableResource(func() (any, error) {
 		count++
 		return nil, errors.New("any")
 	}, WithRefreshIntervalOnFailure(0))

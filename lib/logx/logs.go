@@ -31,13 +31,13 @@ type (
 	// LogField 是一个将被加入到日志条目的键值对。
 	LogField struct {
 		Key   string
-		Value interface{}
+		Value any
 	}
 
 	// LogOption 用于自定义日志记录的方法。
 	LogOption func(options *logOptions)
 
-	logEntry map[string]interface{}
+	logEntry map[string]any
 
 	logOptions struct {
 		gzipEnabled            bool
@@ -176,7 +176,7 @@ func WithRotation(rule string) LogOption {
 }
 
 // Field 将 key, value 转换为 LogField。
-func Field(key string, value interface{}) LogField {
+func Field(key string, value any) LogField {
 	switch val := value.(type) {
 	case error:
 		return LogField{Key: key, Value: val.Error()}
@@ -214,17 +214,17 @@ func Field(key string, value interface{}) LogField {
 }
 
 // Info 将 v 写入访问日志。
-func Info(v ...interface{}) {
+func Info(v ...any) {
 	writeInfo(fmt.Sprint(v...))
 }
 
 // Infof 将带有格式的 v 写入访问日志。
-func Infof(format string, v ...interface{}) {
+func Infof(format string, v ...any) {
 	writeInfo(fmt.Sprintf(format, v...))
 }
 
 // Infov 使用 json 内容将 v 写入访问日志。
-func Infov(v interface{}) {
+func Infov(v any) {
 	writeInfo(v)
 }
 
@@ -239,17 +239,17 @@ func Alert(v string) {
 }
 
 // Debug writes v into access log.
-func Debug(v ...interface{}) {
+func Debug(v ...any) {
 	writeDebug(fmt.Sprint(v...))
 }
 
 // Debugf writes v with format into access log.
-func Debugf(format string, v ...interface{}) {
+func Debugf(format string, v ...any) {
 	writeDebug(fmt.Sprintf(format, v...))
 }
 
 // Debugv writes v into access log with json content.
-func Debugv(v interface{}) {
+func Debugv(v any) {
 	writeDebug(v)
 }
 
@@ -259,28 +259,28 @@ func Debugw(msg string, fields ...LogField) {
 }
 
 // Error 将 v 写入错误日志。
-func Error(v ...interface{}) {
+func Error(v ...any) {
 	writeError(fmt.Sprint(v...))
 }
 
 // Errorf 将带有格式的 v 写入错误日志。
-func Errorf(format string, v ...interface{}) {
+func Errorf(format string, v ...any) {
 	writeError(fmt.Errorf(format, v...).Error())
 }
 
 // ErrorStack 将 v 和调用堆栈一起写入错误日志。
-func ErrorStack(v ...interface{}) {
+func ErrorStack(v ...any) {
 	writeStack(fmt.Sprint(v...))
 }
 
 // ErrorStackf 将格式化后的 v 和调用堆栈一起写入错误日志。
-func ErrorStackf(format string, v ...interface{}) {
+func ErrorStackf(format string, v ...any) {
 	writeStack(fmt.Sprintf(format, v...))
 }
 
 // Errorv 将 json 编组后的 v 写入错误日志。
 // 不带有调用堆栈，因为打包堆栈并不优雅。
-func Errorv(v interface{}) {
+func Errorv(v any) {
 	writeError(v)
 }
 
@@ -290,27 +290,27 @@ func Errorw(msg string, fields ...LogField) {
 }
 
 // Severe 将 v 和调用堆栈一起写入严重错误日志。
-func Severe(v ...interface{}) {
+func Severe(v ...any) {
 	writeSevere(fmt.Sprint(v...))
 }
 
 // Severef 将带有格式的 v 和调用堆栈写入严重错误日志。
-func Severef(format string, v ...interface{}) {
+func Severef(format string, v ...any) {
 	writeSevere(fmt.Sprintf(format, v...))
 }
 
 // Slow 将 v 写入慢执行日志。
-func Slow(v ...interface{}) {
+func Slow(v ...any) {
 	writeSlow(fmt.Sprint(v...))
 }
 
 // Slowf 将格式化后的 v 写入慢执行日志。
-func Slowf(format string, v ...interface{}) {
+func Slowf(format string, v ...any) {
 	writeSlow(fmt.Sprintf(format, v...))
 }
 
 // Slowv 将 json 编组后的 v 写入慢执行日志。
-func Slowv(v interface{}) {
+func Slowv(v any) {
 	writeSlow(v)
 }
 
@@ -320,12 +320,12 @@ func Sloww(msg string, fields ...LogField) {
 }
 
 // Stat 将 v 写入统计日志。
-func Stat(v ...interface{}) {
+func Stat(v ...any) {
 	writeStat(fmt.Sprint(v...))
 }
 
 // Statf 将格式化后的 v 写入统计日志。
-func Statf(format string, v ...interface{}) {
+func Statf(format string, v ...any) {
 	writeStat(fmt.Sprintf(format, v...))
 }
 
@@ -350,7 +350,7 @@ func writeStat(val string) {
 	}
 }
 
-func writeSlow(val interface{}, fields ...LogField) {
+func writeSlow(val any, fields ...LogField) {
 	if shallLog(ErrorLevel) {
 		getWriter().Slow(val, addCaller(fields...)...)
 	}
@@ -362,7 +362,7 @@ func writeSevere(val string) {
 	}
 }
 
-func writeError(val interface{}, fields ...LogField) {
+func writeError(val any, fields ...LogField) {
 	if shallLog(ErrorLevel) {
 		getWriter().Error(val, addCaller(fields...)...)
 	}
@@ -376,7 +376,7 @@ func writeStack(val string) {
 	}
 }
 
-func writeInfo(val interface{}, fields ...LogField) {
+func writeInfo(val any, fields ...LogField) {
 	if shallLog(InfoLevel) {
 		getWriter().Info(val, addCaller(fields...)...)
 	}
@@ -390,7 +390,7 @@ func shallLogStat() bool {
 	return atomic.LoadUint32(&disableStat) == 0
 }
 
-func writeDebug(val interface{}, fields ...LogField) {
+func writeDebug(val any, fields ...LogField) {
 	if shallLog(DebugLevel) {
 		getWriter().Debug(val, addCaller(fields...)...)
 	}

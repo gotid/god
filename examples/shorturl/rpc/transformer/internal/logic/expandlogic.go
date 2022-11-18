@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"github.com/gotid/god/examples/shorturl/errorx"
 
 	"github.com/gotid/god/examples/shorturl/rpc/transformer/internal/svc"
 	"github.com/gotid/god/examples/shorturl/rpc/transformer/transformer"
@@ -24,7 +25,12 @@ func NewExpandLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ExpandLogi
 }
 
 func (l *ExpandLogic) Expand(in *transformer.ExpandRequest) (*transformer.ExpandResponse, error) {
-	//TODO 此处添加你的逻辑并删除该行
+	resp, err := l.svcCtx.Model.FindOne(l.ctx, in.Shorten)
+	if err != nil {
+		return nil, errorx.NewDefaultError(err.Error())
+	}
 
-	return &transformer.ExpandResponse{}, nil
+	return &transformer.ExpandResponse{
+		Url: resp.Url,
+	}, nil
 }

@@ -292,7 +292,7 @@ func (cs *cacheStat) statLoop() {
 		}
 
 		percent := 100 * float32(hit) / float32(total)
-		logx.Statf("缓存（%s）- 请求数（m)：%d，命中率：%.1f%%，元素：%d，命中：%d，未命中：%d",
+		logx.Statf("缓存(%s) - 请求数(m): %d, 命中率: %.1f%%, 元素: %d, 命中: %d, 未命中: %d",
 			cs.name, total, percent, cs.sizeCallback(), hit, miss)
 	}
 }

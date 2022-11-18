@@ -92,7 +92,7 @@ func (g *Generator) genClientGroup(ctx DirContext, proto parser.Proto, cfg *conf
 
 		aliasKeys := alias.KeysStr()
 		sort.Strings(aliasKeys)
-		if err = util.With("shared").GoFmt(true).Parse(text).SaveTo(map[string]interface{}{
+		if err = util.With("shared").GoFmt(true).Parse(text).SaveTo(map[string]any{
 			"name":           clientFilename,
 			"alias":          strings.Join(aliasKeys, pathx.NL),
 			"head":           head,
@@ -155,7 +155,7 @@ func (g *Generator) genClientInCompatibility(ctx DirContext, proto parser.Proto,
 	}
 	aliasKeys := alias.KeysStr()
 	sort.Strings(aliasKeys)
-	return util.With("shared").GoFmt(true).Parse(text).SaveTo(map[string]interface{}{
+	return util.With("shared").GoFmt(true).Parse(text).SaveTo(map[string]any{
 		"name":           clientFilename,
 		"alias":          strings.Join(aliasKeys, pathx.NL),
 		"head":           head,
@@ -207,7 +207,7 @@ func (g *Generator) getInterfaceFunctions(pbPackage string, service parser.Servi
 				parser.CamelCase(rpc.Name), "Client")
 		}
 
-		buffer, err := util.With("interfaceFn").Parse(text).Execute(map[string]interface{}{
+		buffer, err := util.With("interfaceFn").Parse(text).Execute(map[string]any{
 			"hasComment": len(comment) > 0,
 			"comment":    comment,
 			"method":     parser.CamelCase(rpc.Name),
@@ -241,7 +241,7 @@ func (g *Generator) genCallFunctions(pbPackage string, service parser.Service, i
 		if isCallPkgSameToGrpcPkg {
 			streamServer = fmt.Sprintf("%s_%s%s", parser.CamelCase(service.Name), parser.CamelCase(rpc.Name), "Client")
 		}
-		buffer, err := util.With("sharedFn").Parse(text).Execute(map[string]interface{}{
+		buffer, err := util.With("sharedFn").Parse(text).Execute(map[string]any{
 			"serviceName":            stringx.From(service.Name).ToCamel(),
 			"rpcServiceName":         parser.CamelCase(service.Name),
 			"method":                 parser.CamelCase(rpc.Name),

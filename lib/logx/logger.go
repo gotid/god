@@ -7,38 +7,38 @@ import (
 
 type Logger interface {
 	// Debug 记录一条调试级别的消息。
-	Debug(...interface{})
+	Debug(...any)
 	// Debugf 记录一条调试级别的消息。
-	Debugf(string, ...interface{})
+	Debugf(string, ...any)
 	// Debugv 记录一条调试级别的消息。
-	Debugv(interface{})
+	Debugv(any)
 	// Debugw 记录一条调试级别的消息。
 	Debugw(string, ...LogField)
 
 	// Error 记录一条错误级别的消息。
-	Error(...interface{})
+	Error(...any)
 	// Errorf 记录一条错误级别的消息。
-	Errorf(string, ...interface{})
+	Errorf(string, ...any)
 	// Errorv 记录一条错误级别的消息
-	Errorv(interface{})
+	Errorv(any)
 	// Errorw 记录一条错误级别的消息
 	Errorw(string, ...LogField)
 
 	// Info 记录一条信息级别的消息。
-	Info(...interface{})
+	Info(...any)
 	// Infof 记录一条信息级别的消息。
-	Infof(string, ...interface{})
+	Infof(string, ...any)
 	// Infov 记录一条信息级别的消息。
-	Infov(interface{})
+	Infov(any)
 	// Infow 记录一条信息级别的消息。
 	Infow(string, ...LogField)
 
 	// Slow 记录一条慢执行级别的消息。
-	Slow(...interface{})
+	Slow(...any)
 	// Slowf 记录一条慢执行级别的消息。
-	Slowf(string, ...interface{})
+	Slowf(string, ...any)
 	// Slowv 记录一条慢执行级别的消息。
-	Slowv(interface{})
+	Slowv(any)
 	// Sloww 记录一条慢执行级别的消息。
 	Sloww(string, ...LogField)
 

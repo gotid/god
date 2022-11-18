@@ -139,7 +139,7 @@ func TestCacheNode_Take(t *testing.T) {
 	n := NewNode(store, syncx.NewSingleFlight(), NewStat("any"), errTestNotFound,
 		WithExpire(time.Second), WithNotFoundExpire(time.Second))
 	var str string
-	err = n.Take(&str, "any", func(v interface{}) error {
+	err = n.Take(&str, "any", func(v any) error {
 		*v.(*string) = "value"
 		return nil
 	})
@@ -166,7 +166,7 @@ func TestCacheNode_TakeNotFound(t *testing.T) {
 		errNotFound:    errTestNotFound,
 	}
 	var str string
-	err = cn.Take(&str, "any", func(v interface{}) error {
+	err = cn.Take(&str, "any", func(v any) error {
 		return errTestNotFound
 	})
 	assert.True(t, cn.IsNotFound(err))
@@ -176,7 +176,7 @@ func TestCacheNode_TakeNotFound(t *testing.T) {
 	assert.Equal(t, `*`, val)
 
 	store.Set("any", "*")
-	err = cn.Take(&str, "any", func(v interface{}) error {
+	err = cn.Take(&str, "any", func(v any) error {
 		return nil
 	})
 	assert.True(t, cn.IsNotFound(err))
@@ -184,7 +184,7 @@ func TestCacheNode_TakeNotFound(t *testing.T) {
 
 	store.Del("any")
 	errDummy := errors.New("dummy")
-	err = cn.Take(&str, "any", func(v interface{}) error {
+	err = cn.Take(&str, "any", func(v any) error {
 		return errDummy
 	})
 	assert.Equal(t, errDummy, err)
@@ -205,7 +205,7 @@ func TestCacheNode_TakeWithExpire(t *testing.T) {
 		errNotFound:    errors.New("any"),
 	}
 	var str string
-	err = n.TakeWithExpire(&str, "any", func(v interface{}, expire time.Duration) error {
+	err = n.TakeWithExpire(&str, "any", func(v any, expire time.Duration) error {
 		*v.(*string) = "value"
 		return nil
 	})
@@ -255,7 +255,7 @@ func TestCacheValueWithBigInt(t *testing.T) {
 	)
 
 	assert.Nil(t, cn.Set(key, value))
-	var val interface{}
+	var val any
 	assert.Nil(t, cn.Get(key, &val))
 	assert.Equal(t, strconv.FormatInt(value, 10), fmt.Sprintf("%v", val))
 }

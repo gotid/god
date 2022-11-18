@@ -73,7 +73,7 @@ func (g *Generator) GenMain(ctx DirContext, proto parser.Proto, cfg *conf.Config
 		return err
 	}
 
-	return util.With("main").GoFmt(true).Parse(text).SaveTo(map[string]interface{}{
+	return util.With("main").GoFmt(true).Parse(text).SaveTo(map[string]any{
 		"serviceName":  serviceName,
 		"imports":      strings.Join(imports, pathx.NL),
 		"pkg":          proto.PbPackage,

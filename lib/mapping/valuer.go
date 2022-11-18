@@ -4,11 +4,11 @@ type (
 	// Valuer 接口定义了使用给定键从底层对象获取值的方法。
 	Valuer interface {
 		// Value 获取给定键关联的值。
-		Value(key string) (interface{}, bool)
+		Value(key string) (any, bool)
 	}
 
 	// MapValuer 是一个使用 Value 方法获取给定键的值的字典。
-	mapValuer map[string]interface{}
+	mapValuer map[string]any
 
 	// A valuerWithParent defines a node that has a parent node.
 	valuerWithParent interface {
@@ -25,7 +25,7 @@ type (
 
 	// A valueWithParent is used to wrap the value with its parent.
 	valueWithParent struct {
-		value  interface{}
+		value  any
 		parent valuerWithParent
 	}
 
@@ -37,13 +37,13 @@ type (
 )
 
 // Value 从字典 mv 中获取给定键的值。
-func (mv mapValuer) Value(key string) (interface{}, bool) {
+func (mv mapValuer) Value(key string) (any, bool) {
 	v, ok := mv[key]
 	return v, ok
 }
 
 // Value gets the value associated with the given key from sv.
-func (sv simpleValuer) Value(key string) (interface{}, bool) {
+func (sv simpleValuer) Value(key string) (any, bool) {
 	v, ok := sv.current.Value(key)
 	return v, ok
 }
@@ -62,7 +62,7 @@ func (sv simpleValuer) Parent() valuerWithParent {
 
 // Value gets the value associated with the given key from rv,
 // and it will inherit the value from parent nodes.
-func (rv recursiveValuer) Value(key string) (interface{}, bool) {
+func (rv recursiveValuer) Value(key string) (any, bool) {
 	val, ok := rv.current.Value(key)
 	if !ok {
 		if parent := rv.Parent(); parent != nil {
@@ -72,11 +72,11 @@ func (rv recursiveValuer) Value(key string) (interface{}, bool) {
 		return nil, false
 	}
 
-	if vm, ok := val.(map[string]interface{}); ok {
+	if vm, ok := val.(map[string]any); ok {
 		if parent := rv.Parent(); parent != nil {
 			pv, pok := parent.Value(key)
 			if pok {
-				if pm, ok := pv.(map[string]interface{}); ok {
+				if pm, ok := pv.(map[string]any); ok {
 					for k, v := range vm {
 						pm[k] = v
 					}

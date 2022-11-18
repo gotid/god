@@ -98,9 +98,9 @@ func FinishVoid(fns ...func()) {
 // ForEach 加工所有生成的元素，但并不输出。
 func ForEach(generate GenerateFunc, mapper ForEachFunc, opts ...Option) {
 	options := buildOptions(opts...)
-	panicChan := &onceChan{channel: make(chan interface{})}
+	panicChan := &onceChan{channel: make(chan any)}
 	source := buildSource(generate, panicChan)
-	collector := make(chan interface{})
+	collector := make(chan any)
 	done := make(chan lang.PlaceholderType)
 
 	go executeMappers(mapperContext{

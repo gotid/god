@@ -59,7 +59,7 @@ func OkJson(w http.ResponseWriter, body interface{}) {
 }
 
 // WriteJson 将响应体及状态码写入响应编写器。
-func WriteJson(w http.ResponseWriter, code int, body interface{}) {
+func WriteJson(w http.ResponseWriter, code int, body any) {
 	bs, err := json.Marshal(body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -81,7 +81,7 @@ func WriteJson(w http.ResponseWriter, code int, body interface{}) {
 }
 
 // SetErrorHandler 设置错误处理器。
-func SetErrorHandler(handler func(error) (int, interface{})) {
+func SetErrorHandler(handler func(error) (int, any)) {
 	lock.Lock()
 	defer lock.Unlock()
 	errorHandler = handler

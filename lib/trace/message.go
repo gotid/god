@@ -19,7 +19,7 @@ var (
 type messageType attribute.KeyValue
 
 // Event 添加一个指定上下文、ID和消息到事件。
-func (m messageType) Event(ctx context.Context, id int, message interface{}) {
+func (m messageType) Event(ctx context.Context, id int, message any) {
 	span := trace.SpanFromContext(ctx)
 	if p, ok := message.(proto.Message); ok {
 		span.AddEvent(messageEvent, trace.WithAttributes(

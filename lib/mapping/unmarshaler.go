@@ -10,6 +10,7 @@ import (
 	"github.com/gotid/god/lib/proc"
 	"github.com/gotid/god/lib/stringx"
 	"reflect"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -29,9 +30,9 @@ var (
 	cacheKeys        = make(map[string][]string)
 	cacheKeysLock    sync.Mutex
 	durationType     = reflect.TypeOf(time.Duration(0))
-	defaultCache     = make(map[string]interface{})
+	defaultCache     = make(map[string]any)
 	defaultCacheLock sync.Mutex
-	emptyMap         = map[string]interface{}{}
+	emptyMap         = map[string]any{}
 	emptyValue       = reflect.ValueOf(lang.Placeholder)
 )
 
@@ -52,16 +53,16 @@ type (
 )
 
 // Unmarshal 解组字典 m 至 v。
-func (u *Unmarshaler) Unmarshal(m map[string]interface{}, v interface{}) error {
+func (u *Unmarshaler) Unmarshal(m map[string]any, v any) error {
 	return u.UnmarshalValuer(mapValuer(m), v)
 }
 
 // UnmarshalValuer 解组字典 m 至 v。
-func (u *Unmarshaler) UnmarshalValuer(m Valuer, v interface{}) error {
+func (u *Unmarshaler) UnmarshalValuer(m Valuer, v any) error {
 	return u.unmarshalWithFullName(simpleValuer{current: m}, v, "")
 }
 
-func (u *Unmarshaler) unmarshalWithFullName(m valuerWithParent, v interface{}, fullName string) error {
+func (u *Unmarshaler) unmarshalWithFullName(m valuerWithParent, v any, fullName string) error {
 	rv := reflect.ValueOf(v)
 	if err := ValidatePtr(&rv); err != nil {
 		return err
@@ -117,12 +118,12 @@ func (u *Unmarshaler) processAnonymousField(field reflect.StructField, value ref
 }
 
 // 获取字典 m 中给定键 key 的值，键的格式可为 parentKey.childKey。
-func getValue(m valuerWithParent, key string) (interface{}, bool) {
+func getValue(m valuerWithParent, key string) (any, bool) {
 	keys := readKeys(key)
 	return getValueWithChainedKeys(m, keys)
 }
 
-func getValueWithChainedKeys(m valuerWithParent, keys []string) (interface{}, bool) {
+func getValueWithChainedKeys(m valuerWithParent, keys []string) (any, bool) {
 	switch len(keys) {
 	case 0:
 		return nil, false
@@ -131,7 +132,7 @@ func getValueWithChainedKeys(m valuerWithParent, keys []string) (interface{}, bo
 		return v, ok
 	default:
 		if v, ok := m.Value(keys[0]); ok {
-			if nextM, ok := v.(map[string]interface{}); ok {
+			if nextM, ok := v.(map[string]any); ok {
 				return getValueWithChainedKeys(recursiveValuer{
 					current: mapValuer(nextM),
 					parent:  m,
@@ -237,6 +238,14 @@ func (u *Unmarshaler) processFieldWithEnvValue(field reflect.StructField, value 
 	envVal string, opts *fieldOptionsWithContext, fullName string) error {
 	fieldKind := field.Type.Kind()
 	switch fieldKind {
+	case reflect.Bool:
+		val, err := strconv.ParseBool(envVal)
+		if err != nil {
+			return fmt.Errorf("用环境变量解组字段 %q 出错，%w", fullName, err)
+		}
+
+		value.SetBool(val)
+		return nil
 	case durationType.Kind():
 		if err := fillDurationValue(fieldKind, value, envVal); err != nil {
 			return fmt.Errorf("用环境变量解组字段 %q 出错，%w", fullName, err)
@@ -340,7 +349,7 @@ func (u *Unmarshaler) processFieldNotFromString(field reflect.StructField, value
 
 	switch {
 	case valueKind == reflect.Map && typeKind == reflect.Struct:
-		if mv, ok := mapValue.(map[string]interface{}); ok {
+		if mv, ok := mapValue.(map[string]any); ok {
 			return u.processFieldStruct(field, value, &simpleValuer{
 				current: mapValuer(mv),
 				parent:  vp.parent,
@@ -362,7 +371,7 @@ func (u *Unmarshaler) processFieldNotFromString(field reflect.StructField, value
 }
 
 func (u *Unmarshaler) processFieldPrimitive(field reflect.StructField, value reflect.Value,
-	mapValue interface{}, opts *fieldOptionsWithContext, fullName string) error {
+	mapValue any, opts *fieldOptionsWithContext, fullName string) error {
 	fieldType := field.Type
 	typeKind := Deref(fieldType).Kind()
 	valueKind := reflect.TypeOf(mapValue).Kind()
@@ -441,8 +450,8 @@ func (u *Unmarshaler) processFieldPrimitiveWithJSONNumber(field reflect.StructFi
 	return nil
 }
 func (u *Unmarshaler) fillSliceFromString(fieldType reflect.Type, value reflect.Value,
-	mapValue interface{}) error {
-	var slice []interface{}
+	mapValue any) error {
+	var slice []any
 	switch v := mapValue.(type) {
 	case fmt.Stringer:
 		if err := jsonx.UnmarshalFromString(v.String(), &slice); err != nil {
@@ -470,7 +479,7 @@ func (u *Unmarshaler) fillSliceFromString(fieldType reflect.Type, value reflect.
 	return nil
 }
 
-func (u *Unmarshaler) generateMap(keyType, elemType reflect.Type, mapValue interface{}) (reflect.Value, error) {
+func (u *Unmarshaler) generateMap(keyType, elemType reflect.Type, mapValue any) (reflect.Value, error) {
 	mapType := reflect.MapOf(keyType, elemType)
 	valueType := reflect.TypeOf(mapValue)
 	if mapType == valueType {
@@ -496,7 +505,7 @@ func (u *Unmarshaler) generateMap(keyType, elemType reflect.Type, mapValue inter
 
 			targetValue.SetMapIndex(key, target.Elem())
 		case reflect.Struct:
-			keythMap, ok := keythData.(map[string]interface{})
+			keythMap, ok := keythData.(map[string]any)
 			if !ok {
 				return emptyValue, errTypeMismatch
 			}
@@ -512,7 +521,7 @@ func (u *Unmarshaler) generateMap(keyType, elemType reflect.Type, mapValue inter
 				targetValue.SetMapIndex(key, target.Elem())
 			}
 		case reflect.Map:
-			keythMap, ok := keythData.(map[string]interface{})
+			keythMap, ok := keythData.(map[string]any)
 			if !ok {
 				return emptyValue, errTypeMismatch
 			}
@@ -545,7 +554,7 @@ func (u *Unmarshaler) generateMap(keyType, elemType reflect.Type, mapValue inter
 	return targetValue, nil
 }
 
-func (u *Unmarshaler) fillMap(field reflect.StructField, value reflect.Value, mapValue interface{}) error {
+func (u *Unmarshaler) fillMap(field reflect.StructField, value reflect.Value, mapValue any) error {
 	if !value.CanSet() {
 		return errValueNotSettable
 	}
@@ -561,7 +570,7 @@ func (u *Unmarshaler) fillMap(field reflect.StructField, value reflect.Value, ma
 	return nil
 }
 
-func (u *Unmarshaler) fillMapFromString(value reflect.Value, mapValue interface{}) error {
+func (u *Unmarshaler) fillMapFromString(value reflect.Value, mapValue any) error {
 	if !value.CanSet() {
 		return errValueNotSettable
 	}
@@ -582,7 +591,7 @@ func (u *Unmarshaler) fillMapFromString(value reflect.Value, mapValue interface{
 	return nil
 }
 
-func (u *Unmarshaler) fillSlice(fieldType reflect.Type, value reflect.Value, mapValue interface{}) error {
+func (u *Unmarshaler) fillSlice(fieldType reflect.Type, value reflect.Value, mapValue any) error {
 	if !value.CanSet() {
 		return errValueNotSettable
 	}
@@ -613,7 +622,7 @@ func (u *Unmarshaler) fillSlice(fieldType reflect.Type, value reflect.Value, map
 		switch dereffedBaseKind {
 		case reflect.Struct:
 			target := reflect.New(dereffedBaseType)
-			if err := u.Unmarshal(ithValue.(map[string]interface{}), target.Interface()); err != nil {
+			if err := u.Unmarshal(ithValue.(map[string]any), target.Interface()); err != nil {
 				return err
 			}
 
@@ -641,7 +650,7 @@ func (u *Unmarshaler) fillSlice(fieldType reflect.Type, value reflect.Value, map
 }
 
 func (u *Unmarshaler) fillSliceValue(slice reflect.Value, index int,
-	baseKind reflect.Kind, value interface{}) error {
+	baseKind reflect.Kind, value any) error {
 	ithVal := slice.Index(index)
 	switch v := value.(type) {
 	case fmt.Stringer:
@@ -695,7 +704,7 @@ func (u *Unmarshaler) fillSliceWithDefault(derefedType reflect.Type, value refle
 }
 
 func (u *Unmarshaler) processFieldTextUnmarshaler(field reflect.StructField, value reflect.Value,
-	mapValue interface{}) (bool, error) {
+	mapValue any) (bool, error) {
 	var tval encoding.TextUnmarshaler
 	var ok bool
 
@@ -820,7 +829,7 @@ func fillDurationValue(fieldKind reflect.Kind, value reflect.Value, dur string) 
 	return nil
 }
 
-func fillPrimitive(fieldType reflect.Type, value reflect.Value, mapValue interface{},
+func fillPrimitive(fieldType reflect.Type, value reflect.Value, mapValue any,
 	opts *fieldOptionsWithContext, fullName string) error {
 	if !value.CanSet() {
 		return errValueNotSettable
@@ -849,7 +858,7 @@ func fillPrimitive(fieldType reflect.Type, value reflect.Value, mapValue interfa
 	}
 }
 
-func fillWithSameType(field reflect.StructField, value reflect.Value, mapValue interface{},
+func fillWithSameType(field reflect.StructField, value reflect.Value, mapValue any,
 	opts *fieldOptionsWithContext) error {
 	if !value.CanSet() {
 		return errValueNotSettable
@@ -871,7 +880,7 @@ func fillWithSameType(field reflect.StructField, value reflect.Value, mapValue i
 	return nil
 }
 
-func setSameKindValue(targetType reflect.Type, target reflect.Value, value interface{}) {
+func setSameKindValue(targetType reflect.Type, target reflect.Value, value any) {
 	if reflect.ValueOf(value).Type().AssignableTo(targetType) {
 		target.Set(reflect.ValueOf(value))
 	} else {
@@ -913,7 +922,7 @@ func NewUnmarshaler(key string, opts ...UnmarshalOption) *Unmarshaler {
 }
 
 // UnmarshalKey 解组键值对字典 m 至 v。
-func UnmarshalKey(m map[string]interface{}, v interface{}) error {
+func UnmarshalKey(m map[string]any, v any) error {
 	return keyUnmarshaler.Unmarshal(m, v)
 }
 

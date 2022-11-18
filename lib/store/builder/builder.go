@@ -9,7 +9,7 @@ import (
 const dbTag = "db"
 
 // RawFieldNames 转换 golang 结构体字段为字符串切片。
-func RawFieldNames(in interface{}, postgreSql ...bool) []string {
+func RawFieldNames(in any, postgreSql ...bool) []string {
 	out := make([]string, 0)
 	v := reflect.ValueOf(in)
 	if v.Kind() == reflect.Ptr {

@@ -17,14 +17,14 @@ const (
 
 // Set 用于并发，非线程安全，确保在同步状态下使用。
 type Set struct {
-	data map[interface{}]lang.PlaceholderType
+	data map[any]lang.PlaceholderType
 	tp   int
 }
 
 // NewSet 返回一个托管 Set，只能存放相同类型的值。
 func NewSet() *Set {
 	return &Set{
-		data: make(map[interface{}]lang.PlaceholderType),
+		data: make(map[any]lang.PlaceholderType),
 		tp:   untyped,
 	}
 }
@@ -32,13 +32,13 @@ func NewSet() *Set {
 // NewUnmanagedSet 返回一个非托管 Set，可以存放不同类型的值。
 func NewUnmanagedSet() *Set {
 	return &Set{
-		data: make(map[interface{}]lang.PlaceholderType),
+		data: make(map[any]lang.PlaceholderType),
 		tp:   unmanaged,
 	}
 }
 
 // Add 添加 i 到集合 s。
-func (s *Set) Add(i ...interface{}) {
+func (s *Set) Add(i ...any) {
 	for _, each := range i {
 		s.add(each)
 	}
@@ -80,7 +80,7 @@ func (s *Set) AddStr(ss ...string) {
 }
 
 // Contains 检查 i 是否存在于集合 s。
-func (s *Set) Contains(i interface{}) bool {
+func (s *Set) Contains(i any) bool {
 	if len(s.data) == 0 {
 		return false
 	}
@@ -91,8 +91,8 @@ func (s *Set) Contains(i interface{}) bool {
 }
 
 // Keys 返回集合 s 中的键。
-func (s *Set) Keys() []interface{} {
-	var keys []interface{}
+func (s *Set) Keys() []any {
+	var keys []any
 
 	for key := range s.data {
 		keys = append(keys, key)
@@ -167,7 +167,7 @@ func (s *Set) KeysStr() []string {
 }
 
 // Remove 从集合 s 中移除元素 i。
-func (s *Set) Remove(i interface{}) {
+func (s *Set) Remove(i any) {
 	s.validate(i)
 	delete(s.data, i)
 }
@@ -177,7 +177,7 @@ func (s *Set) Count() int {
 	return len(s.data)
 }
 
-func (s *Set) add(i interface{}) {
+func (s *Set) add(i any) {
 	switch s.tp {
 	case unmanaged:
 	// 啥也不做
@@ -189,7 +189,7 @@ func (s *Set) add(i interface{}) {
 	s.data[i] = lang.Placeholder
 }
 
-func (s *Set) setType(i interface{}) {
+func (s *Set) setType(i any) {
 	switch i.(type) {
 	case int:
 		s.tp = intType
@@ -204,7 +204,7 @@ func (s *Set) setType(i interface{}) {
 	}
 }
 
-func (s *Set) validate(i interface{}) {
+func (s *Set) validate(i any) {
 	if s.tp == unmanaged {
 		return
 	}

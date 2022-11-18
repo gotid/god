@@ -12,20 +12,20 @@ type SafeMap struct {
 	lock        sync.RWMutex
 	deletionOld int
 	deletionNew int
-	dirtyOld    map[interface{}]interface{}
-	dirtyNew    map[interface{}]interface{}
+	dirtyOld    map[any]any
+	dirtyNew    map[any]any
 }
 
 // NewSafeMap 返回一个 SafeMap。
 func NewSafeMap() *SafeMap {
 	return &SafeMap{
-		dirtyOld: make(map[interface{}]interface{}),
-		dirtyNew: make(map[interface{}]interface{}),
+		dirtyOld: make(map[any]any),
+		dirtyNew: make(map[any]any),
 	}
 }
 
 // Del 删除 m 中指定键值。
-func (m *SafeMap) Del(key interface{}) {
+func (m *SafeMap) Del(key any) {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 
@@ -43,20 +43,20 @@ func (m *SafeMap) Del(key interface{}) {
 		}
 		m.dirtyOld = m.dirtyNew
 		m.deletionOld = m.deletionNew
-		m.dirtyNew = make(map[interface{}]interface{})
+		m.dirtyNew = make(map[any]any)
 		m.deletionNew = 0
 	}
 	if m.deletionNew >= maxDeletion && len(m.dirtyNew) < copyThreshold {
 		for k, v := range m.dirtyNew {
 			m.dirtyOld[k] = v
 		}
-		m.dirtyNew = make(map[interface{}]interface{})
+		m.dirtyNew = make(map[any]any)
 		m.deletionNew = 0
 	}
 }
 
 // Get 获取 m 中给定键的值。
-func (m *SafeMap) Get(key interface{}) (interface{}, bool) {
+func (m *SafeMap) Get(key any) (any, bool) {
 	m.lock.RLock()
 	defer m.lock.RUnlock()
 
@@ -69,7 +69,7 @@ func (m *SafeMap) Get(key interface{}) (interface{}, bool) {
 }
 
 // Put 将指定键值对加入 m。
-func (m *SafeMap) Put(key, val interface{}) {
+func (m *SafeMap) Put(key, val any) {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 
@@ -97,7 +97,7 @@ func (m *SafeMap) Size() int {
 }
 
 // Range 让 m 中的每个成员都调用 f 函数，如果返回 false 则退出迭代。
-func (m *SafeMap) Range(f func(key, val interface{}) bool) {
+func (m *SafeMap) Range(f func(key, val any) bool) {
 	m.lock.RLock()
 	defer m.lock.RUnlock()
 

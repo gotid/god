@@ -34,12 +34,12 @@ type (
 
 	// Result 从树中搜索到的结果。
 	Result struct {
-		Item   interface{}
+		Item   any
 		Params map[string]string
 	}
 
 	node struct {
-		item     interface{}
+		item     any
 		children [2]map[string]*node
 	}
 
@@ -59,7 +59,7 @@ func NewTree() *Tree {
 }
 
 // Add 添加一个路由关联的条目到树中。
-func (t *Tree) Add(route string, item interface{}) error {
+func (t *Tree) Add(route string, item any) error {
 	if len(route) == 0 || route[0] != slash {
 		return errNotFromRoot
 	}
@@ -152,7 +152,7 @@ func match(pat, token string) innerResult {
 	}
 }
 
-func add(n *node, route string, item interface{}) error {
+func add(n *node, route string, item any) error {
 	if len(route) == 0 {
 		if n.item != nil {
 			return errDuplicateItem
@@ -220,7 +220,7 @@ func (n *node) forEach(fn func(string, *node) bool) bool {
 	return false
 }
 
-func newNode(item interface{}) *node {
+func newNode(item any) *node {
 	return &node{
 		item: item,
 		children: [2]map[string]*node{

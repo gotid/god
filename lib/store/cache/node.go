@@ -83,12 +83,12 @@ func (n node) DelCtx(ctx context.Context, keys ...string) error {
 }
 
 // Get 获取给定 key 的缓存并填充至 val。
-func (n node) Get(key string, val interface{}) error {
+func (n node) Get(key string, val any) error {
 	return n.GetCtx(context.Background(), key, val)
 }
 
 // GetCtx 获取给定 key 的缓存并填充至 val。
-func (n node) GetCtx(ctx context.Context, key string, val interface{}) error {
+func (n node) GetCtx(ctx context.Context, key string, val any) error {
 	err := n.doGetCache(ctx, key, val)
 	if err == errPlaceholder {
 		return n.errNotFound
@@ -103,22 +103,22 @@ func (n node) IsNotFound(err error) bool {
 }
 
 // Set 设置键值对缓存，并将其存活时间设置为 n.expire。
-func (n node) Set(key string, val interface{}) error {
+func (n node) Set(key string, val any) error {
 	return n.SetCtx(context.Background(), key, val)
 }
 
 // SetCtx 设置键值对缓存，并将其存活时间设置为 n.expire。
-func (n node) SetCtx(ctx context.Context, key string, val interface{}) error {
+func (n node) SetCtx(ctx context.Context, key string, val any) error {
 	return n.SetWithExpireCtx(ctx, key, val, n.aroundDuration(n.expire))
 }
 
 // SetWithExpire 设置给定的键值对及过期时长。
-func (n node) SetWithExpire(key string, val interface{}, expire time.Duration) error {
+func (n node) SetWithExpire(key string, val any, expire time.Duration) error {
 	return n.SetWithExpireCtx(context.Background(), key, val, expire)
 }
 
 // SetWithExpireCtx 设置给定的键值对及过期时长。
-func (n node) SetWithExpireCtx(ctx context.Context, key string, val interface{}, expire time.Duration) error {
+func (n node) SetWithExpireCtx(ctx context.Context, key string, val any, expire time.Duration) error {
 	data, err := jsonx.Marshal(val)
 	if err != nil {
 		return err
@@ -133,28 +133,28 @@ func (n node) String() string {
 }
 
 // Take 首先从缓存中获取结果，如果未找到则从DB查询并设置过期时长，然后返回结果。
-func (n node) Take(val interface{}, key string, query func(val interface{}) error) error {
+func (n node) Take(val any, key string, query func(val any) error) error {
 	return n.TakeCtx(context.Background(), val, key, query)
 }
 
 // TakeCtx 首先从缓存中获取结果，如果未找到则从DB查询并设置为给定过期时长，然后返回结果。
-func (n node) TakeCtx(ctx context.Context, val interface{}, key string, query func(val interface{}) error) error {
-	return n.doTake(ctx, val, key, query, func(v interface{}) error {
+func (n node) TakeCtx(ctx context.Context, val any, key string, query func(val any) error) error {
+	return n.doTake(ctx, val, key, query, func(v any) error {
 		return n.SetCtx(ctx, key, val)
 	})
 }
 
 // TakeWithExpire 首先从缓存中获取结果，如果未找到则从DB查询并设置为给定过期时长，然后返回结果。
-func (n node) TakeWithExpire(val interface{}, key string, query func(val interface{}, expire time.Duration) error) error {
+func (n node) TakeWithExpire(val any, key string, query func(val any, expire time.Duration) error) error {
 	return n.TakeWithExpireCtx(context.Background(), val, key, query)
 }
 
 // TakeWithExpireCtx 首先从缓存中获取结果，如果未找到则从DB查询并设置为给定过期时长，然后返回结果。
-func (n node) TakeWithExpireCtx(ctx context.Context, val interface{}, key string, query func(val interface{}, expire time.Duration) error) error {
+func (n node) TakeWithExpireCtx(ctx context.Context, val any, key string, query func(val any, expire time.Duration) error) error {
 	expire := n.aroundDuration(n.expire)
-	return n.doTake(ctx, val, key, func(val interface{}) error {
+	return n.doTake(ctx, val, key, func(val any) error {
 		return query(val, expire)
-	}, func(val interface{}) error {
+	}, func(val any) error {
 		return n.SetWithExpireCtx(ctx, key, val, expire)
 	})
 }
@@ -166,7 +166,7 @@ func (n node) asyncRetryDelCache(keys ...string) {
 	}, keys...)
 }
 
-func (n node) doGetCache(ctx context.Context, key string, val interface{}) error {
+func (n node) doGetCache(ctx context.Context, key string, val any) error {
 	n.stat.IncrTotal()
 	data, err := n.rds.GetCtx(ctx, key)
 	if err != nil {
@@ -187,11 +187,11 @@ func (n node) doGetCache(ctx context.Context, key string, val interface{}) error
 	return n.processCache(ctx, key, data, val)
 }
 
-func (n node) doTake(ctx context.Context, val interface{}, key string,
-	query func(val interface{}) error,
-	cacheVal func(val interface{}) error) error {
+func (n node) doTake(ctx context.Context, val any, key string,
+	query func(val any) error,
+	cacheVal func(val any) error) error {
 	logger := logx.WithContext(ctx)
-	data, fresh, err := n.barrier.DoEx(key, func() (interface{}, error) {
+	data, fresh, err := n.barrier.DoEx(key, func() (any, error) {
 		if err := n.doGetCache(ctx, key, val); err != nil {
 			if err == errPlaceholder {
 				return nil, n.errNotFound
@@ -236,7 +236,7 @@ func (n node) doTake(ctx context.Context, val interface{}, key string,
 	return jsonx.Unmarshal(data.([]byte), val)
 }
 
-func (n node) processCache(ctx context.Context, key, data string, val interface{}) error {
+func (n node) processCache(ctx context.Context, key, data string, val any) error {
 	err := jsonx.Unmarshal([]byte(data), val)
 	if err == nil {
 		return nil

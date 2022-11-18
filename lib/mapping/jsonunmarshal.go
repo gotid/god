@@ -10,22 +10,22 @@ const jsonTagKey = "json"
 var jsonUnmarshaler = NewUnmarshaler(jsonTagKey)
 
 // UnmarshalJsonBytes 解编组 []byte 至给定变量。
-func UnmarshalJsonBytes(content []byte, v interface{}) error {
+func UnmarshalJsonBytes(content []byte, v any) error {
 	return unmarshalJsonBytes(content, v, jsonUnmarshaler)
 }
 
 // UnmarshalJsonMap 解编组 map 至给定变量。
-func UnmarshalJsonMap(m map[string]interface{}, v interface{}) error {
+func UnmarshalJsonMap(m map[string]any, v any) error {
 	return jsonUnmarshaler.Unmarshal(m, v)
 }
 
 // UnmarshalJsonReader 解编组 io.Reader 至给定变量。
-func UnmarshalJsonReader(reader io.Reader, v interface{}) error {
+func UnmarshalJsonReader(reader io.Reader, v any) error {
 	return unmarshalJsonReader(reader, v, jsonUnmarshaler)
 }
 
-func unmarshalJsonBytes(content []byte, v interface{}, unmarshaler *Unmarshaler) error {
-	var m map[string]interface{}
+func unmarshalJsonBytes(content []byte, v any, unmarshaler *Unmarshaler) error {
+	var m map[string]any
 	if err := jsonx.Unmarshal(content, &m); err != nil {
 		return err
 	}
@@ -33,8 +33,8 @@ func unmarshalJsonBytes(content []byte, v interface{}, unmarshaler *Unmarshaler)
 	return unmarshaler.Unmarshal(m, v)
 }
 
-func unmarshalJsonReader(reader io.Reader, v interface{}, unmarshaler *Unmarshaler) error {
-	var m map[string]interface{}
+func unmarshalJsonReader(reader io.Reader, v any, unmarshaler *Unmarshaler) error {
+	var m map[string]any
 	if err := jsonx.UnmarshalFromReader(reader, &m); err != nil {
 		return err
 	}

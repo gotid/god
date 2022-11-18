@@ -3,7 +3,7 @@ lexer grammar ApiLexer;
 // 关键词
 ATDOC:              '@doc';
 ATHANDLER:          '@handler';
-INTERFACE:          'interface{}';
+INTERFACE:          'any';
 ATSERVER:           '@server';
 
 // 空格和注释

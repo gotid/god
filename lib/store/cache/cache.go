@@ -15,27 +15,27 @@ type Cache interface {
 	// DelCtx 删除给定键名的缓存值。
 	DelCtx(ctx context.Context, keys ...string) error
 	// Get 获取给定 key 的缓存并填充至 val。
-	Get(key string, val interface{}) error
+	Get(key string, val any) error
 	// GetCtx 获取给定 key 的缓存并填充至 val。
-	GetCtx(ctx context.Context, key string, val interface{}) error
+	GetCtx(ctx context.Context, key string, val any) error
 	// IsNotFound 判断给定错误是否为预定义的未找到错误。
 	IsNotFound(err error) bool
 	// Set 设置键值对缓存，并将其存活时间设置为 n.expire。
-	Set(key string, val interface{}) error
+	Set(key string, val any) error
 	// SetCtx 设置键值对缓存，并将其存活时间设置为 n.expire。
-	SetCtx(ctx context.Context, key string, val interface{}) error
+	SetCtx(ctx context.Context, key string, val any) error
 	// SetWithExpire 设置给定的键值对及过期时长。
-	SetWithExpire(key string, val interface{}, expire time.Duration) error
+	SetWithExpire(key string, val any, expire time.Duration) error
 	// SetWithExpireCtx 设置给定的键值对及过期时长。
-	SetWithExpireCtx(ctx context.Context, key string, val interface{}, expire time.Duration) error
+	SetWithExpireCtx(ctx context.Context, key string, val any, expire time.Duration) error
 	// Take 首先从缓存中获取结果，如果未找到则从DB查询并设置过期时长，然后返回结果。
-	Take(val interface{}, key string, query func(val interface{}) error) error
+	Take(val any, key string, query func(val any) error) error
 	// TakeCtx 首先从缓存中获取结果，如果未找到则从DB查询并设置为给定过期时长，然后返回结果。
-	TakeCtx(ctx context.Context, val interface{}, key string, query func(val interface{}) error) error
+	TakeCtx(ctx context.Context, val any, key string, query func(val any) error) error
 	// TakeWithExpire 首先从缓存中获取结果，如果未找到则从DB查询并设置为给定过期时长，然后返回结果。
-	TakeWithExpire(val interface{}, key string, query func(val interface{}, expire time.Duration) error) error
+	TakeWithExpire(val any, key string, query func(val any, expire time.Duration) error) error
 	// TakeWithExpireCtx 首先从缓存中获取结果，如果未找到则从DB查询并设置为给定过期时长，然后返回结果。
-	TakeWithExpireCtx(ctx context.Context, val interface{}, key string, query func(val interface{}, expire time.Duration) error) error
+	TakeWithExpireCtx(ctx context.Context, val any, key string, query func(val any, expire time.Duration) error) error
 }
 
 // New 返回一个缓存 Cache。

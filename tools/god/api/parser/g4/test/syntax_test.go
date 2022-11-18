@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var syntaxAccept = func(p *api.ApiParserParser, visitor *ast.ApiVisitor) interface{} {
+var syntaxAccept = func(p *api.ApiParserParser, visitor *ast.ApiVisitor) any {
 	return p.SyntaxLit().Accept(visitor)
 }
 

@@ -346,13 +346,13 @@ func (r *Redis) DelCtx(ctx context.Context, keys ...string) (val int, err error)
 }
 
 // Eval 对 Lua 脚本及键值参数 keys, args 求值。
-func (r *Redis) Eval(script string, keys []string, args ...interface{}) (interface{}, error) {
+func (r *Redis) Eval(script string, keys []string, args ...any) (any, error) {
 	return r.EvalCtx(context.Background(), script, keys, args...)
 }
 
 // EvalCtx 对 Lua 脚本及键值参数 keys, args 求值。
 func (r *Redis) EvalCtx(ctx context.Context, script string, keys []string,
-	args ...interface{}) (val interface{}, err error) {
+	args ...any) (val any, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -367,13 +367,13 @@ func (r *Redis) EvalCtx(ctx context.Context, script string, keys []string,
 }
 
 // EvalSha 根据给定的 sha1 校验码，对缓存在服务器中的脚本进行求值。
-func (r *Redis) EvalSha(sha string, keys []string, args ...interface{}) (interface{}, error) {
+func (r *Redis) EvalSha(sha string, keys []string, args ...any) (any, error) {
 	return r.EvalShaCtx(context.Background(), sha, keys, args...)
 }
 
 // EvalShaCtx 根据给定的 sha1 校验码，对缓存在服务器中的脚本进行求值。
 func (r *Redis) EvalShaCtx(ctx context.Context, sha string, keys []string,
-	args ...interface{}) (val interface{}, err error) {
+	args ...any) (val any, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -908,7 +908,7 @@ func (r *Redis) HMSetCtx(ctx context.Context, key string, fieldsAndValues map[st
 			return err
 		}
 
-		vals := make(map[string]interface{}, len(fieldsAndValues))
+		vals := make(map[string]any, len(fieldsAndValues))
 		for k, v := range fieldsAndValues {
 			vals[k] = v
 		}
@@ -1085,12 +1085,12 @@ func (r *Redis) LPopCtx(ctx context.Context, key string) (val string, err error)
 }
 
 // LPush 将一个或多个值插入到列表头部。
-func (r *Redis) LPush(key string, values ...interface{}) (int, error) {
+func (r *Redis) LPush(key string, values ...any) (int, error) {
 	return r.LPushCtx(context.Background(), key, values...)
 }
 
 // LPushCtx 将一个或多个值插入到列表头部。
-func (r *Redis) LPushCtx(ctx context.Context, key string, values ...interface{}) (val int, err error) {
+func (r *Redis) LPushCtx(ctx context.Context, key string, values ...any) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1219,12 +1219,12 @@ func (r *Redis) PersistCtx(ctx context.Context, key string) (val bool, err error
 }
 
 // PFAdd 将 values 加入到键为 key 的 HyperLogLog 中，用于快速统计超大数据的唯一元素（基数）估算值。
-func (r *Redis) PFAdd(key string, values ...interface{}) (bool, error) {
+func (r *Redis) PFAdd(key string, values ...any) (bool, error) {
 	return r.PFAddCtx(context.Background(), key, values...)
 }
 
 // PFAddCtx 将 values 加入到键为 key 的 HyperLogLog 中，用于快速统计超大数据的唯一元素（基数）估算值。
-func (r *Redis) PFAddCtx(ctx context.Context, key string, values ...interface{}) (val bool, err error) {
+func (r *Redis) PFAddCtx(ctx context.Context, key string, values ...any) (val bool, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1349,12 +1349,12 @@ func (r *Redis) RPopCtx(ctx context.Context, key string) (val string, err error)
 }
 
 // RPush 在列表右侧添加一个或多个值。
-func (r *Redis) RPush(key string, values ...interface{}) (int, error) {
+func (r *Redis) RPush(key string, values ...any) (int, error) {
 	return r.RPushCtx(context.Background(), key, values...)
 }
 
 // RPushCtx 在列表右侧添加一个或多个值。
-func (r *Redis) RPushCtx(ctx context.Context, key string, values ...interface{}) (val int, err error) {
+func (r *Redis) RPushCtx(ctx context.Context, key string, values ...any) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1374,12 +1374,12 @@ func (r *Redis) RPushCtx(ctx context.Context, key string, values ...interface{})
 }
 
 // SAdd 向集合添加一个或多个成员。
-func (r *Redis) SAdd(key string, values ...interface{}) (int, error) {
+func (r *Redis) SAdd(key string, values ...any) (int, error) {
 	return r.SAddCtx(context.Background(), key, values...)
 }
 
 // SAddCtx 向集合添加一个或多个成员。
-func (r *Redis) SAddCtx(ctx context.Context, key string, values ...interface{}) (val int, err error) {
+func (r *Redis) SAddCtx(ctx context.Context, key string, values ...any) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1578,12 +1578,12 @@ func (r *Redis) SetNXExCtx(ctx context.Context, key, value string, seconds int) 
 }
 
 // SIsMember 判断 member 是否为集合 key 的成员。
-func (r *Redis) SIsMember(key string, member interface{}) (bool, error) {
+func (r *Redis) SIsMember(key string, member any) (bool, error) {
 	return r.SIsMemberCtx(context.Background(), key, member)
 }
 
 // SIsMemberCtx 判断 member 是否为集合 key 的成员。
-func (r *Redis) SIsMemberCtx(ctx context.Context, key string, member interface{}) (val bool, err error) {
+func (r *Redis) SIsMemberCtx(ctx context.Context, key string, member any) (val bool, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -1658,12 +1658,12 @@ func (r *Redis) SRandMemberCtx(ctx context.Context, key string, count int) (val 
 }
 
 // SRem 移除集合 key 中的一个或多个成员 members。
-func (r *Redis) SRem(key string, members ...interface{}) (int, error) {
+func (r *Redis) SRem(key string, members ...any) (int, error) {
 	return r.SRemCtx(context.Background(), key, members...)
 }
 
 // SRemCtx 移除集合 key 中的一个或多个成员 members。
-func (r *Redis) SRemCtx(ctx context.Context, key string, members ...interface{}) (val int, err error) {
+func (r *Redis) SRemCtx(ctx context.Context, key string, members ...any) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -2044,12 +2044,12 @@ func (r *Redis) ZRankCtx(ctx context.Context, key, field string) (val int64, err
 }
 
 // ZRem 移除有序集合中给定的一个或多个成员。
-func (r *Redis) ZRem(key string, members ...interface{}) (int, error) {
+func (r *Redis) ZRem(key string, members ...any) (int, error) {
 	return r.ZRemCtx(context.Background(), key, members...)
 }
 
 // ZRemCtx 移除有序集合中给定的一个或多个成员。
-func (r *Redis) ZRemCtx(ctx context.Context, key string, members ...interface{}) (val int, err error) {
+func (r *Redis) ZRemCtx(ctx context.Context, key string, members ...any) (val int, err error) {
 	err = r.brk.DoWithAcceptable(func() error {
 		node, err := getRedis(r)
 		if err != nil {
@@ -2450,7 +2450,7 @@ func toPairs(values []red.Z) []Pair {
 	return pairs
 }
 
-func toStrings(values []interface{}) []string {
+func toStrings(values []any) []string {
 	ret := make([]string, len(values))
 	for i, v := range values {
 		if v == nil {

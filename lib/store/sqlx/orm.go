@@ -20,11 +20,11 @@ type rowsScanner interface {
 	Columns() ([]string, error)
 	Err() error
 	Next() bool
-	Scan(v ...interface{}) error
+	Scan(v ...any) error
 }
 
 // 解编组单行查询结果。
-func unmarshalRow(v interface{}, scanner rowsScanner, strict bool) error {
+func unmarshalRow(v any, scanner rowsScanner, strict bool) error {
 	if !scanner.Next() {
 		if err := scanner.Err(); err != nil {
 			return err
@@ -62,14 +62,15 @@ func unmarshalRow(v interface{}, scanner rowsScanner, strict bool) error {
 			return err
 		}
 
-		return scanner.Scan(values...)
+		err = scanner.Scan(values...)
+		return err
 	default:
 		return ErrUnsupportedValueType
 	}
 }
 
 // 解编组多行查询结果。
-func unmarshalRows(v interface{}, scanner rowsScanner, strict bool) error {
+func unmarshalRows(v any, scanner rowsScanner, strict bool) error {
 	rv := reflect.ValueOf(v)
 	if err := mapping.ValidatePtr(&rv); err != nil {
 		return err
@@ -148,7 +149,7 @@ func unmarshalRows(v interface{}, scanner rowsScanner, strict bool) error {
 	}
 }
 
-func mapStructFieldsIntoSlice(v reflect.Value, columns []string, strict bool) ([]interface{}, error) {
+func mapStructFieldsIntoSlice(v reflect.Value, columns []string, strict bool) ([]any, error) {
 	fields := unwrapFields(v)
 	if strict && len(columns) < len(fields) {
 		return nil, ErrNotMatchDestination
@@ -159,7 +160,7 @@ func mapStructFieldsIntoSlice(v reflect.Value, columns []string, strict bool) ([
 		return nil, err
 	}
 
-	values := make([]interface{}, len(columns))
+	values := make([]any, len(columns))
 	if len(taggedMap) == 0 {
 		for i := 0; i < len(values); i++ {
 			valueField := fields[i]
@@ -188,7 +189,7 @@ func mapStructFieldsIntoSlice(v reflect.Value, columns []string, strict bool) ([
 			if tagged, ok := taggedMap[column]; ok {
 				values[i] = tagged
 			} else {
-				var anonymous interface{}
+				var anonymous any
 				values[i] = &anonymous
 			}
 		}
@@ -197,10 +198,10 @@ func mapStructFieldsIntoSlice(v reflect.Value, columns []string, strict bool) ([
 	return values, nil
 }
 
-func getTaggedFieldValueMap(v reflect.Value) (map[string]interface{}, error) {
+func getTaggedFieldValueMap(v reflect.Value) (map[string]any, error) {
 	rt := mapping.Deref(v.Type())
 	size := rt.NumField()
-	result := make(map[string]interface{}, size)
+	result := make(map[string]any, size)
 
 	for i := 0; i < size; i++ {
 		key := parseTagName(rt.Field(i))

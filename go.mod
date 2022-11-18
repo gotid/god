@@ -16,7 +16,7 @@ require (
 	github.com/jhump/protoreflect v1.12.0
 	github.com/prometheus/client_golang v1.13.0
 	github.com/spaolacci/murmur3 v1.1.0
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.1
 	go.etcd.io/etcd/client/v3 v3.5.5
 	go.opentelemetry.io/otel v1.11.0
 	go.opentelemetry.io/otel/exporters/jaeger v1.11.0
@@ -27,9 +27,11 @@ require (
 	go.uber.org/automaxprocs v1.5.1
 	go.uber.org/goleak v1.1.12
 	golang.org/x/sys v0.2.0
+	golang.org/x/time v0.2.0
 	google.golang.org/genproto v0.0.0-20211118181313-81c1377c94b1
 	google.golang.org/grpc v1.50.1
 	google.golang.org/protobuf v1.28.1
+	gopkg.in/cheggaaa/pb.v1 v1.0.28
 	gopkg.in/h2non/gock.v1 v1.1.2
 	gopkg.in/yaml.v2 v2.4.0
 )
@@ -69,7 +71,5 @@ require (
 	go.uber.org/zap v1.17.0 // indirect
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
 	golang.org/x/text v0.3.7 // indirect
-	golang.org/x/time v0.2.0 // indirect
-	gopkg.in/cheggaaa/pb.v1 v1.0.28 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

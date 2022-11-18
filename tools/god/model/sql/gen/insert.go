@@ -55,7 +55,7 @@ func genInsert(table Table, withCache, postgreSql bool) (string, string, error) 
 		return "", "", err
 	}
 
-	output, err := util.With("insert").Parse(text).Execute(map[string]interface{}{
+	output, err := util.With("insert").Parse(text).Execute(map[string]any{
 		"withCache":             withCache,
 		"upperStartCamelObject": camel,
 		"lowerStartCamelObject": stringx.From(camel).UnTitle(),
@@ -75,7 +75,7 @@ func genInsert(table Table, withCache, postgreSql bool) (string, string, error) 
 		return "", "", err
 	}
 
-	insertMethodOutput, err := util.With("insertMethod").Parse(text).Execute(map[string]interface{}{
+	insertMethodOutput, err := util.With("insertMethod").Parse(text).Execute(map[string]any{
 		"upperStartCamelObject": camel,
 		"data":                  table,
 	})

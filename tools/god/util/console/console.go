@@ -12,11 +12,11 @@ type (
 	// colorConsole 向控制台提供彩色输出
 	// ideaConsole 使用 intellij 的前缀输出
 	Console interface {
-		Info(format string, a ...interface{})
-		Warning(format string, a ...interface{})
-		Error(format string, a ...interface{})
-		Success(format string, a ...interface{})
-		Debug(format string, a ...interface{})
+		Info(format string, a ...any)
+		Warning(format string, a ...any)
+		Error(format string, a ...any)
+		Success(format string, a ...any)
+		Debug(format string, a ...any)
 		MarkDone()
 	}
 
@@ -28,27 +28,27 @@ type (
 	ideaConsole struct{}
 )
 
-func (i *ideaConsole) Info(format string, a ...interface{}) {
+func (i *ideaConsole) Info(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
 	fmt.Println(msg)
 }
 
-func (i *ideaConsole) Warning(format string, a ...interface{}) {
+func (i *ideaConsole) Warning(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
 	fmt.Println("[警告]：", msg)
 }
 
-func (i *ideaConsole) Error(format string, a ...interface{}) {
+func (i *ideaConsole) Error(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
 	fmt.Println("[错误]：", msg)
 }
 
-func (i *ideaConsole) Success(format string, a ...interface{}) {
+func (i *ideaConsole) Success(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
 	fmt.Println("[成功]：", msg)
 }
 
-func (i *ideaConsole) Debug(format string, a ...interface{}) {
+func (i *ideaConsole) Debug(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
 	fmt.Println(aurora.BrightCyan(msg))
 }
@@ -57,7 +57,7 @@ func (i *ideaConsole) MarkDone() {
 	i.Success("完成。")
 }
 
-func (c *colorConsole) Info(format string, a ...interface{}) {
+func (c *colorConsole) Info(format string, a ...any) {
 	if !c.enable {
 		return
 	}
@@ -66,7 +66,7 @@ func (c *colorConsole) Info(format string, a ...interface{}) {
 	fmt.Println(msg)
 }
 
-func (c *colorConsole) Warning(format string, a ...interface{}) {
+func (c *colorConsole) Warning(format string, a ...any) {
 	if !c.enable {
 		return
 	}
@@ -74,7 +74,7 @@ func (c *colorConsole) Warning(format string, a ...interface{}) {
 	println(aurora.BrightYellow(msg))
 }
 
-func (c *colorConsole) Error(format string, a ...interface{}) {
+func (c *colorConsole) Error(format string, a ...any) {
 	if !c.enable {
 		return
 	}
@@ -82,7 +82,7 @@ func (c *colorConsole) Error(format string, a ...interface{}) {
 	println(aurora.BrightRed(msg))
 }
 
-func (c *colorConsole) Success(format string, a ...interface{}) {
+func (c *colorConsole) Success(format string, a ...any) {
 	if !c.enable {
 		return
 	}
@@ -90,7 +90,7 @@ func (c *colorConsole) Success(format string, a ...interface{}) {
 	println(aurora.BrightGreen(msg))
 }
 
-func (c *colorConsole) Debug(format string, a ...interface{}) {
+func (c *colorConsole) Debug(format string, a ...any) {
 	if !c.enable {
 		return
 	}
@@ -134,7 +134,7 @@ func NewColorConsole(enable ...bool) Console {
 
 var defaultConsole = &colorConsole{enable: true}
 
-func println(msg interface{}) {
+func println(msg any) {
 	value, ok := msg.(aurora.Value)
 	if !ok {
 		fmt.Println(msg)
@@ -149,14 +149,14 @@ func println(msg interface{}) {
 	fmt.Println(msg)
 }
 
-func Info(format string, a ...interface{}) {
+func Info(format string, a ...any) {
 	defaultConsole.Info(format, a...)
 }
 
-func Warning(format string, a ...interface{}) {
+func Warning(format string, a ...any) {
 	defaultConsole.Warning(format, a...)
 }
 
-func Error(format string, a ...interface{}) {
+func Error(format string, a ...any) {
 	defaultConsole.Error(format, a...)
 }

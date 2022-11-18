@@ -33,7 +33,7 @@ func SetSlowThreshold(threshold time.Duration) {
 	slowThreshold.Set(threshold)
 }
 
-func exec(ctx context.Context, conn sessionConn, query string, args ...interface{}) (sql.Result, error) {
+func exec(ctx context.Context, conn sessionConn, query string, args ...any) (sql.Result, error) {
 	guard := newGuard("exec")
 	if err := guard.start(query, args...); err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func exec(ctx context.Context, conn sessionConn, query string, args ...interface
 	return result, err
 }
 
-func execStmt(ctx context.Context, conn stmtConn, query string, args ...interface{}) (sql.Result, error) {
+func execStmt(ctx context.Context, conn stmtConn, query string, args ...any) (sql.Result, error) {
 	guard := newGuard("execStmt")
 	if err := guard.start(query, args...); err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func execStmt(ctx context.Context, conn stmtConn, query string, args ...interfac
 	return result, err
 }
 
-func query(ctx context.Context, conn sessionConn, scanner func(*sql.Rows) error, query string, args ...interface{}) error {
+func query(ctx context.Context, conn sessionConn, scanner func(*sql.Rows) error, query string, args ...any) error {
 	guard := newGuard("query")
 	if err := guard.start(query, args...); err != nil {
 		return err
@@ -73,7 +73,7 @@ func query(ctx context.Context, conn sessionConn, scanner func(*sql.Rows) error,
 	return scanner(rows)
 }
 
-func queryStmt(ctx context.Context, conn stmtConn, scanner func(*sql.Rows) error, query string, args ...interface{}) error {
+func queryStmt(ctx context.Context, conn stmtConn, scanner func(*sql.Rows) error, query string, args ...any) error {
 	guard := newGuard("queryStmt")
 	if err := guard.start(query, args...); err != nil {
 		return err
@@ -91,7 +91,7 @@ func queryStmt(ctx context.Context, conn stmtConn, scanner func(*sql.Rows) error
 
 type (
 	sqlGuard interface {
-		start(query string, args ...interface{}) error
+		start(query string, args ...any) error
 		finish(ctx context.Context, err error)
 	}
 
@@ -104,14 +104,14 @@ type (
 	}
 )
 
-func (n nilGuard) start(_ string, _ ...interface{}) error {
+func (n nilGuard) start(_ string, _ ...any) error {
 	return nil
 }
 
 func (n nilGuard) finish(_ context.Context, _ error) {
 }
 
-func (g *realSqlGuard) start(query string, args ...interface{}) error {
+func (g *realSqlGuard) start(query string, args ...any) error {
 	stmt, err := format(query, args...)
 	if err != nil {
 		return err

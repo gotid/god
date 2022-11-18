@@ -19,13 +19,13 @@ const (
 )
 
 func TestNewTimingWheel(t *testing.T) {
-	_, err := NewTimingWheel(0, 10, func(key, value interface{}) {})
+	_, err := NewTimingWheel(0, 10, func(key, value any) {})
 	assert.NotNil(t, err)
 }
 
 func TestTimingWheel_Drain(t *testing.T) {
 	ticker := timex.NewFakeTicker()
-	tw, _ := newTimingWheelWithClock(testStep, 10, func(k, v interface{}) {
+	tw, _ := newTimingWheelWithClock(testStep, 10, func(k, v any) {
 	}, ticker)
 	tw.SetTimer("first", 3, testStep*4)
 	tw.SetTimer("second", 5, testStep*7)
@@ -35,7 +35,7 @@ func TestTimingWheel_Drain(t *testing.T) {
 	var lock sync.Mutex
 	var wg sync.WaitGroup
 	wg.Add(3)
-	tw.Drain(func(key, value interface{}) {
+	tw.Drain(func(key, value any) {
 		lock.Lock()
 		defer lock.Unlock()
 		keys = append(keys, key.(string))
@@ -49,19 +49,19 @@ func TestTimingWheel_Drain(t *testing.T) {
 	assert.EqualValues(t, []string{"first", "second", "third"}, keys)
 	assert.EqualValues(t, []int{3, 5, 7}, vals)
 	var count int
-	tw.Drain(func(key, value interface{}) {
+	tw.Drain(func(key, value any) {
 		count++
 	})
 	time.Sleep(time.Millisecond * 100)
 	assert.Equal(t, 0, count)
 	tw.Stop()
-	assert.Equal(t, ErrClosed, tw.Drain(func(key, value interface{}) {}))
+	assert.Equal(t, ErrClosed, tw.Drain(func(key, value any) {}))
 }
 
 func TestTimingWheel_SetTimerSoon(t *testing.T) {
 	run := syncx.NewAtomicBool()
 	ticker := timex.NewFakeTicker()
-	tw, _ := newTimingWheelWithClock(testStep, 10, func(k, v interface{}) {
+	tw, _ := newTimingWheelWithClock(testStep, 10, func(k, v any) {
 		assert.True(t, run.CompareAndSwap(false, true))
 		assert.Equal(t, "any", k)
 		assert.Equal(t, 3, v.(int))
@@ -77,7 +77,7 @@ func TestTimingWheel_SetTimerSoon(t *testing.T) {
 func TestTimingWheel_SetTimerTwice(t *testing.T) {
 	run := syncx.NewAtomicBool()
 	ticker := timex.NewFakeTicker()
-	tw, _ := newTimingWheelWithClock(testStep, 10, func(k, v interface{}) {
+	tw, _ := newTimingWheelWithClock(testStep, 10, func(k, v any) {
 		assert.True(t, run.CompareAndSwap(false, true))
 		assert.Equal(t, "any", k)
 		assert.Equal(t, 5, v.(int))
@@ -95,7 +95,7 @@ func TestTimingWheel_SetTimerTwice(t *testing.T) {
 
 func TestTimingWheel_SetTimerWrongDelay(t *testing.T) {
 	ticker := timex.NewFakeTicker()
-	tw, _ := newTimingWheelWithClock(testStep, 10, func(k, v interface{}) {}, ticker)
+	tw, _ := newTimingWheelWithClock(testStep, 10, func(k, v any) {}, ticker)
 	defer tw.Stop()
 	assert.NotPanics(t, func() {
 		tw.SetTimer("any", 3, -testStep)
@@ -104,7 +104,7 @@ func TestTimingWheel_SetTimerWrongDelay(t *testing.T) {
 
 func TestTimingWheel_SetTimerAfterClose(t *testing.T) {
 	ticker := timex.NewFakeTicker()
-	tw, _ := newTimingWheelWithClock(testStep, 10, func(k, v interface{}) {}, ticker)
+	tw, _ := newTimingWheelWithClock(testStep, 10, func(k, v any) {}, ticker)
 	tw.Stop()
 	assert.Equal(t, ErrClosed, tw.SetTimer("any", 3, testStep))
 }
@@ -112,7 +112,7 @@ func TestTimingWheel_SetTimerAfterClose(t *testing.T) {
 func TestTimingWheel_MoveTimer(t *testing.T) {
 	run := syncx.NewAtomicBool()
 	ticker := timex.NewFakeTicker()
-	tw, _ := newTimingWheelWithClock(testStep, 3, func(k, v interface{}) {
+	tw, _ := newTimingWheelWithClock(testStep, 3, func(k, v any) {
 		assert.True(t, run.CompareAndSwap(false, true))
 		assert.Equal(t, "any", k)
 		assert.Equal(t, 3, v.(int))
@@ -138,7 +138,7 @@ func TestTimingWheel_MoveTimer(t *testing.T) {
 func TestTimingWheel_MoveTimerSoon(t *testing.T) {
 	run := syncx.NewAtomicBool()
 	ticker := timex.NewFakeTicker()
-	tw, _ := newTimingWheelWithClock(testStep, 3, func(k, v interface{}) {
+	tw, _ := newTimingWheelWithClock(testStep, 3, func(k, v any) {
 		assert.True(t, run.CompareAndSwap(false, true))
 		assert.Equal(t, "any", k)
 		assert.Equal(t, 3, v.(int))
@@ -154,7 +154,7 @@ func TestTimingWheel_MoveTimerSoon(t *testing.T) {
 func TestTimingWheel_MoveTimerEarlier(t *testing.T) {
 	run := syncx.NewAtomicBool()
 	ticker := timex.NewFakeTicker()
-	tw, _ := newTimingWheelWithClock(testStep, 10, func(k, v interface{}) {
+	tw, _ := newTimingWheelWithClock(testStep, 10, func(k, v any) {
 		assert.True(t, run.CompareAndSwap(false, true))
 		assert.Equal(t, "any", k)
 		assert.Equal(t, 3, v.(int))
@@ -172,7 +172,7 @@ func TestTimingWheel_MoveTimerEarlier(t *testing.T) {
 
 func TestTimingWheel_RemoveTimer(t *testing.T) {
 	ticker := timex.NewFakeTicker()
-	tw, _ := newTimingWheelWithClock(testStep, 10, func(k, v interface{}) {}, ticker)
+	tw, _ := newTimingWheelWithClock(testStep, 10, func(k, v any) {}, ticker)
 	tw.SetTimer("any", 3, testStep)
 	assert.NotPanics(t, func() {
 		tw.RemoveTimer("any")
@@ -235,7 +235,7 @@ func TestTimingWheel_SetTimer(t *testing.T) {
 			}
 			var actual int32
 			done := make(chan lang.PlaceholderType)
-			tw, err := newTimingWheelWithClock(testStep, test.slots, func(key, value interface{}) {
+			tw, err := newTimingWheelWithClock(testStep, test.slots, func(key, value any) {
 				assert.Equal(t, 1, key.(int))
 				assert.Equal(t, 2, value.(int))
 				actual = atomic.LoadInt32(&count)
@@ -316,7 +316,7 @@ func TestTimingWheel_SetAndMoveThenStart(t *testing.T) {
 			}
 			var actual int32
 			done := make(chan lang.PlaceholderType)
-			tw, err := newTimingWheelWithClock(testStep, test.slots, func(key, value interface{}) {
+			tw, err := newTimingWheelWithClock(testStep, test.slots, func(key, value any) {
 				actual = atomic.LoadInt32(&count)
 				close(done)
 			}, ticker)
@@ -404,7 +404,7 @@ func TestTimingWheel_SetAndMoveTwice(t *testing.T) {
 			}
 			var actual int32
 			done := make(chan lang.PlaceholderType)
-			tw, err := newTimingWheelWithClock(testStep, test.slots, func(key, value interface{}) {
+			tw, err := newTimingWheelWithClock(testStep, test.slots, func(key, value any) {
 				actual = atomic.LoadInt32(&count)
 				close(done)
 			}, ticker)
@@ -485,7 +485,7 @@ func TestTimingWheel_ElapsedAndSet(t *testing.T) {
 			}
 			var actual int32
 			done := make(chan lang.PlaceholderType)
-			tw, err := newTimingWheelWithClock(testStep, test.slots, func(key, value interface{}) {
+			tw, err := newTimingWheelWithClock(testStep, test.slots, func(key, value any) {
 				actual = atomic.LoadInt32(&count)
 				close(done)
 			}, ticker)
@@ -576,7 +576,7 @@ func TestTimingWheel_ElapsedAndSetThenMove(t *testing.T) {
 			}
 			var actual int32
 			done := make(chan lang.PlaceholderType)
-			tw, err := newTimingWheelWithClock(testStep, test.slots, func(key, value interface{}) {
+			tw, err := newTimingWheelWithClock(testStep, test.slots, func(key, value any) {
 				actual = atomic.LoadInt32(&count)
 				close(done)
 			}, ticker)
@@ -611,7 +611,7 @@ func TestMoveAndRemoveTask(t *testing.T) {
 		}
 	}
 	var keys []int
-	tw, _ := newTimingWheelWithClock(testStep, 10, func(k, v interface{}) {
+	tw, _ := newTimingWheelWithClock(testStep, 10, func(k, v any) {
 		assert.Equal(t, "any", k)
 		assert.Equal(t, 3, v.(int))
 		keys = append(keys, v.(int))
@@ -631,7 +631,7 @@ func TestMoveAndRemoveTask(t *testing.T) {
 func BenchmarkTimingWheel(b *testing.B) {
 	b.ReportAllocs()
 
-	tw, _ := NewTimingWheel(time.Second, 100, func(k, v interface{}) {})
+	tw, _ := NewTimingWheel(time.Second, 100, func(k, v any) {})
 	for i := 0; i < b.N; i++ {
 		tw.SetTimer(i, i, time.Second)
 		tw.SetTimer(b.N+i, b.N+i, time.Second)

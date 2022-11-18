@@ -25,7 +25,7 @@ type (
 		hashFunc Func
 		replicas int
 		keys     []uint64 // 节点哈希值
-		ring     map[uint64][]interface{}
+		ring     map[uint64][]any
 		nodes    map[string]lang.PlaceholderType
 		lock     sync.RWMutex
 	}
@@ -49,24 +49,24 @@ func NewCustomConsistentHash(replicas int, fn Func) *ConsistentHash {
 	return &ConsistentHash{
 		hashFunc: fn,
 		replicas: replicas,
-		ring:     make(map[uint64][]interface{}),
+		ring:     make(map[uint64][]any),
 		nodes:    make(map[string]lang.PlaceholderType),
 	}
 }
 
 // Add 添加 h.replicas 数量的节点，后续调用将覆盖之前的调用。
-func (h *ConsistentHash) Add(node interface{}) {
+func (h *ConsistentHash) Add(node any) {
 	h.AddWithReplicas(node, h.replicas)
 }
 
 // AddWithWeight 添加带权重的节点，权重值为1-100的百分数，后续调用覆盖之前调用。
-func (h *ConsistentHash) AddWithWeight(node interface{}, weight int) {
+func (h *ConsistentHash) AddWithWeight(node any, weight int) {
 	replicas := h.replicas * weight / TopWeight
 	h.AddWithReplicas(node, replicas)
 }
 
 // AddWithReplicas 添加副本数量个节点，最大副本数将被限制在 h.replicas 以内，后续调用覆盖前面的调用。
-func (h *ConsistentHash) AddWithReplicas(node interface{}, replicas int) {
+func (h *ConsistentHash) AddWithReplicas(node any, replicas int) {
 	h.Remove(node)
 
 	if replicas > h.replicas {
@@ -90,7 +90,7 @@ func (h *ConsistentHash) AddWithReplicas(node interface{}, replicas int) {
 }
 
 // Get 基于给定的 v 返回对应节点。
-func (h *ConsistentHash) Get(v interface{}) (interface{}, bool) {
+func (h *ConsistentHash) Get(v any) (any, bool) {
 	h.lock.RLock()
 	defer h.lock.RUnlock()
 
@@ -117,7 +117,7 @@ func (h *ConsistentHash) Get(v interface{}) (interface{}, bool) {
 }
 
 // Remove 从 h 中移除给定节点。
-func (h *ConsistentHash) Remove(node interface{}) {
+func (h *ConsistentHash) Remove(node any) {
 	nodeRepr := repr(node)
 
 	h.lock.Lock()
@@ -170,10 +170,10 @@ func (h *ConsistentHash) removeRingNode(hash uint64, nodeRepr string) {
 	}
 }
 
-func repr(node interface{}) string {
+func repr(node any) string {
 	return lang.Repr(node)
 }
 
-func innerRepr(node interface{}) string {
+func innerRepr(node any) string {
 	return fmt.Sprintf("%d:%v", prime, node)
 }

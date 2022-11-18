@@ -18,7 +18,7 @@ func genNew(table Table, withCache, postgreSql bool) (string, error) {
 		t = "`" + fmt.Sprintf(`"%s"."%s"`, table.Db.Source(), table.Name.Source()) + "`"
 	}
 
-	output, err := util.With("new").Parse(text).Execute(map[string]interface{}{
+	output, err := util.With("new").Parse(text).Execute(map[string]any{
 		"table":                 t,
 		"withCache":             withCache,
 		"upperStartCamelObject": table.Name.ToCamel(),

@@ -41,7 +41,7 @@ func (m *ResourceManager) Close() error {
 
 // Get 返回给定键的资源。
 func (m *ResourceManager) Get(key string, create func() (io.Closer, error)) (io.Closer, error) {
-	val, err := m.singleFlight.Do(key, func() (interface{}, error) {
+	val, err := m.singleFlight.Do(key, func() (any, error) {
 		m.lock.RLock()
 		resource, ok := m.resources[key]
 		m.lock.RUnlock()

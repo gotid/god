@@ -29,7 +29,7 @@ func DoWithTimeout(fn func() error, timeout time.Duration, opts ...DoOption) err
 
 	// 创建缓冲为1的通道，以防协程泄露
 	done := make(chan error, 1)
-	panicChan := make(chan interface{}, 1)
+	panicChan := make(chan any, 1)
 	go func() {
 		defer func() {
 			if p := recover(); p != nil {

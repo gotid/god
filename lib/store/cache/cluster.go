@@ -35,7 +35,7 @@ func (c cluster) DelCtx(ctx context.Context, keys ...string) error {
 		return n.(Cache).DelCtx(ctx, key)
 	default:
 		var be errorx.BatchError
-		nodes := make(map[interface{}][]string)
+		nodes := make(map[any][]string)
 		for _, key := range keys {
 			n, ok := c.dispatcher.Get(key)
 			if !ok {
@@ -56,12 +56,12 @@ func (c cluster) DelCtx(ctx context.Context, keys ...string) error {
 }
 
 // Get 获取给定 key 的缓存并填充至 val。
-func (c cluster) Get(key string, val interface{}) error {
+func (c cluster) Get(key string, val any) error {
 	return c.GetCtx(context.Background(), key, val)
 }
 
 // GetCtx 获取给定 key 的缓存并填充至 val。
-func (c cluster) GetCtx(ctx context.Context, key string, val interface{}) error {
+func (c cluster) GetCtx(ctx context.Context, key string, val any) error {
 	n, ok := c.dispatcher.Get(key)
 	if !ok {
 		return c.errNotFound
@@ -76,12 +76,12 @@ func (c cluster) IsNotFound(err error) bool {
 }
 
 // Set 设置键值对缓存，并将其存活时间设置为 c.expire。
-func (c cluster) Set(key string, val interface{}) error {
+func (c cluster) Set(key string, val any) error {
 	return c.SetCtx(context.Background(), key, val)
 }
 
 // SetCtx 设置键值对缓存，并将其存活时间设置为 c.expire。
-func (c cluster) SetCtx(ctx context.Context, key string, val interface{}) error {
+func (c cluster) SetCtx(ctx context.Context, key string, val any) error {
 	n, ok := c.dispatcher.Get(key)
 	if !ok {
 		return c.errNotFound
@@ -91,12 +91,12 @@ func (c cluster) SetCtx(ctx context.Context, key string, val interface{}) error 
 }
 
 // SetWithExpire 设置给定的键值对及过期时长。
-func (c cluster) SetWithExpire(key string, val interface{}, expire time.Duration) error {
+func (c cluster) SetWithExpire(key string, val any, expire time.Duration) error {
 	return c.SetWithExpireCtx(context.Background(), key, val, expire)
 }
 
 // SetWithExpireCtx 设置给定的键值对及过期时长。
-func (c cluster) SetWithExpireCtx(ctx context.Context, key string, val interface{}, expire time.Duration) error {
+func (c cluster) SetWithExpireCtx(ctx context.Context, key string, val any, expire time.Duration) error {
 	n, ok := c.dispatcher.Get(key)
 	if !ok {
 		return c.errNotFound
@@ -106,12 +106,12 @@ func (c cluster) SetWithExpireCtx(ctx context.Context, key string, val interface
 }
 
 // Take 首先从缓存中获取结果，如果未找到则从DB查询并设置过期时长，然后返回结果。
-func (c cluster) Take(val interface{}, key string, query func(val interface{}) error) error {
+func (c cluster) Take(val any, key string, query func(val any) error) error {
 	return c.TakeCtx(context.Background(), val, key, query)
 }
 
 // TakeCtx 首先从缓存中获取结果，如果未找到则从DB查询并设置为给定过期时长，然后返回结果。
-func (c cluster) TakeCtx(ctx context.Context, val interface{}, key string, query func(val interface{}) error) error {
+func (c cluster) TakeCtx(ctx context.Context, val any, key string, query func(val any) error) error {
 	n, ok := c.dispatcher.Get(key)
 	if !ok {
 		return c.errNotFound
@@ -121,12 +121,12 @@ func (c cluster) TakeCtx(ctx context.Context, val interface{}, key string, query
 }
 
 // TakeWithExpire 首先从缓存中获取结果，如果未找到则从DB查询并设置为给定过期时长，然后返回结果。
-func (c cluster) TakeWithExpire(val interface{}, key string, query func(val interface{}, expire time.Duration) error) error {
+func (c cluster) TakeWithExpire(val any, key string, query func(val any, expire time.Duration) error) error {
 	return c.TakeWithExpireCtx(context.Background(), val, key, query)
 }
 
 // TakeWithExpireCtx 首先从缓存中获取结果，如果未找到则从DB查询并设置为给定过期时长，然后返回结果。
-func (c cluster) TakeWithExpireCtx(ctx context.Context, val interface{}, key string, query func(val interface{}, expire time.Duration) error) error {
+func (c cluster) TakeWithExpireCtx(ctx context.Context, val any, key string, query func(val any, expire time.Duration) error) error {
 	n, ok := c.dispatcher.Get(key)
 	if !ok {
 		return c.errNotFound

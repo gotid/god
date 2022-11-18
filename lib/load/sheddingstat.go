@@ -62,10 +62,10 @@ func (s *SheddingStat) loop(c <-chan time.Time) {
 
 		cpuUsage := stat.CpuUsage()
 		if st.Drop == 0 {
-			logx.Statf("(%s) 负载 [1m]，CPU：%d，请求：%d，通过：%d，丢弃：%d",
+			logx.Statf("(%s) [1m], CPU: %d, 请求: %d, 通过: %d, 丢弃: %d",
 				s.name, cpuUsage, st.Total, st.Pass, st.Drop)
 		} else {
-			logx.Statf("(%s) 负载_丢弃 [1m]，CPU：%d，请求：%d，通过：%d，丢弃：%d",
+			logx.Statf("(%s) 负载_丢弃 [1m], CPU: %d, 请求: %d, 通过: %d, 丢弃: %d",
 				s.name, cpuUsage, st.Total, st.Pass, st.Drop)
 		}
 	}

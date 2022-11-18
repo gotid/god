@@ -8,7 +8,7 @@ import (
 
 type (
 	// AnyType 用于保存任意类型。
-	AnyType = interface{}
+	AnyType = any
 	// PlaceholderType 表示一个占位符类型。
 	PlaceholderType = struct{}
 )
@@ -17,7 +17,7 @@ type (
 var Placeholder PlaceholderType
 
 // Repr 返回 v 的字符串表示形式。
-func Repr(v interface{}) string {
+func Repr(v any) string {
 	if v == nil {
 		return ""
 	}

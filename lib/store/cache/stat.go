@@ -61,7 +61,7 @@ func (s *Stat) statLoop() {
 		percent := 100 * float32(hit) / float32(total)
 		miss := atomic.SwapUint64(&s.Miss, 0)
 		dbFails := atomic.SwapUint64(&s.DbFails, 0)
-		logx.Statf("数据库缓存(%s) - qpm: %d，命中率：%.1f%%，击中：%d，未击中：%d，数据库错误：%d",
+		logx.Statf("数据库缓存(%s) - 请求数(m): %d, 命中率: %.1f%%, 命中: %d, 未命中: %d, 数据库错误L %d",
 			s.name, total, percent, hit, miss, dbFails)
 	}
 }

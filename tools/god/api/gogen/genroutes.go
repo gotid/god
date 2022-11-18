@@ -172,7 +172,7 @@ api.WithPrefix("%s"),`, g.prefix)
 		category:        category,
 		templateFile:    routesTemplateFile,
 		builtinTemplate: routesTemplate,
-		data: map[string]interface{}{
+		data: map[string]any{
 			"hasTimeout":      hasTimeout,
 			"importPackages":  genRouteImports(rootPkg, api),
 			"routesAdditions": strings.TrimSpace(builder.String()),

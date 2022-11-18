@@ -33,17 +33,17 @@ type (
 	// ExecCtxFn 定义 sql 执行方法。
 	ExecCtxFn func(ctx context.Context, conn sqlx.Conn) (sql.Result, error)
 	// QueryFn 定义 sql 查询方法。
-	QueryFn func(conn sqlx.Conn, v interface{}) error
+	QueryFn func(conn sqlx.Conn, v any) error
 	// QueryCtxFn 定义 sql 查询方法。
-	QueryCtxFn func(ctx context.Context, conn sqlx.Conn, v interface{}) error
+	QueryCtxFn func(ctx context.Context, conn sqlx.Conn, v any) error
 	// IndexQueryFn 定义基于唯一索引的 sql 查询方法。
-	IndexQueryFn func(conn sqlx.Conn, v interface{}) (interface{}, error)
+	IndexQueryFn func(conn sqlx.Conn, v any) (any, error)
 	// IndexQueryCtxFn 定义基于唯一索引的 sql 查询方法。
-	IndexQueryCtxFn func(ctx context.Context, conn sqlx.Conn, v interface{}) (interface{}, error)
+	IndexQueryCtxFn func(ctx context.Context, conn sqlx.Conn, v any) (any, error)
 	// PrimaryQueryFn 定义基于主键的 sql 查询方法。
-	PrimaryQueryFn func(conn sqlx.Conn, v, primary interface{}) error
+	PrimaryQueryFn func(conn sqlx.Conn, v, primary any) error
 	// PrimaryQueryCtxFn 定义基于主键的 sql 查询方法。
-	PrimaryQueryCtxFn func(ctx context.Context, conn sqlx.Conn, v, primary interface{}) error
+	PrimaryQueryCtxFn func(ctx context.Context, conn sqlx.Conn, v, primary any) error
 )
 
 // NewConn 返回一个给定 redis 集群的数据库连接 CachedConn。
@@ -78,12 +78,12 @@ func (cc CachedConn) DelCacheCtx(ctx context.Context, keys ...string) error {
 }
 
 // GetCache 获取给定键的缓存并解编组至变量 v。
-func (cc CachedConn) GetCache(key string, v interface{}) error {
+func (cc CachedConn) GetCache(key string, v any) error {
 	return cc.GetCacheCtx(context.Background(), key, v)
 }
 
 // GetCacheCtx 获取给定键的缓存并解编组至变量 v。
-func (cc CachedConn) GetCacheCtx(ctx context.Context, key string, v interface{}) error {
+func (cc CachedConn) GetCacheCtx(ctx context.Context, key string, v any) error {
 	return cc.cache.GetCtx(ctx, key, v)
 }
 
@@ -111,18 +111,18 @@ func (cc CachedConn) ExecCtx(ctx context.Context, exec ExecCtxFn, keys ...string
 }
 
 // ExecNoCache 运行给定的 sql 语句，但不删除缓存。
-func (cc CachedConn) ExecNoCache(query string, args ...interface{}) (sql.Result, error) {
+func (cc CachedConn) ExecNoCache(query string, args ...any) (sql.Result, error) {
 	return cc.ExecNoCacheCtx(context.Background(), query, args...)
 }
 
 // ExecNoCacheCtx 运行给定的 sql 语句，但不删除缓存。
-func (cc CachedConn) ExecNoCacheCtx(ctx context.Context, query string, args ...interface{}) (sql.Result, error) {
+func (cc CachedConn) ExecNoCacheCtx(ctx context.Context, query string, args ...any) (sql.Result, error) {
 	return cc.db.ExecCtx(ctx, query, args...)
 }
 
 // QueryRow 查询缓存键 key 的值到变量 v，若无缓存则使用 query 函数进行查询并编组至缓存建。
-func (cc CachedConn) QueryRow(v interface{}, key string, query QueryFn) error {
-	queryCtx := func(_ context.Context, conn sqlx.Conn, v interface{}) error {
+func (cc CachedConn) QueryRow(v any, key string, query QueryFn) error {
+	queryCtx := func(_ context.Context, conn sqlx.Conn, v any) error {
 		return query(conn, v)
 	}
 
@@ -130,19 +130,19 @@ func (cc CachedConn) QueryRow(v interface{}, key string, query QueryFn) error {
 }
 
 // QueryRowCtx 查询缓存键 key 的值到变量 v，若无缓存则使用 query 函数进行查询并编组至缓存建。
-func (cc CachedConn) QueryRowCtx(ctx context.Context, v interface{}, key string, query QueryCtxFn) error {
-	return cc.cache.TakeCtx(ctx, v, key, func(val interface{}) error {
+func (cc CachedConn) QueryRowCtx(ctx context.Context, v any, key string, query QueryCtxFn) error {
+	return cc.cache.TakeCtx(ctx, v, key, func(val any) error {
 		return query(ctx, cc.db, val)
 	})
 }
 
 // QueryRowIndex 查询缓存建 key 的值到变量 v。
-func (cc CachedConn) QueryRowIndex(v interface{}, key string, keyer func(primary interface{}) string,
+func (cc CachedConn) QueryRowIndex(v any, key string, keyer func(primary any) string,
 	indexQuery IndexQueryFn, primaryQuery PrimaryQueryFn) error {
-	indexQueryCtx := func(_ context.Context, conn sqlx.Conn, v interface{}) (interface{}, error) {
+	indexQueryCtx := func(_ context.Context, conn sqlx.Conn, v any) (any, error) {
 		return indexQuery(conn, v)
 	}
-	primaryQueryCtx := func(_ context.Context, conn sqlx.Conn, v, primary interface{}) error {
+	primaryQueryCtx := func(_ context.Context, conn sqlx.Conn, v, primary any) error {
 		return primaryQuery(conn, v, primary)
 	}
 
@@ -150,13 +150,13 @@ func (cc CachedConn) QueryRowIndex(v interface{}, key string, keyer func(primary
 }
 
 // QueryRowIndexCtx 查询缓存建 key 的值到变量 v。
-func (cc CachedConn) QueryRowIndexCtx(ctx context.Context, v interface{}, key string,
-	keyer func(primary interface{}) string, indexQuery IndexQueryCtxFn, primaryQuery PrimaryQueryCtxFn) error {
-	var primaryKey interface{}
+func (cc CachedConn) QueryRowIndexCtx(ctx context.Context, v any, key string,
+	keyer func(primary any) string, indexQuery IndexQueryCtxFn, primaryQuery PrimaryQueryCtxFn) error {
+	var primaryKey any
 	var found bool
 
 	err := cc.cache.TakeWithExpireCtx(ctx, &primaryKey, key,
-		func(val interface{}, expire time.Duration) (err error) {
+		func(val any, expire time.Duration) (err error) {
 			primaryKey, err = indexQuery(ctx, cc.db, v)
 			if err != nil {
 				return
@@ -173,42 +173,42 @@ func (cc CachedConn) QueryRowIndexCtx(ctx context.Context, v interface{}, key st
 		return nil
 	}
 
-	return cc.cache.TakeCtx(ctx, v, keyer(primaryKey), func(val interface{}) error {
+	return cc.cache.TakeCtx(ctx, v, keyer(primaryKey), func(val any) error {
 		return primaryQuery(ctx, cc.db, v, primaryKey)
 	})
 }
 
 // QueryRowNoCache 查询给定 sql 语句结果至变量 v。
 // 未使用缓存，可能导致数据不一致。
-func (cc CachedConn) QueryRowNoCache(v interface{}, query string, args ...interface{}) error {
+func (cc CachedConn) QueryRowNoCache(v any, query string, args ...any) error {
 	return cc.QueryRowNoCacheCtx(context.Background(), v, query, args...)
 }
 
 // QueryRowNoCacheCtx 查询给定 sql 语句结果至变量 v。
 // 未使用缓存，可能导致数据不一致。
-func (cc CachedConn) QueryRowNoCacheCtx(ctx context.Context, v interface{}, query string, args ...interface{}) error {
+func (cc CachedConn) QueryRowNoCacheCtx(ctx context.Context, v any, query string, args ...any) error {
 	return cc.db.QueryRowCtx(ctx, v, query, args...)
 }
 
 // QueryRowsNoCache 查询给定 sql 语句结果至变量 v。
 // 未使用缓存，可能导致数据不一致。
-func (cc CachedConn) QueryRowsNoCache(v interface{}, query string, args ...interface{}) error {
+func (cc CachedConn) QueryRowsNoCache(v any, query string, args ...any) error {
 	return cc.QueryRowsNoCacheCtx(context.Background(), v, query, args...)
 }
 
 // QueryRowsNoCacheCtx 查询给定 sql 语句结果至变量 v。
 // 未使用缓存，可能导致数据不一致。
-func (cc CachedConn) QueryRowsNoCacheCtx(ctx context.Context, v interface{}, query string, args ...interface{}) error {
+func (cc CachedConn) QueryRowsNoCacheCtx(ctx context.Context, v any, query string, args ...any) error {
 	return cc.db.QueryRowsCtx(ctx, v, query, args...)
 }
 
 // SetCache 设置键值对缓存，并将其存活时间设置为节点指定的时间。
-func (cc CachedConn) SetCache(key string, val interface{}) error {
+func (cc CachedConn) SetCache(key string, val any) error {
 	return cc.SetCacheCtx(context.Background(), key, val)
 }
 
 // SetCacheCtx 设置键值对缓存，并将其存活时间设置为节点指定的时间。
-func (cc CachedConn) SetCacheCtx(ctx context.Context, key string, val interface{}) error {
+func (cc CachedConn) SetCacheCtx(ctx context.Context, key string, val any) error {
 	return cc.cache.SetCtx(ctx, key, val)
 }
 

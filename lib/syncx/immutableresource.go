@@ -11,8 +11,8 @@ const defaultRefreshInterval = time.Second
 type (
 	// ImmutableResource 用于管理一个不可变资源。
 	ImmutableResource struct {
-		fetch           func() (interface{}, error)
-		resource        interface{}
+		fetch           func() (any, error)
+		resource        any
 		err             error
 		lock            sync.RWMutex
 		refreshInterval time.Duration
@@ -24,7 +24,7 @@ type (
 )
 
 // NewImmutableResource 返回一个 ImmutableResource。
-func NewImmutableResource(fetch func() (interface{}, error), opts ...ImmutableResourceOption) *ImmutableResource {
+func NewImmutableResource(fetch func() (any, error), opts ...ImmutableResourceOption) *ImmutableResource {
 	ir := ImmutableResource{
 		fetch:           fetch,
 		refreshInterval: defaultRefreshInterval,
@@ -37,7 +37,7 @@ func NewImmutableResource(fetch func() (interface{}, error), opts ...ImmutableRe
 }
 
 // Get 获取不可变资源，有资源直接返回，无资源尝试获取。
-func (ir *ImmutableResource) Get() (interface{}, error) {
+func (ir *ImmutableResource) Get() (any, error) {
 	ir.lock.RLock()
 	resource := ir.resource
 	ir.lock.RUnlock()

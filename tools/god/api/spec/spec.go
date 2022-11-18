@@ -116,7 +116,7 @@ type (
 		// 指针类型: *string、*User、
 		// 字典类型: map[${PrimitiveType}]interface、
 		// 数组类型:[]int、[]User、[]*User
-		// 接口类型: interface{}
+		// 接口类型: any
 		// Type
 		Value Type
 	}

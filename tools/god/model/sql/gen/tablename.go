@@ -12,7 +12,7 @@ func genTableName(table Table) (string, error) {
 		return "", err
 	}
 
-	output, err := util.With("tableName").Parse(text).Execute(map[string]interface{}{
+	output, err := util.With("tableName").Parse(text).Execute(map[string]any{
 		"tableName":             table.Name.Source(),
 		"upperStartCamelObject": table.Name.ToCamel(),
 	})

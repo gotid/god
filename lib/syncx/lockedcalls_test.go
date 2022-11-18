@@ -10,7 +10,7 @@ import (
 
 func TestLockedCalls_Do(t *testing.T) {
 	calls := NewLockedCalls()
-	v, err := calls.Do("key", func() (interface{}, error) {
+	v, err := calls.Do("key", func() (any, error) {
 		return "bar", nil
 	})
 	if got, want := fmt.Sprintf("%v (%T)", v, v), "bar (string)"; got != want {
@@ -24,7 +24,7 @@ func TestLockedCalls_Do(t *testing.T) {
 func TestLockedCalls_Err(t *testing.T) {
 	calls := NewLockedCalls()
 	someErr := errors.New("some error")
-	v, err := calls.Do("key", func() (interface{}, error) {
+	v, err := calls.Do("key", func() (any, error) {
 		return nil, someErr
 	})
 	if err != someErr {
@@ -39,7 +39,7 @@ func TestNewLockedCalls(t *testing.T) {
 	lc := NewLockedCalls()
 	c := make(chan string)
 	var calls int
-	fn := func() (interface{}, error) {
+	fn := func() (any, error) {
 		calls++
 		ret := calls
 		<-c

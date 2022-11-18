@@ -13,8 +13,8 @@ const (
 
 // Marshal 编组给定的值并字典形式返回。
 // optional=another 并未实现，因为难以实现且不常用。
-func Marshal(v interface{}) (map[string]map[string]interface{}, error) {
-	ret := make(map[string]map[string]interface{})
+func Marshal(v any) (map[string]map[string]any, error) {
+	ret := make(map[string]map[string]any)
 	rt := reflect.TypeOf(v)
 	if rt.Kind() == reflect.Ptr {
 		rt = rt.Elem()
@@ -36,7 +36,7 @@ func Marshal(v interface{}) (map[string]map[string]interface{}, error) {
 	return ret, nil
 }
 
-func processMember(field reflect.StructField, value reflect.Value, ret map[string]map[string]interface{}) error {
+func processMember(field reflect.StructField, value reflect.Value, ret map[string]map[string]any) error {
 	var key string
 	var opt *fieldOptions
 	var err error
@@ -63,7 +63,7 @@ func processMember(field reflect.StructField, value reflect.Value, ret map[strin
 	if ok {
 		m[key] = val
 	} else {
-		m = map[string]interface{}{
+		m = map[string]any{
 			key: val,
 		}
 	}

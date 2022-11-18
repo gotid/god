@@ -11,7 +11,7 @@ const (
 
 // GetHead 返回带有源文件名称的文件头。
 func GetHead(source string) string {
-	buffer, _ := With("head").Parse(headTemplate).Execute(map[string]interface{}{
+	buffer, _ := With("head").Parse(headTemplate).Execute(map[string]any{
 		"source": source,
 	})
 

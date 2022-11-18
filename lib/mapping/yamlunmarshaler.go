@@ -19,40 +19,40 @@ var (
 )
 
 // UnmarshalYamlBytes 解编组 []byte 至 v。
-func UnmarshalYamlBytes(content []byte, v interface{}) error {
+func UnmarshalYamlBytes(content []byte, v any) error {
 	return unmarshalYamlBytes(content, v, yamlUnmarshaler)
 }
 
 // UnmarshalYamlReader 解编组 io.Reader 至 v。
-func UnmarshalYamlReader(reader io.Reader, v interface{}) error {
+func UnmarshalYamlReader(reader io.Reader, v any) error {
 	return unmarshalYamlReader(reader, v, yamlUnmarshaler)
 }
 
-func cleanupInterfaceMap(in map[interface{}]interface{}) map[string]interface{} {
-	res := make(map[string]interface{})
+func cleanupInterfaceMap(in map[any]any) map[string]any {
+	res := make(map[string]any)
 	for k, v := range in {
 		res[Repr(k)] = cleanupMapValue(v)
 	}
 	return res
 }
 
-func cleanupInterfaceNumber(in interface{}) json.Number {
+func cleanupInterfaceNumber(in any) json.Number {
 	return json.Number(Repr(in))
 }
 
-func cleanupInterfaceSlice(in []interface{}) []interface{} {
-	res := make([]interface{}, len(in))
+func cleanupInterfaceSlice(in []any) []any {
+	res := make([]any, len(in))
 	for i, v := range in {
 		res[i] = cleanupMapValue(v)
 	}
 	return res
 }
 
-func cleanupMapValue(v interface{}) interface{} {
+func cleanupMapValue(v any) any {
 	switch v := v.(type) {
-	case []interface{}:
+	case []any:
 		return cleanupInterfaceSlice(v)
-	case map[interface{}]interface{}:
+	case map[any]any:
 		return cleanupInterfaceMap(v)
 	case bool, string:
 		return v
@@ -63,16 +63,16 @@ func cleanupMapValue(v interface{}) interface{} {
 	}
 }
 
-func unmarshal(unmarshaler *Unmarshaler, o, v interface{}) error {
-	if m, ok := o.(map[string]interface{}); ok {
+func unmarshal(unmarshaler *Unmarshaler, o, v any) error {
+	if m, ok := o.(map[string]any); ok {
 		return unmarshaler.Unmarshal(m, v)
 	}
 
 	return ErrUnsupportedType
 }
 
-func unmarshalYamlBytes(content []byte, v interface{}, unmarshaler *Unmarshaler) error {
-	var o interface{}
+func unmarshalYamlBytes(content []byte, v any, unmarshaler *Unmarshaler) error {
+	var o any
 	if err := yamlUnmarshal(content, &o); err != nil {
 		return err
 	}
@@ -80,8 +80,8 @@ func unmarshalYamlBytes(content []byte, v interface{}, unmarshaler *Unmarshaler)
 	return unmarshal(unmarshaler, o, v)
 }
 
-func unmarshalYamlReader(reader io.Reader, v interface{}, unmarshaler *Unmarshaler) error {
-	var res interface{}
+func unmarshalYamlReader(reader io.Reader, v any, unmarshaler *Unmarshaler) error {
+	var res any
 	if err := yaml.NewDecoder(reader).Decode(&res); err != nil {
 		return err
 	}
@@ -89,13 +89,13 @@ func unmarshalYamlReader(reader io.Reader, v interface{}, unmarshaler *Unmarshal
 	return unmarshal(unmarshaler, cleanupMapValue(res), v)
 }
 
-// yamlUnmarshal yaml 转 map[string]interface{}。
-func yamlUnmarshal(in []byte, out interface{}) error {
-	var res interface{}
+// yamlUnmarshal yaml 转 map[string]any。
+func yamlUnmarshal(in []byte, out any) error {
+	var res any
 	if err := yaml.Unmarshal(in, &res); err != nil {
 		return err
 	}
 
-	*out.(*interface{}) = cleanupMapValue(res)
+	*out.(*any) = cleanupMapValue(res)
 	return nil
 }

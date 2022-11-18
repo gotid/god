@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-var loaders = map[string]func([]byte, interface{}) error{
+var loaders = map[string]func([]byte, any) error{
 	".json": LoadFromJsonBytes,
 	".yaml": LoadFromYamlBytes,
 	".yml":  LoadFromYamlBytes,
@@ -17,14 +17,14 @@ var loaders = map[string]func([]byte, interface{}) error{
 
 // MustLoad 加载给定配置文件 path 至 v，遇错退出。
 // 支持自定义选项，如使用环境变量。
-func MustLoad(path string, v interface{}, opts ...Option) {
+func MustLoad(path string, v any, opts ...Option) {
 	if err := Load(path, v, opts...); err != nil {
 		log.Fatalf("错误：配置文件 %s，%s", path, err.Error())
 	}
 }
 
 // Load 加载给定配置文件 file 至 v，支持 json|yaml 文件。
-func Load(file string, v interface{}, opts ...Option) error {
+func Load(file string, v any, opts ...Option) error {
 	content, err := os.ReadFile(file)
 	if err != nil {
 		return err
@@ -49,11 +49,11 @@ func Load(file string, v interface{}, opts ...Option) error {
 }
 
 // LoadFromJsonBytes 从 json 字节切片中加载配置到变量 v。
-func LoadFromJsonBytes(content []byte, v interface{}) error {
+func LoadFromJsonBytes(content []byte, v any) error {
 	return mapping.UnmarshalJsonBytes(content, v)
 }
 
 // LoadFromYamlBytes 从 yaml 字节切片中加载配置到变量 v。
-func LoadFromYamlBytes(content []byte, v interface{}) error {
+func LoadFromYamlBytes(content []byte, v any) error {
 	return mapping.UnmarshalYamlBytes(content, v)
 }

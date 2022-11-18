@@ -28,9 +28,9 @@ type (
 		// DelCtx 删除 keys。
 		DelCtx(ctx context.Context, keys ...string) (int, error)
 		// Eval 对 Lua 脚本及键值参数 keys, args 求值。
-		Eval(script string, key string, args ...interface{}) (interface{}, error)
+		Eval(script string, key string, args ...any) (any, error)
 		// EvalCtx 对 Lua 脚本及键值参数 keys, args 求值。
-		EvalCtx(ctx context.Context, script string, key string, args ...interface{}) (interface{}, error)
+		EvalCtx(ctx context.Context, script string, key string, args ...any) (any, error)
 		// Exists 检查 key 是否存在。
 		Exists(key string) (bool, error)
 		// ExistsCtx 检查 key 是否存在。
@@ -124,9 +124,9 @@ type (
 		// LPopCtx 移除并返回列表的第一个元素。
 		LPopCtx(ctx context.Context, key string) (val string, err error)
 		// LPush 将一个或多个值插入到列表头部。
-		LPush(key string, values ...interface{}) (int, error)
+		LPush(key string, values ...any) (int, error)
 		// LPushCtx 将一个或多个值插入到列表头部。
-		LPushCtx(ctx context.Context, key string, values ...interface{}) (val int, err error)
+		LPushCtx(ctx context.Context, key string, values ...any) (val int, err error)
 		// LRange 获取列表指定范围内的元素。
 		LRange(key string, start, stop int) ([]string, error)
 		// LRangeCtx 获取列表指定范围内的元素。
@@ -144,9 +144,9 @@ type (
 		// PersistCtx 移除 key 的过期时间，key 将持久保持。
 		PersistCtx(ctx context.Context, key string) (val bool, err error)
 		// PFAdd 将 values 加入到键为 key 的 HyperLogLog 中，用于快速统计超大数据的唯一元素（基数）估算值。
-		PFAdd(key string, values ...interface{}) (bool, error)
+		PFAdd(key string, values ...any) (bool, error)
 		// PFAddCtx 将 values 加入到键为 key 的 HyperLogLog 中，用于快速统计超大数据的唯一元素（基数）估算值。
-		PFAddCtx(ctx context.Context, key string, values ...interface{}) (val bool, err error)
+		PFAddCtx(ctx context.Context, key string, values ...any) (val bool, err error)
 		// PFCount 返回给定 HyperLogLog 的基数估算值。
 		PFCount(key string) (int64, error)
 		// PFCountCtx 返回给定 HyperLogLog 的基数估算值。
@@ -156,13 +156,13 @@ type (
 		// RPopCtx 移除并返回列表的最后一个元素。
 		RPopCtx(ctx context.Context, key string) (val string, err error)
 		// RPush 在列表右侧添加一个或多个值。
-		RPush(key string, values ...interface{}) (int, error)
+		RPush(key string, values ...any) (int, error)
 		// RPushCtx 在列表右侧添加一个或多个值。
-		RPushCtx(ctx context.Context, key string, values ...interface{}) (val int, err error)
+		RPushCtx(ctx context.Context, key string, values ...any) (val int, err error)
 		// SAdd 向集合添加一个或多个成员。
-		SAdd(key string, values ...interface{}) (int, error)
+		SAdd(key string, values ...any) (int, error)
 		// SAddCtx 向集合添加一个或多个成员。
-		SAddCtx(ctx context.Context, key string, values ...interface{}) (val int, err error)
+		SAddCtx(ctx context.Context, key string, values ...any) (val int, err error)
 		// SScan 迭代集合中的元素。
 		SScan(key string, cursor uint64, match string, count int64) (keys []string, cur uint64, err error)
 		// SScanCtx 迭代集合中的元素。
@@ -192,9 +192,9 @@ type (
 		// SetNXExCtx 当 key 不存时，设置键值对及其存活秒数，过期会自动删除。
 		SetNXExCtx(ctx context.Context, key, value string, seconds int) (val bool, err error)
 		// SIsMember 判断 member 是否为集合 key 的成员。
-		SIsMember(key string, member interface{}) (bool, error)
+		SIsMember(key string, member any) (bool, error)
 		// SIsMemberCtx 判断 member 是否为集合 key 的成员。
-		SIsMemberCtx(ctx context.Context, key string, member interface{}) (val bool, err error)
+		SIsMemberCtx(ctx context.Context, key string, member any) (val bool, err error)
 		// SMembers 返回集合 key 中的所有成员。
 		SMembers(key string) ([]string, error)
 		// SMembersCtx 返回集合 key 中的所有成员。
@@ -208,9 +208,9 @@ type (
 		// SRandMemberCtx 随机返回集合 key 中的 count 个成员。
 		SRandMemberCtx(ctx context.Context, key string, count int) (val []string, err error)
 		// SRem 移除集合 key 中的一个或多个成员 members。
-		SRem(key string, members ...interface{}) (int, error)
+		SRem(key string, members ...any) (int, error)
 		// SRemCtx 移除集合 key 中的一个或多个成员 members。
-		SRemCtx(ctx context.Context, key string, members ...interface{}) (val int, err error)
+		SRemCtx(ctx context.Context, key string, members ...any) (val int, err error)
 		// TTL 返回 key 的剩余生存秒数。
 		TTL(key string) (int, error)
 		// TTLCtx 返回 key 的剩余生存秒数。
@@ -248,9 +248,9 @@ type (
 		// ZRankCtx 获取有序集合中给定成员的升序索引排名。
 		ZRankCtx(ctx context.Context, key, field string) (val int64, err error)
 		// ZRem 移除有序集合中给定的一个或多个成员。
-		ZRem(key string, members ...interface{}) (int, error)
+		ZRem(key string, members ...any) (int, error)
 		// ZRemCtx 移除有序集合中给定的一个或多个成员。
-		ZRemCtx(ctx context.Context, key string, members ...interface{}) (val int, err error)
+		ZRemCtx(ctx context.Context, key string, members ...any) (val int, err error)
 		// ZRemRangeByScore 移除有序集合中给定分数区间的所有成员。
 		ZRemRangeByScore(key string, start, stop int64) (int, error)
 		// ZRemRangeByScoreCtx 移除有序集合中给定分数区间的所有成员。
@@ -373,11 +373,11 @@ func (s kvStore) DelCtx(ctx context.Context, keys ...string) (int, error) {
 	return val, be.Err()
 }
 
-func (s kvStore) Eval(script, key string, args ...interface{}) (interface{}, error) {
+func (s kvStore) Eval(script, key string, args ...any) (any, error) {
 	return s.EvalCtx(context.Background(), script, key, args...)
 }
 
-func (s kvStore) EvalCtx(ctx context.Context, script, key string, args ...interface{}) (interface{}, error) {
+func (s kvStore) EvalCtx(ctx context.Context, script, key string, args ...any) (any, error) {
 	node, err := s.getRedis(key)
 	if err != nil {
 		return nil, err
@@ -659,11 +659,11 @@ func (s kvStore) LPopCtx(ctx context.Context, key string) (string, error) {
 	return node.LPopCtx(ctx, key)
 }
 
-func (s kvStore) LPush(key string, values ...interface{}) (int, error) {
+func (s kvStore) LPush(key string, values ...any) (int, error) {
 	return s.LPushCtx(context.Background(), key, values...)
 }
 
-func (s kvStore) LPushCtx(ctx context.Context, key string, values ...interface{}) (int, error) {
+func (s kvStore) LPushCtx(ctx context.Context, key string, values ...any) (int, error) {
 	node, err := s.getRedis(key)
 	if err != nil {
 		return 0, err
@@ -724,11 +724,11 @@ func (s kvStore) PersistCtx(ctx context.Context, key string) (bool, error) {
 	return node.PersistCtx(ctx, key)
 }
 
-func (s kvStore) PFAdd(key string, values ...interface{}) (bool, error) {
+func (s kvStore) PFAdd(key string, values ...any) (bool, error) {
 	return s.PFAddCtx(context.Background(), key, values...)
 }
 
-func (s kvStore) PFAddCtx(ctx context.Context, key string, values ...interface{}) (bool, error) {
+func (s kvStore) PFAddCtx(ctx context.Context, key string, values ...any) (bool, error) {
 	node, err := s.getRedis(key)
 	if err != nil {
 		return false, err
@@ -764,11 +764,11 @@ func (s kvStore) RPopCtx(ctx context.Context, key string) (string, error) {
 	return node.RPopCtx(ctx, key)
 }
 
-func (s kvStore) RPush(key string, values ...interface{}) (int, error) {
+func (s kvStore) RPush(key string, values ...any) (int, error) {
 	return s.RPushCtx(context.Background(), key, values...)
 }
 
-func (s kvStore) RPushCtx(ctx context.Context, key string, values ...interface{}) (int, error) {
+func (s kvStore) RPushCtx(ctx context.Context, key string, values ...any) (int, error) {
 	node, err := s.getRedis(key)
 	if err != nil {
 		return 0, err
@@ -777,11 +777,11 @@ func (s kvStore) RPushCtx(ctx context.Context, key string, values ...interface{}
 	return node.RPushCtx(ctx, key, values...)
 }
 
-func (s kvStore) SAdd(key string, values ...interface{}) (int, error) {
+func (s kvStore) SAdd(key string, values ...any) (int, error) {
 	return s.SAddCtx(context.Background(), key, values...)
 }
 
-func (s kvStore) SAddCtx(ctx context.Context, key string, values ...interface{}) (int, error) {
+func (s kvStore) SAddCtx(ctx context.Context, key string, values ...any) (int, error) {
 	node, err := s.getRedis(key)
 	if err != nil {
 		return 0, err
@@ -894,11 +894,11 @@ func (s kvStore) GetBitCtx(ctx context.Context, key string, offset int64) (int, 
 	return node.GetBitCtx(ctx, key, offset)
 }
 
-func (s kvStore) SIsMember(key string, value interface{}) (bool, error) {
+func (s kvStore) SIsMember(key string, value any) (bool, error) {
 	return s.SIsMemberCtx(context.Background(), key, value)
 }
 
-func (s kvStore) SIsMemberCtx(ctx context.Context, key string, value interface{}) (bool, error) {
+func (s kvStore) SIsMemberCtx(ctx context.Context, key string, value any) (bool, error) {
 	node, err := s.getRedis(key)
 	if err != nil {
 		return false, err
@@ -946,11 +946,11 @@ func (s kvStore) SRandMemberCtx(ctx context.Context, key string, count int) ([]s
 	return node.SRandMemberCtx(ctx, key, count)
 }
 
-func (s kvStore) SRem(key string, values ...interface{}) (int, error) {
+func (s kvStore) SRem(key string, values ...any) (int, error) {
 	return s.SRemCtx(context.Background(), key, values...)
 }
 
-func (s kvStore) SRemCtx(ctx context.Context, key string, values ...interface{}) (int, error) {
+func (s kvStore) SRemCtx(ctx context.Context, key string, values ...any) (int, error) {
 	node, err := s.getRedis(key)
 	if err != nil {
 		return 0, err
@@ -1127,11 +1127,11 @@ func (s kvStore) ZRangeByScoreWithScoresAndLimitCtx(ctx context.Context, key str
 	return node.ZRangeByScoreWithScoresAndLimitCtx(ctx, key, start, stop, page, size)
 }
 
-func (s kvStore) ZRem(key string, values ...interface{}) (int, error) {
+func (s kvStore) ZRem(key string, values ...any) (int, error) {
 	return s.ZRemCtx(context.Background(), key, values...)
 }
 
-func (s kvStore) ZRemCtx(ctx context.Context, key string, values ...interface{}) (int, error) {
+func (s kvStore) ZRemCtx(ctx context.Context, key string, values ...any) (int, error) {
 	node, err := s.getRedis(key)
 	if err != nil {
 		return 0, err
