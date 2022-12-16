@@ -2,6 +2,8 @@ package stringx
 
 import (
 	"bytes"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	"strings"
 	"unicode"
 )
@@ -23,7 +25,7 @@ func (s String) Title() string {
 		return s.source
 	}
 
-	return strings.Title(s.source)
+	return cases.Title(language.English, cases.NoLower).String(s.source)
 }
 
 // UnTitle 首字母小写。

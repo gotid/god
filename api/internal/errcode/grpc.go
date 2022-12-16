@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-// CodeFromGrpcError 将 gRPC 错误转为一个 HTTP 状态码。
+// CodeFromGRPCError 将 gRPC 错误转为一个 HTTP 状态码。
 // 详见：https://github.com/googleapis/googleapis/blob/master/google/rpc/code.proto
-func CodeFromGrpcError(err error) int {
+func CodeFromGRPCError(err error) int {
 	code := status.Code(err)
 	switch code {
 	case codes.OK:
@@ -40,8 +40,8 @@ func CodeFromGrpcError(err error) int {
 	return http.StatusInternalServerError
 }
 
-// IsGrpcError 检查错误是否为一个 gRPC 的错误。
-func IsGrpcError(err error) bool {
+// IsGRPCError 检查错误是否为一个 gRPC 的错误。
+func IsGRPCError(err error) bool {
 	if err == nil {
 		return false
 	}

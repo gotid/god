@@ -64,7 +64,7 @@ func TestPropertiesEnv(t *testing.T) {
 }
 
 func TestLoadProperties_badContent(t *testing.T) {
-	filename, err := fs.TempFilenameWithText("hellox")
+	filename, err := fs.TempFilenameWithText("hello")
 	assert.Nil(t, err)
 	defer os.Remove(filename)
 	_, err = LoadProperties(filename)

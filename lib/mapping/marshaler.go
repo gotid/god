@@ -36,7 +36,8 @@ func Marshal(v any) (map[string]map[string]any, error) {
 	return ret, nil
 }
 
-func processMember(field reflect.StructField, value reflect.Value, ret map[string]map[string]any) error {
+func processMember(field reflect.StructField, value reflect.Value,
+	ret map[string]map[string]any) error {
 	var key string
 	var opt *fieldOptions
 	var err error
@@ -59,6 +60,7 @@ func processMember(field reflect.StructField, value reflect.Value, ret map[strin
 	if opt != nil && opt.FromString {
 		val = fmt.Sprint(val)
 	}
+
 	m, ok := ret[tag]
 	if ok {
 		m[key] = val

@@ -7,9 +7,6 @@ type (
 		Value(key string) (any, bool)
 	}
 
-	// MapValuer 是一个使用 Value 方法获取给定键的值的字典。
-	mapValuer map[string]any
-
 	// A valuerWithParent defines a node that has a parent node.
 	valuerWithParent interface {
 		Valuer
@@ -28,6 +25,9 @@ type (
 		value  any
 		parent valuerWithParent
 	}
+
+	// MapValuer 是一个使用 Value 方法获取给定键的值的字典。
+	mapValuer map[string]any
 
 	// simpleValuer is a type to get value from current node.
 	simpleValuer node
@@ -72,21 +72,33 @@ func (rv recursiveValuer) Value(key string) (any, bool) {
 		return nil, false
 	}
 
-	if vm, ok := val.(map[string]any); ok {
-		if parent := rv.Parent(); parent != nil {
-			pv, pok := parent.Value(key)
-			if pok {
-				if pm, ok := pv.(map[string]any); ok {
-					for k, v := range vm {
-						pm[k] = v
-					}
-					return pm, true
-				}
-			}
+	vm, ok := val.(map[string]any)
+	if !ok {
+		return val, true
+	}
+
+	parent := rv.Parent()
+	if parent == nil {
+		return val, true
+	}
+
+	pv, ok := parent.Value(key)
+	if !ok {
+		return val, true
+	}
+
+	pm, ok := pv.(map[string]any)
+	if !ok {
+		return val, true
+	}
+
+	for k, v := range pm {
+		if _, ok := vm[k]; !ok {
+			vm[k] = v
 		}
 	}
 
-	return val, true
+	return vm, true
 }
 
 // Parent get the parent valuer from rv.

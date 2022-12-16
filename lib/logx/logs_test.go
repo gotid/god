@@ -464,7 +464,7 @@ func TestStructuredLogSeveref(t *testing.T) {
 }
 
 func TestStructuredLogWithDuration(t *testing.T) {
-	const message = "hellox there"
+	const message = "hello there"
 	w := new(mockWriter)
 	old := writer.Swap(w)
 	defer writer.Store(old)
@@ -481,7 +481,7 @@ func TestStructuredLogWithDuration(t *testing.T) {
 
 func TestSetLevel(t *testing.T) {
 	SetLevel(ErrorLevel)
-	const message = "hellox there"
+	const message = "hello there"
 	w := new(mockWriter)
 	old := writer.Swap(w)
 	defer writer.Store(old)
@@ -507,7 +507,7 @@ func TestSetLevelTwiceWithMode(t *testing.T) {
 
 func TestSetLevelWithDuration(t *testing.T) {
 	SetLevel(ErrorLevel)
-	const message = "hellox there"
+	const message = "hello there"
 	w := new(mockWriter)
 	old := writer.Swap(w)
 	defer writer.Store(old)
@@ -523,8 +523,8 @@ func TestErrorfWithWrappedError(t *testing.T) {
 	old := writer.Swap(w)
 	defer writer.Store(old)
 
-	Errorf("hellox %w", errors.New(message))
-	assert.True(t, strings.Contains(w.String(), "hellox there"))
+	Errorf("hello %w", errors.New(message))
+	assert.True(t, strings.Contains(w.String(), "hello there"))
 }
 
 func TestMustNil(t *testing.T) {
@@ -711,7 +711,7 @@ func put(b []byte) {
 }
 
 func doTestStructuredLog(t *testing.T, level string, w *mockWriter, write func(...any)) {
-	const message = "hellox there"
+	const message = "hello there"
 	write(message)
 	var entry logEntry
 	if err := json.Unmarshal([]byte(w.String()), &entry); err != nil {
@@ -724,7 +724,7 @@ func doTestStructuredLog(t *testing.T, level string, w *mockWriter, write func(.
 }
 
 func doTestStructuredLogConsole(t *testing.T, w *mockWriter, write func(...any)) {
-	const message = "hellox there"
+	const message = "hello there"
 	write(message)
 	assert.True(t, strings.Contains(w.String(), message))
 }
@@ -741,7 +741,7 @@ func testSetLevelTwiceWithMode(t *testing.T, mode string, w *mockWriter) {
 		Level: "info",
 		Path:  "/dev/null",
 	})
-	const message = "hellox there"
+	const message = "hello there"
 	Info(message)
 	assert.Equal(t, 0, w.builder.Len())
 	Infof(message)

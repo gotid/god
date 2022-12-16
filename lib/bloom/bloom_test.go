@@ -46,9 +46,9 @@ func TestRedisBitSet_Add(t *testing.T) {
 	defer clean()
 
 	filter := New(store, "test_key", 64)
-	assert.Nil(t, filter.Add([]byte("hellox")))
+	assert.Nil(t, filter.Add([]byte("hello")))
 	assert.Nil(t, filter.Add([]byte("world")))
-	ok, err := filter.Exists([]byte("hellox"))
+	ok, err := filter.Exists([]byte("hello"))
 	assert.Nil(t, err)
 	assert.True(t, ok)
 }

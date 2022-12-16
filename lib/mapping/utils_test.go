@@ -16,7 +16,7 @@ type Foo struct {
 
 func TestDerefInt(t *testing.T) {
 	i := 1
-	s := "hellox"
+	s := "hello"
 	number := struct {
 		f float64
 	}{
@@ -61,7 +61,7 @@ func TestDerefInt(t *testing.T) {
 
 func TestDerefValInt(t *testing.T) {
 	i := 1
-	s := "hellox"
+	s := "hello"
 	number := struct {
 		f float64
 	}{

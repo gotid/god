@@ -20,7 +20,8 @@ func TempFileWithText(text string) (*os.File, error) {
 	return file, nil
 }
 
-// TempFilenameWithText 创建指定 text 的临时文件并返回全路径文件名。
+// TempFilenameWithText 创建指定文本的临时文件并返回全路径文件名。
+//
 // 调用方需要在使用后删除该文件。
 func TempFilenameWithText(text string) (string, error) {
 	file, err := TempFileWithText(text)

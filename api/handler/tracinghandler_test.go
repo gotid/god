@@ -26,9 +26,9 @@ func TestOtelHandler(t *testing.T) {
 		t.Run(test, func(t *testing.T) {
 			h := chain.New(TracingHandler("foo", test)).Then(
 				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-					ctx := otel.GetTextMapPropagator().Extract(r.Context(), propagation.HeaderCarrier(r.Header))
-					spanCtx := trace.SpanContextFromContext(ctx)
-					assert.True(t, spanCtx.IsValid())
+					span := trace.SpanFromContext(r.Context())
+					assert.True(t, span.SpanContext().IsValid())
+					assert.True(t, span.IsRecording())
 				}))
 			ts := httptest.NewServer(h)
 			defer ts.Close()
@@ -65,12 +65,15 @@ func TestDontTracingSpanName(t *testing.T) {
 		t.Run(test, func(t *testing.T) {
 			h := chain.New(TracingHandler("foo", test)).Then(
 				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-					spanCtx := trace.SpanContextFromContext(r.Context())
+					span := trace.SpanFromContext(r.Context())
+					spanCtx := span.SpanContext()
 					if test == "bar" {
 						assert.False(t, spanCtx.IsValid())
+						assert.False(t, span.IsRecording())
 						return
 					}
 
+					assert.True(t, span.IsRecording())
 					assert.True(t, spanCtx.IsValid())
 				}))
 			ts := httptest.NewServer(h)

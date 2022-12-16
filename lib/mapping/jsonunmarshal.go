@@ -10,20 +10,27 @@ const jsonTagKey = "json"
 var jsonUnmarshaler = NewUnmarshaler(jsonTagKey)
 
 // UnmarshalJsonBytes 解编组 []byte 至给定变量。
-func UnmarshalJsonBytes(content []byte, v any) error {
-	return unmarshalJsonBytes(content, v, jsonUnmarshaler)
+func UnmarshalJsonBytes(content []byte, v any, opts ...UnmarshalOption) error {
+	return unmarshalJsonBytes(content, v, getJsonUnmarshaler(opts...))
 }
 
 // UnmarshalJsonMap 解编组 map 至给定变量。
-func UnmarshalJsonMap(m map[string]any, v any) error {
-	return jsonUnmarshaler.Unmarshal(m, v)
+func UnmarshalJsonMap(m map[string]any, v any, opts ...UnmarshalOption) error {
+	return getJsonUnmarshaler(opts...).Unmarshal(m, v)
 }
 
 // UnmarshalJsonReader 解编组 io.Reader 至给定变量。
-func UnmarshalJsonReader(reader io.Reader, v any) error {
-	return unmarshalJsonReader(reader, v, jsonUnmarshaler)
+func UnmarshalJsonReader(reader io.Reader, v any, opts ...UnmarshalOption) error {
+	return unmarshalJsonReader(reader, v, getJsonUnmarshaler(opts...))
 }
 
+func getJsonUnmarshaler(opts ...UnmarshalOption) *Unmarshaler {
+	if len(opts) > 0 {
+		return NewUnmarshaler(jsonTagKey, opts...)
+	}
+
+	return jsonUnmarshaler
+}
 func unmarshalJsonBytes(content []byte, v any, unmarshaler *Unmarshaler) error {
 	var m map[string]any
 	if err := jsonx.Unmarshal(content, &m); err != nil {

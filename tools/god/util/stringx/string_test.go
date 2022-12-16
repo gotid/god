@@ -1,0 +1,99 @@
+package stringx
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+func TestString_IsEmptyOrSpace(t *testing.T) {
+	cases := []struct {
+		input string
+		want  bool
+	}{
+		{
+			want: true,
+		},
+		{
+			input: " ",
+			want:  true,
+		},
+		{
+			input: "\t",
+			want:  true,
+		},
+		{
+			input: "\n",
+			want:  true,
+		},
+		{
+			input: "\f",
+			want:  true,
+		},
+		{
+			input: "		",
+			want:  true,
+		},
+	}
+	for _, v := range cases {
+		s := From(v.input)
+		assert.Equal(t, v.want, s.IsEmptyOrSpace())
+	}
+}
+
+func TestString_Snake2Camel(t *testing.T) {
+	ret := From("____this_is_snake").ToCamel()
+	assert.Equal(t, "ThisIsSnake", ret)
+
+	ret2 := From("测试_test_Data").ToCamel()
+	assert.Equal(t, "测试TestData", ret2)
+
+	ret3 := From("___").ToCamel()
+	assert.Equal(t, "", ret3)
+
+	ret4 := From("testData_").ToCamel()
+	assert.Equal(t, "TestData", ret4)
+
+	ret5 := From("testDataTestData").ToCamel()
+	assert.Equal(t, "TestDataTestData", ret5)
+}
+
+func TestString_Camel2Snake(t *testing.T) {
+	ret := From("ThisIsCCCamel").ToSnake()
+	assert.Equal(t, "this_is_c_c_camel", ret)
+
+	ret2 := From("测试Test_Data_test_data").ToSnake()
+	assert.Equal(t, "测试_test__data_test_data", ret2)
+}
+
+func TestTitle(t *testing.T) {
+	cases := []struct {
+		src  string
+		exec string
+	}{
+		{
+			src:  "hello world!",
+			exec: "Hello World!",
+		},
+		{
+			src:  "go zero",
+			exec: "Go Zero",
+		},
+		{
+			src:  "goZero",
+			exec: "GoZero",
+		},
+		{
+			src:  "GoZero",
+			exec: "GoZero",
+		},
+		{
+			src:  "测试this is data",
+			exec: "测试This Is Data",
+		},
+	}
+	for _, c := range cases {
+		ret := From(c.src).Title()
+		assert.Equal(t, c.exec, ret)
+	}
+}

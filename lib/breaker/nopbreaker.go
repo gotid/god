@@ -20,15 +20,15 @@ func (n nopBreaker) Do(req func() error) error {
 	return req()
 }
 
-func (n nopBreaker) DoWithAcceptable(req func() error, acceptable Acceptable) error {
+func (n nopBreaker) DoWithAcceptable(req func() error, _ Acceptable) error {
 	return req()
 }
 
-func (n nopBreaker) DoWithFallback(req func() error, fallback func(err error) error) error {
+func (n nopBreaker) DoWithFallback(req func() error, _ func(err error) error) error {
 	return req()
 }
 
-func (n nopBreaker) DoWithFallbackAcceptable(req func() error, fallback func(err error) error, acceptable Acceptable) error {
+func (n nopBreaker) DoWithFallbackAcceptable(req func() error, _ func(err error) error, _ Acceptable) error {
 	return req()
 }
 
@@ -38,6 +38,6 @@ func (p nopPromise) Accept() {
 
 }
 
-func (p nopPromise) Reject(reason string) {
+func (p nopPromise) Reject(string) {
 
 }

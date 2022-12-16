@@ -93,7 +93,7 @@ func TestReadTextLines(t *testing.T) {
 }
 
 func TestDupReadCloser(t *testing.T) {
-	input := "hellox"
+	input := "hello"
 	reader := io.NopCloser(bytes.NewBufferString(input))
 	r1, r2 := DupReadCloser(reader)
 	verify := func(r io.Reader) {

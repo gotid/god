@@ -193,7 +193,7 @@ func TestUnmarshalRowFloat64(t *testing.T) {
 
 func TestUnmarshalRowString(t *testing.T) {
 	runOrmTest(t, func(db *sql.DB, mock sqlmock.Sqlmock) {
-		const expect = "hellox"
+		const expect = "hello"
 		rs := sqlmock.NewRows([]string{"value"}).FromCSVString(expect)
 		mock.ExpectQuery("select (.+) from users where user=?").WithArgs("anyone").WillReturnRows(rs)
 
@@ -441,8 +441,8 @@ func TestUnmarshalRowsFloat64(t *testing.T) {
 
 func TestUnmarshalRowsString(t *testing.T) {
 	runOrmTest(t, func(db *sql.DB, mock sqlmock.Sqlmock) {
-		expect := []string{"hellox", "world"}
-		rs := sqlmock.NewRows([]string{"value"}).FromCSVString("hellox\nworld")
+		expect := []string{"hello", "world"}
+		rs := sqlmock.NewRows([]string{"value"}).FromCSVString("hello\nworld")
 		mock.ExpectQuery("select (.+) from users where user=?").WithArgs("anyone").WillReturnRows(rs)
 
 		var value []string
@@ -662,11 +662,11 @@ func TestUnmarshalRowsFloat64Ptr(t *testing.T) {
 }
 
 func TestUnmarshalRowsStringPtr(t *testing.T) {
-	hello := "hellox"
+	hello := "hello"
 	world := "world"
 	runOrmTest(t, func(db *sql.DB, mock sqlmock.Sqlmock) {
 		expect := []*string{&hello, &world}
-		rs := sqlmock.NewRows([]string{"value"}).FromCSVString("hellox\nworld")
+		rs := sqlmock.NewRows([]string{"value"}).FromCSVString("hello\nworld")
 		mock.ExpectQuery("select (.+) from users where user=?").WithArgs("anyone").WillReturnRows(rs)
 
 		var value []*string

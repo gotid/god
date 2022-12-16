@@ -1,13 +1,18 @@
 package internal
 
 import (
+	"fmt"
+	"net"
+
+	"github.com/gotid/god/internal/health"
 	"github.com/gotid/god/lib/proc"
 	"github.com/gotid/god/lib/stat"
 	"github.com/gotid/god/rpc/internal/serverinterceptors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health/grpc_health_v1"
-	"net"
 )
+
+const probeNamePrefix = "rpc"
 
 type (
 	// ServerOption 自定义 serverOptions 的方法。
@@ -21,6 +26,7 @@ type (
 	server struct {
 		name string
 		*baseServer
+		healthManager health.Probe
 	}
 )
 
@@ -35,7 +41,8 @@ func NewServer(address string, opts ...ServerOption) Server {
 	}
 
 	return &server{
-		baseServer: newBaseServer(address, &options),
+		baseServer:    newBaseServer(address, &options),
+		healthManager: health.NewHealthManager(fmt.Sprintf("%s-%s", probeNamePrefix, address)),
 	}
 }
 
@@ -78,6 +85,8 @@ func (s *server) Start(register RegisterFn) error {
 		grpc_health_v1.RegisterHealthServer(svr, s.health)
 		s.health.Resume()
 	}
+	s.healthManager.MarkReady()
+	health.AddProbe(s.healthManager)
 
 	// 确保关闭健康检查服务器和 grpc 服务器
 	waitForCalled := proc.AddWrapUpListener(func() {
@@ -88,8 +97,7 @@ func (s *server) Start(register RegisterFn) error {
 	})
 	defer waitForCalled()
 
-	err = svr.Serve(listen)
-	return err
+	return svr.Serve(listen)
 }
 
 // WithMetrics 设置 grpc 服务器 Server 的统计指标。

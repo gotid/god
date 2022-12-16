@@ -42,7 +42,7 @@ cPUOENMllINnzk2oEd3tXiscnSvYL4aUeoErnGP2LERZ40/YD+mMZ9g6FVboaX04
 0oHf+k5mnXZD7WJyJD0CQQDJ2HyFbNaUUHK+lcifCibfzKTgmnNh9ZpePFumgJzI
 EfFE5H+nzsbbry2XgJbWzRNvuFTOLWn4zM+aFyy9WvbO
 -----END RSA PRIVATE KEY-----`
-	body = "hellox world!"
+	body = "hello world!"
 )
 
 var key = []byte("q4t7w!z%C*F-JaNdRgUjXn2r5u8x/A?D")
@@ -129,8 +129,8 @@ func TestContentSecurity(t *testing.T) {
 			}
 
 			encryptedContent := base64.StdEncoding.EncodeToString(output)
-			r.Header.Set(httpx.ContentSecurity, strings.Join([]string{
-				fmt.Sprintf("key=%s", fingerprint(pubKey)),
+			r.Header.Set("X-Content-Security", strings.Join([]string{
+				fmt.Sprintf("fingerprint=%s", fingerprint(pubKey)),
 				"secret=" + encryptedContent + test.extraSecret,
 				"signature=" + sign,
 			}, "; "))

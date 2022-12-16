@@ -20,9 +20,9 @@ type (
 		Name string `json:",optional"`
 		// Grpc 是上游的目标
 		Grpc rpc.ClientConfig
-		// ProtoSets 是 proto 文件列表，形如 [hellox.pb]。
+		// ProtoSets 是 proto 文件列表，形如 [hello.pb]。
 		// 如果你的 proto 文件导入了其他 proto，逆序编写多文件切片，如：
-		// [hellox.pb, common.pb]。
+		// [hello.pb, common.pb]。
 		ProtoSets []string `json:",optional"`
 		// Mappings 是网关路由和上游 rpc 方法之间的映射。
 		// 如果再 rpc 方法中添加了注释，请将其保留为空。

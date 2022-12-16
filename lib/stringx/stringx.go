@@ -3,6 +3,7 @@ package stringx
 import (
 	"errors"
 	"github.com/gotid/god/lib/lang"
+	"unicode"
 )
 
 var (
@@ -162,6 +163,14 @@ func TakeWithPriority(fns ...func() string) string {
 		}
 	}
 
+	return ""
+}
+
+// ToCamelCase 返回首字母小写的字符串。
+func ToCamelCase(s string) string {
+	for i, v := range s {
+		return string(unicode.ToLower(v)) + s[i+1:]
+	}
 	return ""
 }
 

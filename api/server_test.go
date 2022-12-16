@@ -149,8 +149,8 @@ func TestWithMiddleware(t *testing.T) {
 	})
 
 	urls := []string{
-		"http://hello.com/first/kevin/2017?nickname=whatever&zipcode=200000",
-		"http://hello.com/second/wan/2020?nickname=whatever&zipcode=200000",
+		"https://hello.com/first/kevin/2017?nickname=whatever&zipcode=200000",
+		"https://hello.com/second/wan/2020?nickname=whatever&zipcode=200000",
 	}
 	for _, route := range rs {
 		assert.Nil(t, rt.Handle(route.Method, route.Path, route.Handler))
@@ -223,8 +223,8 @@ func TestMultiMiddlewares(t *testing.T) {
 	})
 
 	urls := []string{
-		"http://hello.com/first/kevin/2017?nickname=whatever&zipcode=200000",
-		"http://hello.com/second/wan/2020?nickname=whatever&zipcode=200000",
+		"https://hello.com/first/richard/2017?nickname=whatever&zipcode=200000",
+		"https://hello.com/second/zhu/2020?nickname=whatever&zipcode=200000",
 	}
 	for _, route := range rs {
 		assert.Nil(t, rt.Handle(route.Method, route.Path, route.Handler))
@@ -240,8 +240,8 @@ func TestMultiMiddlewares(t *testing.T) {
 	}
 
 	assert.EqualValues(t, map[string]string{
-		"kevin":    "2017",
-		"wan":      "2020",
+		"richard":  "2017",
+		"zhu":      "2020",
 		"whatever": "200000200000",
 	}, m)
 }
@@ -250,7 +250,7 @@ func TestWithPrefix(t *testing.T) {
 	fr := featuredRoutes{
 		routes: []Route{
 			{
-				Path: "/hellox",
+				Path: "/hello",
 			},
 			{
 				Path: "/world",
@@ -262,7 +262,7 @@ func TestWithPrefix(t *testing.T) {
 	for _, r := range fr.routes {
 		vals = append(vals, r.Path)
 	}
-	assert.EqualValues(t, []string{"/api/hellox", "/api/world"}, vals)
+	assert.EqualValues(t, []string{"/api/hello", "/api/world"}, vals)
 }
 
 func TestWithPriority(t *testing.T) {
@@ -356,7 +356,7 @@ func TestServer_PrintRoutes(t *testing.T) {
 Name: foo
 Port: 54321
 `
-		expect = `Routes:
+		expect = `路由：
   GET /bar
   GET /foo
   GET /foo/:bar
@@ -406,11 +406,11 @@ Port: 54321
 
 	go func() {
 		var buf strings.Builder
-		io.Copy(&buf, r)
+		_, _ = io.Copy(&buf, r)
 		ch <- buf.String()
 	}()
 
-	w.Close()
+	_ = w.Close()
 	out := <-ch
 	assert.Equal(t, expect, out)
 }

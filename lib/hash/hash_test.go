@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	text      = "hellox, world!\n"
+	text      = "hello, world!\n"
 	md5Digest = "910c8bc73110b0cd1bc5d2bcae782511"
 )
 

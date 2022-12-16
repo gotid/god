@@ -1,10 +1,10 @@
 package service
 
 import (
+	"github.com/gotid/god/internal/devserver"
 	"github.com/gotid/god/lib/load"
 	"github.com/gotid/god/lib/logx"
 	"github.com/gotid/god/lib/proc"
-	"github.com/gotid/god/lib/prometheus"
 	"github.com/gotid/god/lib/stat"
 	"github.com/gotid/god/lib/trace"
 	"log"
@@ -22,10 +22,11 @@ const (
 type Config struct {
 	Name       string
 	Log        logx.Config
-	Mode       string            `json:",default=pro,options=[dev,tet,rt,pre,pro]"`
-	MetricsUrl string            `json:",optional"`
-	Prometheus prometheus.Config `json:",optional"`
-	Telemetry  trace.Config      `json:",optional"`
+	Mode       string `json:",default=pro,options=[dev,tet,rt,pre,pro]"`
+	MetricsUrl string `json:",optional"`
+	//Prometheus prometheus.Config `json:",optional"`
+	Telemetry trace.Config     `json:",optional"`
+	DevServer devserver.Config `json:",optional"`
 }
 
 // MustSetup 设置服务，出错退出。
@@ -46,7 +47,7 @@ func (c Config) Setup() error {
 
 	c.initMode()
 
-	prometheus.StartAgent(c.Prometheus)
+	//prometheus.StartAgent(c.Prometheus)
 
 	if len(c.Telemetry.Name) == 0 {
 		c.Telemetry.Name = c.Name
@@ -59,6 +60,8 @@ func (c Config) Setup() error {
 	if len(c.MetricsUrl) > 0 {
 		stat.SetReportWriter(stat.NewRemoteWriter(c.MetricsUrl))
 	}
+
+	devserver.StartAgent(c.DevServer)
 
 	return nil
 }

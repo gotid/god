@@ -90,3 +90,8 @@ func NewClientWithTarget(target string, opts ...ClientOption) (Client, error) {
 func SetClientSlowThreshold(threshold time.Duration) {
 	clientinterceptors.SetSlowThreshold(threshold)
 }
+
+// DontLogContentMethod 不记录给定方法的请求/响应详情。
+func DontLogContentMethod(method string) {
+	clientinterceptors.DontLogContentMethod(method)
+}

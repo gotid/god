@@ -19,7 +19,7 @@ func TestAddGlobalFields(t *testing.T) {
 	SetWriter(writer)
 	defer SetWriter(old)
 
-	Info("hellox")
+	Info("hello")
 	buf.Reset()
 
 	AddGlobalFields(Field("a", "1"), Field("b", "2"))

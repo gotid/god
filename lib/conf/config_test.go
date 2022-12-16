@@ -1,7 +1,6 @@
 package conf
 
 import (
-	"fmt"
 	"github.com/gotid/god/lib/fs"
 	"github.com/gotid/god/lib/hash"
 	"github.com/stretchr/testify/assert"
@@ -15,12 +14,10 @@ func TestLoadConfig_notExists(t *testing.T) {
 }
 
 func TestLoadConfig_notRecogFile(t *testing.T) {
-	filename, err := fs.TempFilenameWithText("hellox")
+	filename, err := fs.TempFilenameWithText("hello")
 	assert.Nil(t, err)
 	defer os.Remove(filename)
-	err = Load(filename, nil)
-	assert.NotNil(t, err)
-	fmt.Println(err)
+	assert.NotNil(t, Load(filename, nil))
 }
 
 func TestConfigJson(t *testing.T) {
@@ -59,6 +56,61 @@ func TestConfigJson(t *testing.T) {
 	}
 }
 
+func TestLoadFromJsonBytesArray(t *testing.T) {
+	input := []byte(`{"users": [{"name": "foo"}, {"Name": "bar"}]}`)
+	var val struct {
+		Users []struct {
+			Name string
+		}
+	}
+
+	assert.NoError(t, LoadFromJsonBytes(input, &val))
+	var expect []string
+	for _, user := range val.Users {
+		expect = append(expect, user.Name)
+	}
+	assert.EqualValues(t, []string{"foo", "bar"}, expect)
+}
+
+func TestConfigJsonCanonical(t *testing.T) {
+	text := []byte(`{"a": "foo", "B": "bar"}`)
+
+	var val1 struct {
+		A string `json:"a"`
+		B string `json:"b"`
+	}
+	var val2 struct {
+		A string
+		B string
+	}
+	assert.NoError(t, LoadFromJsonBytes(text, &val1))
+	assert.Equal(t, "foo", val1.A)
+	assert.Equal(t, "bar", val1.B)
+	assert.NoError(t, LoadFromJsonBytes(text, &val2))
+	assert.Equal(t, "foo", val2.A)
+	assert.Equal(t, "bar", val2.B)
+}
+
+func TestConfigYamlCanonical(t *testing.T) {
+	text := []byte(`a: foo
+B: bar`)
+
+	var val1 struct {
+		A string `json:"a"`
+		B string `json:"b"`
+	}
+	var val2 struct {
+		A string
+		B string
+	}
+	assert.NoError(t, LoadFromYamlBytes(text, &val1))
+	assert.Equal(t, "foo", val1.A)
+	assert.Equal(t, "bar", val1.B)
+	assert.NoError(t, LoadFromYamlBytes(text, &val2))
+	assert.Equal(t, "foo", val2.A)
+	assert.Equal(t, "bar", val2.B)
+}
+
 func TestConfigJsonEnv(t *testing.T) {
 	tests := []string{
 		".json",
@@ -93,6 +145,111 @@ func TestConfigJsonEnv(t *testing.T) {
 			assert.Equal(t, "abcd!@# 3", val.D)
 		})
 	}
+}
+
+func TestToCamelCase(t *testing.T) {
+	tests := []struct {
+		input  string
+		expect string
+	}{
+		{
+			input:  "",
+			expect: "",
+		},
+		{
+			input:  "A",
+			expect: "a",
+		},
+		{
+			input:  "a",
+			expect: "a",
+		},
+		{
+			input:  "hello_world",
+			expect: "helloWorld",
+		},
+		{
+			input:  "Hello_world",
+			expect: "helloWorld",
+		},
+		{
+			input:  "hello_World",
+			expect: "helloWorld",
+		},
+		{
+			input:  "helloWorld",
+			expect: "helloWorld",
+		},
+		{
+			input:  "HelloWorld",
+			expect: "helloWorld",
+		},
+		{
+			input:  "hello World",
+			expect: "hello world",
+		},
+		{
+			input:  "Hello World",
+			expect: "hello world",
+		},
+		{
+			input:  "Hello World",
+			expect: "hello world",
+		},
+		{
+			input:  "Hello World foo_bar",
+			expect: "hello world fooBar",
+		},
+		{
+			input:  "Hello World foo_Bar",
+			expect: "hello world fooBar",
+		},
+		{
+			input:  "Hello World Foo_bar",
+			expect: "hello world fooBar",
+		},
+		{
+			input:  "Hello World Foo_Bar",
+			expect: "hello world fooBar",
+		},
+		{
+			input:  "你好 World Foo_Bar",
+			expect: "你好 world fooBar",
+		},
+	}
+
+	for _, test := range tests {
+		test := test
+		t.Run(test.input, func(t *testing.T) {
+			assert.Equal(t, test.expect, toCamelCase(test.input))
+		})
+	}
+}
+
+func TestLoadFromJsonBytesError(t *testing.T) {
+	var val struct{}
+	assert.Error(t, LoadFromJsonBytes([]byte(`hello`), &val))
+}
+
+func TestLoadFromYamlBytesError(t *testing.T) {
+	var val struct{}
+	assert.Error(t, LoadFromYamlBytes([]byte(`':hello`), &val))
+}
+
+func TestLoadFromYamlBytes(t *testing.T) {
+	input := []byte(`layer1:
+  layer2:
+    layer3: foo`)
+	var val struct {
+		Layer1 struct {
+			Layer2 struct {
+				Layer3 string
+			}
+		}
+	}
+
+	assert.NoError(t, LoadFromYamlBytes(input, &val))
+	assert.Equal(t, "foo", val.Layer1.Layer2.Layer3)
 }
 
 func createTempFile(ext, text string) (string, error) {

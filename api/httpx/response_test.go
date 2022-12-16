@@ -1,6 +1,7 @@
 package httpx
 
 import (
+	"context"
 	"errors"
 	"github.com/gotid/god/lib/logx"
 	"github.com/stretchr/testify/assert"
@@ -28,7 +29,7 @@ func TestError(t *testing.T) {
 	tests := []struct {
 		name          string
 		input         string
-		errorHandler  func(error) (int, interface{})
+		errorHandler  func(error) (int, any)
 		expectHasBody bool
 		expectBody    string
 		expectCode    int
@@ -43,7 +44,7 @@ func TestError(t *testing.T) {
 		{
 			name:  "customized error handler return string",
 			input: body,
-			errorHandler: func(err error) (int, interface{}) {
+			errorHandler: func(err error) (int, any) {
 				return http.StatusForbidden, err.Error()
 			},
 			expectHasBody: true,
@@ -53,7 +54,7 @@ func TestError(t *testing.T) {
 		{
 			name:  "customized error handler return error",
 			input: body,
-			errorHandler: func(err error) (int, interface{}) {
+			errorHandler: func(err error) (int, any) {
 				return http.StatusForbidden, err
 			},
 			expectHasBody: true,
@@ -63,7 +64,7 @@ func TestError(t *testing.T) {
 		{
 			name:  "customized error handler return nil",
 			input: body,
-			errorHandler: func(err error) (int, interface{}) {
+			errorHandler: func(err error) (int, any) {
 				return http.StatusForbidden, nil
 			},
 			expectHasBody: false,
@@ -172,7 +173,7 @@ func TestWriteJsonMarshalFailed(t *testing.T) {
 	w := tracedResponseWriter{
 		headers: make(map[string][]string),
 	}
-	WriteJson(&w, http.StatusOK, map[string]interface{}{
+	WriteJson(&w, http.StatusOK, map[string]any{
 		"Data": complex(0, 0),
 	})
 	assert.Equal(t, http.StatusInternalServerError, w.code)
@@ -212,4 +213,116 @@ func (w *tracedResponseWriter) WriteHeader(code int) {
 	}
 	w.wroteHeader = true
 	w.code = code
+}
+
+func TestErrorCtx(t *testing.T) {
+	const (
+		body        = "foo"
+		wrappedBody = `"foo"`
+	)
+
+	tests := []struct {
+		name            string
+		input           string
+		errorHandlerCtx func(context.Context, error) (int, any)
+		expectHasBody   bool
+		expectBody      string
+		expectCode      int
+	}{
+		{
+			name:          "default error handler",
+			input:         body,
+			expectHasBody: true,
+			expectBody:    body,
+			expectCode:    http.StatusBadRequest,
+		},
+		{
+			name:  "customized error handler return string",
+			input: body,
+			errorHandlerCtx: func(ctx context.Context, err error) (int, any) {
+				return http.StatusForbidden, err.Error()
+			},
+			expectHasBody: true,
+			expectBody:    wrappedBody,
+			expectCode:    http.StatusForbidden,
+		},
+		{
+			name:  "customized error handler return error",
+			input: body,
+			errorHandlerCtx: func(ctx context.Context, err error) (int, any) {
+				return http.StatusForbidden, err
+			},
+			expectHasBody: true,
+			expectBody:    body,
+			expectCode:    http.StatusForbidden,
+		},
+		{
+			name:  "customized error handler return nil",
+			input: body,
+			errorHandlerCtx: func(context.Context, error) (int, any) {
+				return http.StatusForbidden, nil
+			},
+			expectHasBody: false,
+			expectBody:    "",
+			expectCode:    http.StatusForbidden,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			w := tracedResponseWriter{
+				headers: make(map[string][]string),
+			}
+			if test.errorHandlerCtx != nil {
+				lock.RLock()
+				prev := errorHandlerCtx
+				lock.RUnlock()
+				SetErrorHandlerCtx(test.errorHandlerCtx)
+				defer func() {
+					lock.Lock()
+					test.errorHandlerCtx = prev
+					lock.Unlock()
+				}()
+			}
+			ErrorCtx(context.Background(), &w, errors.New(test.input))
+			assert.Equal(t, test.expectCode, w.code)
+			assert.Equal(t, test.expectHasBody, w.hasBody)
+			assert.Equal(t, test.expectBody, strings.TrimSpace(w.builder.String()))
+		})
+	}
+
+	//The current handler is a global event,Set default values to avoid impacting subsequent unit tests
+	SetErrorHandlerCtx(nil)
+}
+
+func TestErrorWithGRPCErrorCtx(t *testing.T) {
+	w := tracedResponseWriter{
+		headers: make(map[string][]string),
+	}
+	ErrorCtx(context.Background(), &w, status.Error(codes.Unavailable, "foo"))
+	assert.Equal(t, http.StatusServiceUnavailable, w.code)
+	assert.True(t, w.hasBody)
+	assert.True(t, strings.Contains(w.builder.String(), "foo"))
+}
+
+func TestErrorWithHandlerCtx(t *testing.T) {
+	w := tracedResponseWriter{
+		headers: make(map[string][]string),
+	}
+	ErrorCtx(context.Background(), &w, errors.New("foo"), func(w http.ResponseWriter, err error) {
+		http.Error(w, err.Error(), 499)
+	})
+	assert.Equal(t, 499, w.code)
+	assert.True(t, w.hasBody)
+	assert.Equal(t, "foo", strings.TrimSpace(w.builder.String()))
+}
+
+func TestWriteJsonCtxMarshalFailed(t *testing.T) {
+	w := tracedResponseWriter{
+		headers: make(map[string][]string),
+	}
+	WriteJsonCtx(context.Background(), &w, http.StatusOK, map[string]any{
+		"Data": complex(0, 0),
+	})
+	assert.Equal(t, http.StatusInternalServerError, w.code)
 }

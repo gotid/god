@@ -3,15 +3,16 @@ module github.com/gotid/god/tools/god
 go 1.19
 
 require (
-	github.com/emicklei/proto v1.11.0
+	github.com/emicklei/proto v1.11.1
 	github.com/fatih/structtag v1.2.0
-	github.com/go-sql-driver/mysql v1.6.0
+	github.com/go-sql-driver/mysql v1.7.0
 	github.com/gotid/antlr v0.0.0-20221103053916-29bff99c97c7
 	github.com/gotid/ddl-parser v0.0.0-20221029075150-b53a75dd4846
 	github.com/gotid/god v1.4.3
 	github.com/logrusorgru/aurora v2.0.3+incompatible
-	github.com/spf13/cobra v1.6.0
+	github.com/spf13/cobra v1.6.1
 	github.com/stretchr/testify v1.8.0
+	golang.org/x/text v0.3.7
 )
 
 require (
@@ -49,7 +50,6 @@ require (
 	go.uber.org/automaxprocs v1.5.1 // indirect
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
 	golang.org/x/sys v0.0.0-20220919091848-fb04ddd9f9c8 // indirect
-	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/genproto v0.0.0-20211118181313-81c1377c94b1 // indirect
 	google.golang.org/grpc v1.50.1 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect

@@ -3,20 +3,21 @@ package gateway
 import (
 	"context"
 	"fmt"
-	"github.com/golang/protobuf/jsonpb"
-	"github.com/gotid/god/api/httpx"
-	"github.com/gotid/god/gateway/internal"
-	"google.golang.org/grpc/codes"
+	"github.com/jhump/protoreflect/grpcreflect"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/fullstorydev/grpcurl"
+	"github.com/golang/protobuf/jsonpb"
 	"github.com/gotid/god/api"
+	"github.com/gotid/god/api/httpx"
+	"github.com/gotid/god/gateway/internal"
 	"github.com/gotid/god/lib/logx"
 	"github.com/gotid/god/lib/mr"
 	"github.com/gotid/god/rpc"
-	"github.com/jhump/protoreflect/grpcreflect"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/reflection/grpc_reflection_v1alpha"
 )
 
 type (
@@ -140,10 +141,9 @@ func (s *Server) createDescriptorSource(client rpc.Client, upstream Upstream) (g
 			return nil, err
 		}
 	} else {
-		//TODO 待确认
-		//reflectionClient := grpc_reflection_v1alpha.NewServerReflectionClient(client.Conn())
-		refClient := grpcreflect.NewClientAuto(context.Background(), client.Conn())
-		source = grpcurl.DescriptorSourceFromServer(context.Background(), refClient)
+		refCli := grpc_reflection_v1alpha.NewServerReflectionClient(client.Conn())
+		client := grpcreflect.NewClient(context.Background(), refCli)
+		source = grpcurl.DescriptorSourceFromServer(context.Background(), client)
 	}
 
 	return source, nil
@@ -154,7 +154,7 @@ func (s *Server) buildHandler(source grpcurl.DescriptorSource, resolver jsonpb.A
 	return func(w http.ResponseWriter, r *http.Request) {
 		parser, err := internal.NewRequestParser(r, resolver)
 		if err != nil {
-			httpx.Error(w, err)
+			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
@@ -166,12 +166,12 @@ func (s *Server) buildHandler(source grpcurl.DescriptorSource, resolver jsonpb.A
 		handler := internal.NewEventHandler(w, resolver)
 		if err = grpcurl.InvokeRPC(ctx, source, client.Conn(), path, s.prepareMetadata(r.Header),
 			handler, parser.Next); err != nil {
-			httpx.Error(w, err)
+			httpx.ErrorCtx(r.Context(), w, err)
 		}
 
 		status := handler.Status
 		if status.Code() != codes.OK {
-			httpx.Error(w, status.Err())
+			httpx.ErrorCtx(r.Context(), w, status.Err())
 		}
 	}
 }

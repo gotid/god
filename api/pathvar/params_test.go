@@ -27,6 +27,6 @@ func TestVarsNil(t *testing.T) {
 }
 
 func TestContextKey(t *testing.T) {
-	ck := contextKey("hellox")
-	assert.True(t, strings.Contains(ck.String(), "hellox"))
+	ck := contextKey("hello")
+	assert.True(t, strings.Contains(ck.String(), "hello"))
 }

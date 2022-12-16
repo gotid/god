@@ -100,7 +100,7 @@ func (h *timeoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		defer tw.mu.Unlock()
 		// TimoutHandler 之前没有任何用户定义的中间件，
 		// 所以我们可以保证，业务代码中的取消不会出现于此。
-		httpx.Error(w, ctx.Err(), func(w http.ResponseWriter, err error) {
+		httpx.ErrorCtx(r.Context(), w, ctx.Err(), func(w http.ResponseWriter, err error) {
 			if errors.Is(err, context.Canceled) {
 				w.WriteHeader(statusClientClosedRequest)
 			} else {

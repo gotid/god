@@ -110,13 +110,13 @@ func TestCodeFromGrpcError(t *testing.T) {
 	for _, test := range tests {
 		test := test
 		t.Run(test.name, func(t *testing.T) {
-			assert.Equal(t, test.want, CodeFromGrpcError(status.Error(test.code, "foo")))
+			assert.Equal(t, test.want, CodeFromGRPCError(status.Error(test.code, "foo")))
 		})
 	}
 }
 
 func TestIsGrpcError(t *testing.T) {
-	assert.True(t, IsGrpcError(status.Error(codes.Unknown, "foo")))
-	assert.False(t, IsGrpcError(errors.New("foo")))
-	assert.False(t, IsGrpcError(nil))
+	assert.True(t, IsGRPCError(status.Error(codes.Unknown, "foo")))
+	assert.False(t, IsGRPCError(errors.New("foo")))
+	assert.False(t, IsGRPCError(nil))
 }

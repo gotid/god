@@ -2,15 +2,24 @@ package trace
 
 import (
 	"context"
+	"net"
+	"strings"
+
+	gtrace "github.com/gotid/god/internal/trace"
 	"go.opentelemetry.io/otel/attribute"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 	semconv2 "go.opentelemetry.io/otel/semconv/v1.5.0"
 	"google.golang.org/grpc/peer"
-	"net"
-	"strings"
 )
 
 const localhost = "127.0.0.1"
+
+var (
+	// SpanIDFromContext 从上下文返回 SpanID。
+	SpanIDFromContext = gtrace.SpanIDFromContext
+	// TraceIDFromContext 从上下文返回 TraceID。
+	TraceIDFromContext = gtrace.TraceIDFromContext
+)
 
 // PeerFromCtx 从上下文返回 peer。
 func PeerFromCtx(ctx context.Context) string {

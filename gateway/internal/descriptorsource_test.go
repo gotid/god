@@ -30,7 +30,7 @@ func TestGetMethods(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, []Method{
 		{
-			RpcPath: "hellox.Hello/Ping",
+			RpcPath: "hello.Hello/Ping",
 		},
 	}, methods)
 }
@@ -51,27 +51,27 @@ func TestGetMethodsWithAnnotations(t *testing.T) {
 		{
 			HttpMethod: http.MethodGet,
 			HttpPath:   "/v1/get/:foo",
-			RpcPath:    "hellox.Hello/PingGet",
+			RpcPath:    "hello.Hello/PingGet",
 		},
 		{
 			HttpMethod: http.MethodPost,
 			HttpPath:   "/v1/post",
-			RpcPath:    "hellox.Hello/PingPost",
+			RpcPath:    "hello.Hello/PingPost",
 		},
 		{
 			HttpMethod: http.MethodPut,
 			HttpPath:   "/v1/put",
-			RpcPath:    "hellox.Hello/PingPut",
+			RpcPath:    "hello.Hello/PingPut",
 		},
 		{
 			HttpMethod: http.MethodDelete,
 			HttpPath:   "/v1/delete",
-			RpcPath:    "hellox.Hello/PingDelete",
+			RpcPath:    "hello.Hello/PingDelete",
 		},
 		{
 			HttpMethod: http.MethodPatch,
 			HttpPath:   "/v1/patch",
-			RpcPath:    "hellox.Hello/PingPatch",
+			RpcPath:    "hello.Hello/PingPatch",
 		},
 	}, methods)
 }

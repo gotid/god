@@ -13,18 +13,18 @@ func TestImmutableResource(t *testing.T) {
 	ir := NewImmutableResource(func() (any, error) {
 		fmt.Println("请求资源")
 		count++
-		return "hellox", nil
+		return "hello", nil
 	})
 
 	res, err := ir.Get()
 	assert.Nil(t, err)
-	assert.Equal(t, "hellox", res)
+	assert.Equal(t, "hello", res)
 	assert.Equal(t, 1, count)
 
 	// 再来一次
 	res, err = ir.Get()
 	assert.Nil(t, err)
-	assert.Equal(t, "hellox", res)
+	assert.Equal(t, "hello", res)
 	assert.Equal(t, 1, count)
 }
 

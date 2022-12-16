@@ -3,10 +3,14 @@ package internal
 import (
 	"context"
 	"fmt"
+	"net/http"
+
+	"github.com/gotid/god/internal/health"
 	"github.com/gotid/god/lib/logx"
 	"github.com/gotid/god/lib/proc"
-	"net/http"
 )
+
+const probeNamePrefix = "api"
 
 // StartOption 自定义 http.Server 的方法。
 type StartOption func(svr *http.Server)
@@ -36,16 +40,23 @@ func start(host string, port int, handler http.Handler, run func(svr *http.Serve
 		opt(server)
 	}
 
+	healthManager := health.NewHealthManager(fmt.Sprintf("%s-%s:%d", probeNamePrefix, host, port))
+
 	waitForCalled := proc.AddWrapUpListener(func() {
+		healthManager.MarkNotReady()
 		if e := server.Shutdown(context.Background()); e != nil {
 			logx.Error(e)
 		}
 	})
+
 	defer func() {
 		if err == http.ErrServerClosed {
 			waitForCalled()
 		}
 	}()
+
+	healthManager.MarkReady()
+	health.AddProbe(healthManager)
 
 	return run(server)
 }

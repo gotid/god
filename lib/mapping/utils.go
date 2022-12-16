@@ -87,8 +87,8 @@ func usingDifferentKeys(key string, field reflect.StructField) bool {
 	return false
 }
 
-func maybeNewValue(field reflect.StructField, value reflect.Value) {
-	if field.Type.Kind() == reflect.Ptr && value.IsNil() {
+func maybeNewValue(fieldType reflect.Type, value reflect.Value) {
+	if fieldType.Kind() == reflect.Ptr && value.IsNil() {
 		value.Set(reflect.New(value.Type().Elem()))
 	}
 }
@@ -172,7 +172,14 @@ func validateValueRange(mapValue any, opts *fieldOptionsWithContext) error {
 func convertType(kind reflect.Kind, str string) (any, error) {
 	switch kind {
 	case reflect.Bool:
-		return str == "1" || strings.ToLower(str) == "true", nil
+		switch strings.ToLower(str) {
+		case "1", "true":
+			return true, nil
+		case "0", "false":
+			return false, nil
+		default:
+			return false, errTypeMismatch
+		}
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		intValue, err := strconv.ParseInt(str, 10, 64)
 		if err != nil {

@@ -3,10 +3,10 @@ package logx
 import (
 	"context"
 	"fmt"
-	"github.com/gotid/god/lib/timex"
 	"time"
 
-	"go.opentelemetry.io/otel/trace"
+	"github.com/gotid/god/internal/trace"
+	"github.com/gotid/god/lib/timex"
 )
 
 // WithCallerSkip 返回具有给定调用者跳跃级别的日志记录器。
@@ -136,12 +136,12 @@ func (l *richLogger) buildFields(fields ...LogField) []LogField {
 		return fields
 	}
 
-	traceID := traceIdFromContext(l.ctx)
+	traceID := trace.TraceIDFromContext(l.ctx)
 	if len(traceID) > 0 {
 		fields = append(fields, Field(traceKey, traceID))
 	}
 
-	spanID := spanIdFromContext(l.ctx)
+	spanID := trace.SpanIDFromContext(l.ctx)
 	if len(spanID) > 0 {
 		fields = append(fields, Field(spanKey, spanID))
 	}
@@ -178,22 +178,4 @@ func (l *richLogger) slow(v any, fields ...LogField) {
 	if shallLog(ErrorLevel) {
 		getWriter().Slow(v, l.buildFields(fields...)...)
 	}
-}
-
-func spanIdFromContext(ctx context.Context) string {
-	spanCtx := trace.SpanContextFromContext(ctx)
-	if spanCtx.HasSpanID() {
-		return spanCtx.SpanID().String()
-	}
-
-	return ""
-}
-
-func traceIdFromContext(ctx context.Context) string {
-	spanCtx := trace.SpanContextFromContext(ctx)
-	if spanCtx.HasTraceID() {
-		return spanCtx.TraceID().String()
-	}
-
-	return ""
 }

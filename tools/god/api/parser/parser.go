@@ -2,11 +2,12 @@ package parser
 
 import (
 	"fmt"
+	"path/filepath"
+	"unicode"
+
 	"github.com/gotid/god/tools/god/api/parser/g4/ast"
 	"github.com/gotid/god/tools/god/api/parser/g4/gen/api"
 	"github.com/gotid/god/tools/god/api/spec"
-	"path/filepath"
-	"unicode"
 )
 
 // Parse 解析 api 协议文件。
