@@ -1,3 +1,5 @@
 Name: cors
 Host: 0.0.0.0
 Port: 3333
+DevServer:
+  Enable: true

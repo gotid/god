@@ -1,12 +1,14 @@
 package fx
 
 import (
+	"fmt"
 	"github.com/gotid/god/lib/stringx"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/goleak"
 	"io"
 	"log"
 	"math/rand"
+	"os"
 	"reflect"
 	"runtime"
 	"sort"
@@ -298,6 +300,37 @@ func TestMap(t *testing.T) {
 			})
 		}
 	})
+}
+
+func TestMapLikeJavaScript(t *testing.T) {
+	start := time.Now()
+	From(func(source chan<- any) {
+		files := []string{
+			"/Users/zs/Desktop/dHome/20221014/1-首页.jpg",
+			"/Users/zs/Desktop/dHome/20221014/2-案例.jpg",
+			"/Users/zs/Desktop/dHome/20221014/3-筑巢奖.jpg",
+		}
+		for _, file := range files {
+			source <- file
+		}
+	}).Map(func(item any) any {
+		file := item.(string)
+		stat, err := os.Stat(file)
+		if err != nil {
+			return nil
+		}
+		return stat
+	}, WithWorkers(3)).Reduce(func(pipe <-chan any) (any, error) {
+		var stats []os.FileInfo
+		for stat := range pipe {
+			fmt.Println(stat)
+			stats = append(stats, stat.(os.FileInfo))
+		}
+
+		return stats, nil
+	})
+
+	fmt.Println(time.Since(start))
 }
 
 func TestMerge(t *testing.T) {

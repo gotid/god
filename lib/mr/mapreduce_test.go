@@ -92,6 +92,25 @@ func TestFinishVoid(t *testing.T) {
 	assert.Equal(t, uint32(10), atomic.LoadUint32(&total))
 }
 
+func TestFinishVoid2(t *testing.T) {
+	var count int32
+	FinishVoid(
+		func() {
+			time.Sleep(100 * time.Millisecond)
+			atomic.AddInt32(&count, 1)
+		},
+		func() {
+			time.Sleep(100 * time.Millisecond)
+			atomic.AddInt32(&count, 1)
+		},
+		func() {
+			time.Sleep(100 * time.Millisecond)
+			atomic.AddInt32(&count, 1)
+		},
+	)
+	assert.Equal(t, int32(3), count)
+}
+
 func TestForEach(t *testing.T) {
 	const tasks = 1000
 

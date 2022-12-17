@@ -19,29 +19,6 @@ const (
 
 var src = newLockedSource(time.Now().UnixNano())
 
-type lockedSource struct {
-	source rand.Source
-	lock   sync.Mutex
-}
-
-func newLockedSource(seed int64) *lockedSource {
-	return &lockedSource{
-		source: rand.NewSource(seed),
-	}
-}
-
-func (ls *lockedSource) Int63() int64 {
-	ls.lock.Lock()
-	defer ls.lock.Unlock()
-	return ls.source.Int63()
-}
-
-func (ls *lockedSource) Seed(seed int64) {
-	ls.lock.Lock()
-	defer ls.lock.Unlock()
-	ls.source.Seed(seed)
-}
-
 // Rand 返回一个 8 位数的随机字符串。
 func Rand() string {
 	return Randn(defaultRandLen)
@@ -81,4 +58,27 @@ func Randn(n int) string {
 // Seed 设置随机种子数。
 func Seed(seed int64) {
 	src.Seed(seed)
+}
+
+type lockedSource struct {
+	source rand.Source
+	lock   sync.Mutex
+}
+
+func newLockedSource(seed int64) *lockedSource {
+	return &lockedSource{
+		source: rand.NewSource(seed),
+	}
+}
+
+func (ls *lockedSource) Int63() int64 {
+	ls.lock.Lock()
+	defer ls.lock.Unlock()
+	return ls.source.Int63()
+}
+
+func (ls *lockedSource) Seed(seed int64) {
+	ls.lock.Lock()
+	defer ls.lock.Unlock()
+	ls.source.Seed(seed)
 }

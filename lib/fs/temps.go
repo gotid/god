@@ -5,7 +5,8 @@ import (
 	"os"
 )
 
-// TempFileWithText 创建指定 text 的临时文件并返回已打开的文件实例。
+// TempFileWithText 创建指定文本的临时文件，并返回已打开的实例。
+//
 // 因为文件为打开状态，所以调用方需要负责关闭文件并删除。
 func TempFileWithText(text string) (*os.File, error) {
 	file, err := os.CreateTemp(os.TempDir(), hash.Md5Hex([]byte(text)))

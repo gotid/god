@@ -2,7 +2,7 @@ package netx
 
 import "net"
 
-// InternalIp 获取内部IP。
+// InternalIp 获取内网IP。
 func InternalIp() string {
 	interfaces, err := net.Interfaces()
 	if err != nil {

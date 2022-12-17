@@ -2,7 +2,7 @@ package threading
 
 import "sync"
 
-// RoutineGroup 用于等待一组协程全部执行完毕。
+// RoutineGroup 协程组：用于等待一组协程全部执行完毕。
 type RoutineGroup struct {
 	waitGroup sync.WaitGroup
 }
@@ -12,7 +12,8 @@ func NewRoutineGroup() *RoutineGroup {
 	return new(RoutineGroup)
 }
 
-// Run 运行 RoutineGroup 中的给定函数 fn。
+// Run 运行给定函数 fn。
+//
 // 不要从外部引用变量，因为可能被其他协程更改。
 func (g *RoutineGroup) Run(fn func()) {
 	g.waitGroup.Add(1)
@@ -24,6 +25,7 @@ func (g *RoutineGroup) Run(fn func()) {
 }
 
 // RunSafe 运行给定函数 fn，若 panics 则记录。
+//
 // 不要从外部引用变量，因为可能被其他协程更改。
 func (g *RoutineGroup) RunSafe(fn func()) {
 	g.waitGroup.Add(1)

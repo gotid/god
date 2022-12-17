@@ -6,7 +6,9 @@ import (
 	"time"
 )
 
-// Proba 用于测试给定的可能性是否为真。
+// Proba Probability 概率。
+//
+//	用于测试给定的可能性是否为真。
 type Proba struct {
 	// rand.New(...) 返回非线程安全对象
 	r    *rand.Rand
@@ -20,7 +22,7 @@ func NewProba() *Proba {
 	}
 }
 
-// TrueOnProba 判断给定的可能性是否为真。
+// TrueOnProba 判断给定的可能性是否为真（随机数 < proba）。
 func (p *Proba) TrueOnProba(proba float64) (truth bool) {
 	p.lock.Lock()
 	truth = p.r.Float64() < proba

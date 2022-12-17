@@ -8,8 +8,8 @@ import (
 
 func TestFxSplit(t *testing.T) {
 	fx.Just(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).Split(4).ForEach(func(item any) {
-		vals := item.([]any)
-		fmt.Println(len(vals))
+		chunkNumbers := item.([]any)
+		fmt.Println(chunkNumbers)
 	})
 }
 

@@ -8,6 +8,7 @@ import (
 
 func TestRetry(t *testing.T) {
 	assert.NotNil(t, DoWithRetry(func() error {
+		print("重试\n")
 		return errors.New("any")
 	}))
 
